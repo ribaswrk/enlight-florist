@@ -109,7 +109,7 @@ export default function ProductDetailPage() {
           </div>
 
           <button className="w-full bg-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-pink-600 transition duration-300">
-            Add to Cart
+            Order Now
           </button>
         </div>
       </div>
