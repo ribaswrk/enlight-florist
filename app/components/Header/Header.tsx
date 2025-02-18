@@ -1,27 +1,33 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 
 const Header = () => {
   const [isTransparent, setIsTransparent] = useState(true);
   const [isScrolledPast, setIsScrolledPast] = useState(false);
+  const [isNotHome, setisNotHome] = useState<string>("fixed");
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const carouselHeight = window.innerHeight * 0.6; // Match carousel height
+    if (window.location.pathname !== "/home") {
+      setisNotHome("");
+      return; // Skip if not on home page
+    } else {
+      const handleScroll = () => {
+        const scrollY = window.scrollY;
+        const carouselHeight = window.innerHeight * 0.6;
 
-      setIsTransparent(scrollY < carouselHeight * 0.7); // Transparent while over the carousel
-      setIsScrolledPast(scrollY > carouselHeight); // "Scroll away" effect when past carousel
-    };
+        setisNotHome("fixed");
+        setIsTransparent(scrollY < carouselHeight * 0.7);
+        setIsScrolledPast(scrollY > carouselHeight);
+      };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
   }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 shadow-md transition-all duration-500 ${
+      className={`${isNotHome} top-0 left-0 w-full z-50 shadow-md transition-all duration-500 ${
         isScrolledPast ? "-translate-y-full" : "translate-y-0"
       } ${isTransparent ? "bg-white-100/80 backdrop-blur-md" : "bg-white"}`}
     >
