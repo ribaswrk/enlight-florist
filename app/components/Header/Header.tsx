@@ -23,15 +23,12 @@ const Header = () => {
     <header
       className={`fixed top-0 left-0 w-full z-50 shadow-md transition-all duration-500 ${
         isScrolledPast ? "-translate-y-full" : "translate-y-0"
-      } ${isTransparent ? "bg-white/80 backdrop-blur-md" : "bg-white"}`}
+      } ${isTransparent ? "bg-white-100/80 backdrop-blur-md" : "bg-white"}`}
     >
       <div className="container mx-auto flex flex-col items-center px-6 py-4">
         {/* Logo */}
         <div className="text-4xl font-serif font-extrabold text-center">
-          <a
-            href="/"
-            className="text-pink-500 hover:text-pink-600 transition-colors duration-200"
-          >
+          <a href="/" className="text-pink-500 transition-colors duration-200">
             Enlight Florist
           </a>
         </div>
@@ -42,7 +39,11 @@ const Header = () => {
             <li>
               <a
                 href="/"
-                className="text-lg font-medium hover:text-teal-400 transition-colors duration-200"
+                className={`text-lg font-medium ${
+                  isTransparent
+                    ? "text-pink-100 hover:text-white-400"
+                    : "text-black hover:text-gray-500"
+                }  transition-colors duration-200`}
               >
                 Home
               </a>
@@ -50,7 +51,11 @@ const Header = () => {
             <li>
               <a
                 href="/about"
-                className="text-lg font-medium hover:text-teal-400 transition-colors duration-200"
+                className={`text-lg font-medium ${
+                  isTransparent
+                    ? "text-pink-100 hover:text-white-400"
+                    : "text-black hover:text-gray-500"
+                }  transition-colors duration-200`}
               >
                 About
               </a>
@@ -58,7 +63,11 @@ const Header = () => {
             <li>
               <a
                 href="/products"
-                className="text-lg font-medium hover:text-teal-400 transition-colors duration-200"
+                className={`text-lg font-medium ${
+                  isTransparent
+                    ? "text-pink-100 hover:text-white-400"
+                    : "text-black hover:text-gray-500"
+                }  transition-colors duration-200`}
               >
                 Our Product
               </a>
