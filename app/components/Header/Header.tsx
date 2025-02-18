@@ -48,10 +48,10 @@ const Header = () => {
             </li>
             <li>
               <a
-                href="/contact"
+                href="/products"
                 className="text-lg font-medium hover:text-teal-400 transition-colors duration-200"
               >
-                Contact
+                Our Product
               </a>
             </li>
           </ul>
