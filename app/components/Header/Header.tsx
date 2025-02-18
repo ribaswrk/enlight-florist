@@ -1,14 +1,19 @@
 "use client";
+import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 const Header = () => {
   const [isTransparent, setIsTransparent] = useState(true);
   const [isScrolledPast, setIsScrolledPast] = useState(false);
   const [isNotHome, setisNotHome] = useState<string>("fixed");
+  const path = usePathname();
 
   useEffect(() => {
-    if (window.location.pathname !== "/home") {
+    console.log(path);
+    if (path !== "/home") {
       setisNotHome("");
+      setIsTransparent(false);
+      setIsScrolledPast(false);
       return; // Skip if not on home page
     } else {
       const handleScroll = () => {
@@ -23,7 +28,7 @@ const Header = () => {
       window.addEventListener("scroll", handleScroll);
       return () => window.removeEventListener("scroll", handleScroll);
     }
-  }, []);
+  }, [path]);
 
   return (
     <header
