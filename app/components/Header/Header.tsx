@@ -73,7 +73,7 @@ const Header = () => {
             </li>
             <li>
               <a
-                href="/products"
+                href="/categories"
                 className={`text-lg font-medium ${
                   isTransparent
                     ? "text-pink-100 hover:text-white-400"

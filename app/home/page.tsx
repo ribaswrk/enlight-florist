@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import ProductCard from "../components/Products/ProductCard";
 
 export interface Product {
   id: number;
@@ -99,23 +98,6 @@ export default function HomePage() {
               onClick={() => setCurrentSlide(index)}
             />
           ))}
-        </div>
-      </div>
-      {/* Store top products */}
-      <div className="max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {topProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-        {/* Button to View All Products */}
-        <div className="mt-8 text-center">
-          <a
-            href="/products"
-            className="inline-block px-6 py-3 text-lg font-semibold text-white bg-pink-500 rounded-full hover:bg-pink-600 transition duration-300 ease-in-out"
-          >
-            View All Products
-          </a>
         </div>
       </div>
 
