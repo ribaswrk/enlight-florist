@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface Product {
 	id: number;
@@ -47,6 +48,7 @@ export default async function CategoryPage({
 			</h1>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 				{products.map((product) => (
+					<Link href={'/productdetail'}>
 					<div
 						key={product.id}
 						className="border rounded-lg overflow-hidden shadow-md"
@@ -65,6 +67,7 @@ export default async function CategoryPage({
 							<p className="text-gray-600">${product.price}</p>
 						</div>
 					</div>
+					</Link>
 				))}
 			</div>
 		</div>

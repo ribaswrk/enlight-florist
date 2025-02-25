@@ -32,7 +32,7 @@ const categories = [
 	{
     id: 4,
 		imageUrl: "/placeholder.svg?height=300&width=400",
-		categoryName: "Standing Flowe",
+		categoryName: "Standing Flower",
 		slug: "standingflower",
 	},
 	{
