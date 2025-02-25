@@ -96,26 +96,6 @@ export default function AboutUs() {
 					/>
 				</div>
 			</section>
-
-			{/* Team Photos */}
-			<section>
-				<h2 className="text-3xl font-semibold mb-6">Meet Our Team</h2>
-				<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-					{[1, 2, 3, 4].map((member) => (
-						<div key={member} className="text-center">
-							<Image
-								src={`/placeholder.svg?height=200&width=200&text=Team Member ${member}`}
-								alt={`Team member ${member}`}
-								width={200}
-								height={200}
-								className="rounded-full mx-auto mb-2"
-							/>
-							<p className="font-semibold">Team Member {member}</p>
-							<p className="text-sm text-gray-600">Position</p>
-						</div>
-					))}
-				</div>
-			</section>
 		</div>
 	);
 }

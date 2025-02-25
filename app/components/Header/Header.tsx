@@ -45,6 +45,22 @@ const Header = () => {
                 Our Product
               </Link>
             </li>
+            <li>
+              <Link
+                href="/special"
+                className={`text-lg font-medium text-black hover:text-gray-500 transition-colors duration-200`}
+              >
+                Special Request
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/coorporate"
+                className={`text-lg font-medium text-black hover:text-gray-500 transition-colors duration-200`}
+              >
+                Cooporate Deals
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>
