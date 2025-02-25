@@ -2,13 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-
-export interface Product {
-  id: number;
+import { Flower2 } from "lucide-react";
+import CategoryCarousel from "../components/Home/ProductCard";
+interface Product {
+  id: string;
   name: string;
   price: number;
   image: string;
   category: string;
+}
+interface CategorySection {
+  name: string;
+  slug: string;
+  products: Product[];
 }
 
 const carouselImages = [
@@ -27,39 +33,224 @@ const carouselImages = [
 ];
 
 // Simulasi data produk
-const products: Product[] = [
+const categories: CategorySection[] = [
   {
-    id: 1,
-    name: "Red Rose Bouquet",
-    price: 999.99,
-    image: "/placeholder.svg?height=200&width=300",
-    category: "Bouquet",
+    name: "Fresh Flowers",
+    slug: "fresh-flowers",
+    products: [
+      {
+        id: "1",
+        name: "Rose Bouquet",
+        price: 49.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "fresh-flowers",
+      },
+      {
+        id: "2",
+        name: "Tulip Arrangement",
+        price: 39.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "fresh-flowers",
+      },
+      {
+        id: "3",
+        name: "Sunflower Bundle",
+        price: 29.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "fresh-flowers",
+      },
+      {
+        id: "4",
+        name: "Mixed Seasonal",
+        price: 59.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "fresh-flowers",
+      },
+      {
+        id: "5",
+        name: "Lily Bouquet",
+        price: 44.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "fresh-flowers",
+      },
+      {
+        id: "6",
+        name: "Orchid Display",
+        price: 69.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "fresh-flowers",
+      },
+      {
+        id: "7",
+        name: "Daisy Collection",
+        price: 34.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "fresh-flowers",
+      },
+      {
+        id: "8",
+        name: "Garden Mix",
+        price: 54.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "fresh-flowers",
+      },
+    ],
   },
   {
-    id: 2,
-    name: "Flower Board",
-    price: 499.99,
-    image: "/placeholder.svg?height=200&width=300",
-    category: "Board",
+    name: "Wedding Collections",
+    slug: "wedding",
+    products: [
+      {
+        id: "9",
+        name: "Bridal Bouquet",
+        price: 149.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "wedding",
+      },
+      {
+        id: "10",
+        name: "Centerpiece Set",
+        price: 199.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "wedding",
+      },
+      {
+        id: "11",
+        name: "Arch Decoration",
+        price: 299.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "wedding",
+      },
+      {
+        id: "12",
+        name: "Boutonnière Set",
+        price: 79.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "wedding",
+      },
+      {
+        id: "13",
+        name: "Bridesmaid Bundle",
+        price: 129.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "wedding",
+      },
+      {
+        id: "14",
+        name: "Aisle Markers",
+        price: 159.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "wedding",
+      },
+      {
+        id: "15",
+        name: "Reception Package",
+        price: 399.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "wedding",
+      },
+      {
+        id: "16",
+        name: "Flower Girl Set",
+        price: 89.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "wedding",
+      },
+    ],
   },
   {
-    id: 3,
-    name: "Golden Rose Bouquet",
-    price: 99.99,
-    image: "/placeholder.svg?height=200&width=300",
-    category: "Bouquet",
-  },
-  {
-    id: 4,
-    name: "Money Bouquet",
-    price: 19.99,
-    image: "/placeholder.svg?height=200&width=300",
-    category: "Bouquet",
+    name: "Dried Flowers",
+    slug: "dried-flowers",
+    products: [
+      {
+        id: "17",
+        name: "Preserved Roses",
+        price: 89.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "dried-flowers",
+      },
+      {
+        id: "18",
+        name: "Dried Lavender",
+        price: 34.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "dried-flowers",
+      },
+      {
+        id: "19",
+        name: "Pampas Grass",
+        price: 24.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "dried-flowers",
+      },
+      {
+        id: "20",
+        name: "Botanical Mix",
+        price: 44.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "dried-flowers",
+      },
+      {
+        id: "21",
+        name: "Dried Hydrangea",
+        price: 39.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "dried-flowers",
+      },
+      {
+        id: "22",
+        name: "Cotton Stems",
+        price: 29.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "dried-flowers",
+      },
+      {
+        id: "23",
+        name: "Wheat Bundle",
+        price: 19.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "dried-flowers",
+      },
+      {
+        id: "24",
+        name: "Forever Bouquet",
+        price: 79.99,
+        image: "/placeholder.svg?height=400&width=400",
+        category: "dried-flowers",
+      },
+    ],
   },
 ];
+
+const clients = [
+  {
+    name: "Vogue Wedding",
+    logo: "/placeholder.svg?height=80&width=160",
+  },
+  {
+    name: "Elegant Venues",
+    logo: "/placeholder.svg?height=80&width=160",
+  },
+  {
+    name: "Luxury Hotels",
+    logo: "/placeholder.svg?height=80&width=160",
+  },
+  {
+    name: "Wedding Magazine",
+    logo: "/placeholder.svg?height=80&width=160",
+  },
+  {
+    name: "Event Planners",
+    logo: "/placeholder.svg?height=80&width=160",
+  },
+  {
+    name: "Bridal Magazine",
+    logo: "/placeholder.svg?height=80&width=160",
+  },
+];
+
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [topProducts, setTopProducts] = useState(products);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -70,7 +261,7 @@ export default function HomePage() {
 
   return (
     <main className="bg-white min-h-screen">
-      {/* Carousel Section */}
+      {/* Carousel event Section */}
       <div className="relative w-full h-[60vh] overflow-hidden">
         {carouselImages.map((image, index) => (
           <div
@@ -101,10 +292,68 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Product section*/}
+      <div className="container px-4 md:px-6">
+        {categories.map((category) => (
+          <CategoryCarousel key={category.slug} category={category} />
+        ))}
+      </div>
+
+      {/* Decorative Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-rose-50/50 to-transparent dark:from-rose-950/10" />
+      <div className="flex flex-col items-center justify-center space-y-4 text-center pt-32">
+        {/* Decorative Flower Icon */}
+        <div className="text-rose-500 dark:text-rose-400">
+          <Flower2 className="h-8 w-8 animate-pulse" />
+        </div>
+
+        <div className="space-y-2">
+          <h2 className="font-serif text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">
+            Featured In
+          </h2>
+          <p className="mx-auto max-w-[700px] text-muted-foreground italic md:text-lg">
+            Proudly creating floral magic for these wonderful partners
+          </p>
+        </div>
+      </div>
+
+      {/* Curved Decorative Line */}
+      <div className="py-16 md:py-24 lg:py-32 relative overflow-hidden">
+        <div className="relative mt-8 mb-12">
+          <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-rose-200 dark:via-rose-800 to-transparent" />
+        </div>
+
+        <div className="mx-auto grid grid-cols-2 gap-8 md:grid-cols-3 lg:gap-12 [&_img]:mx-auto max-w-5xl">
+          {clients.map((client) => (
+            <div
+              key={client.name}
+              className="group relative flex items-center justify-center p-6 transition-all duration-300 hover:scale-105"
+            >
+              {/* Subtle Hover Effect Background */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-rose-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity dark:from-rose-950/20" />
+
+              <Image
+                src={client.logo || "/placeholder.svg"}
+                alt={`${client.name} logo`}
+                width={160}
+                height={80}
+                className="relative object-contain transition-all duration-300 group-hover:brightness-110"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Decorative Elements */}
+        <div className="mt-16 flex items-center justify-center gap-4">
+          <div className="h-px w-12 bg-gradient-to-r from-transparent to-rose-200 dark:to-rose-800" />
+          <Flower2 className="h-5 w-5 text-rose-400 rotate-45" />
+          <div className="h-px w-12 bg-gradient-to-l from-transparent to-rose-200 dark:to-rose-800" />
+        </div>
+      </div>
       {/* Store Information Section */}
       <div className="max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-        <div className="bg-pink-50 rounded-lg shadow-lg p-8">
-          <h2 className="text-3xl font-semibold text-center text-pink-600 mb-6">
+        <div className="bg-rose-50 rounded-lg shadow-lg p-8">
+          <h2 className="text-3xl font-semibold text-center text-rose-600 mb-6">
             Selamat Datang di Toko Bunga Kami
           </h2>
           <p className="text-center text-gray-700 mb-8">
@@ -115,7 +364,7 @@ export default function HomePage() {
             <div className="flex items-center justify-center space-x-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-pink-500"
+                className="h-6 w-6 text-rose-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -140,7 +389,7 @@ export default function HomePage() {
             <div className="flex items-center justify-center space-x-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-pink-500"
+                className="h-6 w-6 text-rose-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -157,7 +406,7 @@ export default function HomePage() {
             <div className="flex items-center justify-center space-x-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-pink-500"
+                className="h-6 w-6 text-rose-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -175,7 +424,7 @@ export default function HomePage() {
           <div className="mt-8 text-center">
             <a
               href="#"
-              className="inline-block px-6 py-3 text-lg font-semibold text-white bg-pink-500 rounded-full hover:bg-pink-600 transition duration-300 ease-in-out"
+              className="inline-block px-6 py-3 text-lg font-semibold text-white bg-rose-500 rounded-full hover:bg-rose-600 transition duration-300 ease-in-out"
             >
               Hubungi Kami
             </a>

@@ -5,6 +5,7 @@
 :root {
   --background: #ffffff;  /* Set background to white */
   --foreground: #171717;  /* Set foreground (text) to dark */
+  --radius: 8px; /* Define a default border radius */
 }
 
 body {
