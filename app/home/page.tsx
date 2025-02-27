@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Flower2 } from "lucide-react";
 import CategoryCarousel from "../components/Home/ProductCard";
+import Link from "next/link";
 interface Product {
   id: string;
   name: string;
@@ -300,7 +301,6 @@ export default function HomePage() {
       </div>
 
       {/* Decorative Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-rose-50/50 to-transparent dark:from-rose-950/10" />
       <div className="flex flex-col items-center justify-center space-y-4 text-center pt-32">
         {/* Decorative Flower Icon */}
         <div className="text-rose-500 dark:text-rose-400">
@@ -309,7 +309,7 @@ export default function HomePage() {
 
         <div className="space-y-2">
           <h2 className="font-serif text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">
-            Featured In
+            Our Clients
           </h2>
           <p className="mx-auto max-w-[700px] text-muted-foreground italic md:text-lg">
             Proudly creating floral magic for these wonderful partners
@@ -422,12 +422,12 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-8 text-center">
-            <a
-              href="#"
+            <Link
+              href="/"
               className="inline-block px-6 py-3 text-lg font-semibold text-white bg-rose-500 rounded-full hover:bg-rose-600 transition duration-300 ease-in-out"
             >
               Hubungi Kami
-            </a>
+            </Link>
           </div>
         </div>
       </div>

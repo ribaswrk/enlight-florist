@@ -4,7 +4,7 @@ export default function Corporate() {
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-blue-600 text-white text-center py-16">
+      <header className="bg-blue-400 text-white text-center py-16">
         <h1 className="text-4xl font-bold">Bermitra dengan Kami 🤝</h1>
         <p className="text-lg mt-2">
           Solusi terbaik untuk kerja sama bisnis yang sukses

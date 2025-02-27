@@ -91,7 +91,7 @@ export default function CategoryCarousel({
               <div key={slideIndex} className="flex gap-6 min-w-full px-3">
                 {slide.map((product) => (
                   <div key={product.id} className="flex-1 group">
-                    <div className="relative bg-white dark:bg-gray-950 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow h-full">
+                    <div className="relative bg-white dark:bg-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow h-full">
                       <div className="aspect-square relative overflow-hidden rounded-md mb-4">
                         <Image
                           src={product.image || "/placeholder.svg"}
@@ -155,19 +155,6 @@ export default function CategoryCarousel({
             />
           ))}
         </div>
-      </div>
-
-      {/* View All Button */}
-      <div className="mt-8 text-center">
-        <Link href={`/products/${category.slug}`}>
-          <Button
-            variant="outline"
-            size="lg"
-            className="bg-white dark:bg-gray-950 hover:bg-rose-50 dark:hover:bg-rose-950/50"
-          >
-            View All {category.name}
-          </Button>
-        </Link>
       </div>
     </div>
   );

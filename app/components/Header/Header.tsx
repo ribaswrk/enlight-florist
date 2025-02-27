@@ -12,7 +12,7 @@ const Header = () => {
         <div className="text-4xl font-serif font-extrabold text-center">
           <Link
             href="/"
-            className="text-pink-500 transition-colors duration-200"
+            className="text-rose-600 transition-colors duration-200"
           >
             Enlight Florist
           </Link>
@@ -24,7 +24,8 @@ const Header = () => {
             <li>
               <Link
                 href="/"
-                className={`text-lg font-medium text-black hover:text-gray-500 transition-colors duration-200`}
+                className={`text-lg font-medium text-black hover:text-gray-500
+                transition-colors duration-200`}
               >
                 Home
               </Link>
@@ -32,7 +33,8 @@ const Header = () => {
             <li>
               <Link
                 href="/about"
-                className={`text-lg font-medium text-black hover:text-gray-500 transition-colors duration-200`}
+                className={`text-lg font-medium text-black hover:text-gray-500
+                  transition-colors duration-200`}
               >
                 About
               </Link>
@@ -40,7 +42,8 @@ const Header = () => {
             <li>
               <Link
                 href="/categories"
-                className={`text-lg font-medium text-black hover:text-gray-500 transition-colors duration-200`}
+                className={`text-lg font-medium text-black hover:text-gray-500
+                  transition-colors duration-200`}
               >
                 Our Product
               </Link>
@@ -48,7 +51,8 @@ const Header = () => {
             <li>
               <Link
                 href="/special"
-                className={`text-lg font-medium text-black hover:text-gray-500 transition-colors duration-200`}
+                className={`text-lg font-medium text-black hover:text-gray-500
+                  transition-colors duration-200`}
               >
                 Special Request
               </Link>
@@ -56,7 +60,8 @@ const Header = () => {
             <li>
               <Link
                 href="/coorporate"
-                className={`text-lg font-medium text-black hover:text-gray-500 transition-colors duration-200`}
+                className={`text-lg font-medium text-black hover:text-gray-500
+                  transition-colors duration-200`}
               >
                 Cooporate Deals
               </Link>
