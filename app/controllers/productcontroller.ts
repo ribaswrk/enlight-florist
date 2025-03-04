@@ -21,7 +21,7 @@ export async function createProduct(data: {
 // ✅ Update a product
 export async function updateProduct(
   productid: number,
-  data: { name: string; price: number; categoryId: number; updateBy: string }
+  data: { name: string; price: string; categoryId: number; updateBy: string }
 ) {
   return await prisma.product.update({
     where: { productid },
