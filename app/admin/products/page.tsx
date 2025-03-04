@@ -67,6 +67,12 @@ export default function ProductsManagement() {
 		}
 	};
 
+	// Fungsi untuk memformat harga dengan konsisten
+	const formatPrice = (price: number) => {
+		// Gunakan format yang konsisten dengan titik sebagai pemisah ribuan
+		return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+	};
+
 	return (
 		<div className="p-6">
 			<div className="flex justify-between items-center mb-6">
@@ -119,7 +125,7 @@ export default function ProductsManagement() {
 								<td className="px-6 py-4 whitespace-nowrap">{product.id}</td>
 								<td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
 								<td className="px-6 py-4 whitespace-nowrap">
-									Rp {product.price.toLocaleString()}
+									Rp {formatPrice(product.price)}
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap">{product.stock}</td>
 								<td className="px-6 py-4 whitespace-nowrap">

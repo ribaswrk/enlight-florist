@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer";
+import LayoutWrapper from "./layoutWrapper";
 
 export const metadata: Metadata = {
 	title: "Enlight Florist",
@@ -16,9 +15,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body>
-				<Header />
-				<main>{children}</main>
-				<Footer />
+				<LayoutWrapper>{children}</LayoutWrapper>
 			</body>
 		</html>
 	);
