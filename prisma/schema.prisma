@@ -8,11 +8,31 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  uid      Int    @id @default(autoincrement())
+  uname    String @unique
+  password String
+}
+
+model Product {
+  productid  Int      @id @default(autoincrement())
+  category   Category @relation(fields: [categoryId], references: [categoryId])
+  categoryId Int
+  name       String
+  price      String
+  createdBy  String
+  createdAt  DateTime @default(now())
+  updateBy   String
+  updateAt   DateTime @default(now())
+}
+
+model Category {
+  categoryId Int       @id @default(autoincrement())
+  name       String
+  createdBy  String
+  createdAt  DateTime  @default(now())
+  updateBy   String
+  updateAt   DateTime  @default(now())
+  Product    Product[]
 }
 
 //Use this for migration :
