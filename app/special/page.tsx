@@ -2,7 +2,7 @@ import React from "react";
 
 export default function SpecialRequest() {
   return (
-    <div className="bg-gradient-to-b from-rose-500 to-rose-200 min-h-screen flex flex-col justify-center text-white">
+    <div className="bg-gradient-to-b from-rose-400 to-rose-200 min-h-screen flex flex-col justify-center text-white">
       <header className="text-center py-16">
         <h1 className="text-5xl font-bold mb-4">Buat Pesanan Bunga Spesial</h1>
         <p className="text-xl">
