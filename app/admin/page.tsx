@@ -1,10 +1,24 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function AdminDashboard() {
+  const { data: session, status } = useSession();
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Ganti dengan state management yang sebenarnya
+
+  useEffect(() => {
+    if (status === "loading") return; // Wait for session to load
+
+    if (!session || session.user?.role !== "admin") {
+      console.log("at admin", session);
+      router.push("/admin/login"); // Redirect non-admin users
+    }
+  }, [session, status, router]);
+
+  if (status === "loading") {
+    return <p>Loading...</p>; // Show loading indicator while checking session
+  }
 
   return (
     <div className="p-6">

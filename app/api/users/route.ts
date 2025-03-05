@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GetAllUsers, CreateUser } from "../../controllers/usercontroller";
+import {
+  GetAllUsers,
+  CreateUser,
+  LoginUser,
+} from "@/controllers/usercontroller";
 
 // ✅ GET: Fetch all users
 export async function GET() {
@@ -15,16 +19,17 @@ export async function GET() {
   }
 }
 
-// ✅ POST: Create a new product
+// ✅ POST: Create a new user
 export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const newUser = await CreateUser(body);
-    return NextResponse.json(newUser, { status: 201 });
-  } catch {
-    return NextResponse.json(
-      { error: "Failed to create user" },
-      { status: 500 }
-    );
-  }
+  const body = await req.json();
+  const newUser = await CreateUser(body);
+  console.log("new user return", newUser);
+  return newUser;
+}
+
+export async function PUT(req: NextRequest) {
+  const body = await req.json();
+  const loginResponse = await LoginUser(body);
+  console.log("🔍 Login Response:", loginResponse);
+  return loginResponse;
 }
