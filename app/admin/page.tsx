@@ -20,19 +20,19 @@ export default function AdminDashboard() {
           title="Produk"
           count="120"
           link="/admin/products"
-          description="Kelola produk bunga"
+          description="Total Produk bunga"
         />
         <DashboardCard
-          title="Pesanan"
-          count="25"
-          link="/admin/orders"
-          description="Lihat pesanan masuk"
+          title="Category"
+          count="7"
+          link="/admin/categories"
+          description="Total Kategory Produk"
         />
         <DashboardCard
-          title="Pelanggan"
-          count="350"
-          link="/admin/customers"
-          description="Data pelanggan"
+          title="Event"
+          count="3"
+          link="/admin/events"
+          description="Total Event"
         />
       </div>
     </div>

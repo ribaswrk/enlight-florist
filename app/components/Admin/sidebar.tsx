@@ -92,24 +92,17 @@ export default function AdminSidebar() {
 							isCollapsed={isCollapsed}
 						/>
 						<SidebarItem
-							href="/admin/orders"
+							href="/admin/categories"
 							icon={<ShoppingCart size={20} />}
-							title="Pesanan"
-							isActive={pathname.startsWith("/admin/orders")}
+							title="Kategori"
+							isActive={pathname.startsWith("/admin/categories")}
 							isCollapsed={isCollapsed}
 						/>
 						<SidebarItem
-							href="/admin/customers"
+							href="/admin/events"
 							icon={<Users size={20} />}
-							title="Pelanggan"
-							isActive={pathname.startsWith("/admin/customers")}
-							isCollapsed={isCollapsed}
-						/>
-						<SidebarItem
-							href="/admin/settings"
-							icon={<Settings size={20} />}
-							title="Pengaturan"
-							isActive={pathname.startsWith("/admin/settings")}
+							title="Events"
+							isActive={pathname.startsWith("/admin/events")}
 							isCollapsed={isCollapsed}
 						/>
 					</nav>

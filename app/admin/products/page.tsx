@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { PencilIcon, TrashIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 
 // Tipe data untuk produk
 type Product = {
@@ -79,9 +80,10 @@ export default function ProductsManagement() {
 				<h1 className="text-2xl font-bold">Manajemen Produk</h1>
 				<Link
 					href="/admin/products/add"
-					className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+					className="p-1.5 inline-flex items-center justify-center"
 				>
-					Tambah Produk
+					<PlusCircleIcon className="h-10 w-10" />
+					<span className="sr-only">Tambah Produk</span>
 				</Link>
 			</div>
 
@@ -131,18 +133,20 @@ export default function ProductsManagement() {
 								<td className="px-6 py-4 whitespace-nowrap">
 									{product.category}
 								</td>
-								<td className="px-6 py-4 whitespace-nowrap space-x-2">
+								<td className="px-6 py-4 whitespace-nowrap flex items-center space-x-2">
 									<Link
-										href={`/admin/products/edit/${product.id}`}
-										className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+										href={`/admin/categories/edit/${product.id}`}
+										className="p-1.5 inline-flex items-center justify-center"
 									>
-										Edit
+										<PencilIcon className="h-4 w-4" />
+										<span className="sr-only">Edit</span>
 									</Link>
 									<button
 										onClick={() => deleteProduct(product.id)}
-										className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+										className="p-1.5 inline-flex items-center justify-center"
 									>
-										Hapus
+										<TrashIcon className="h-4 w-4" />
+										<span className="sr-only">Delete</span>
 									</button>
 								</td>
 							</tr>
