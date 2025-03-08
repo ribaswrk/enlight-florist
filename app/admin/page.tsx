@@ -9,8 +9,8 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (status === "loading") return; // Wait for session to load
-
-    if (!session || session.user?.role !== "admin") {
+    console.log("at admin", session);
+    if (!session) {
       console.log("at admin", session);
       router.push("/admin/login"); // Redirect non-admin users
     }

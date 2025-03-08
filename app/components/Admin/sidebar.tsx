@@ -26,7 +26,7 @@ export default function AdminSidebar() {
   const toggleMobileSidebar = () => setIsMobileOpen(!isMobileOpen);
 
   const handleLogout = async () => {
-    await signOut({ callbackUrl: "/admin/login" }); // ✅ Redirects after logout
+    await signOut({ callbackUrl: "/admin/login" }); // ✅ Clears session & redirects
   };
 
   return (

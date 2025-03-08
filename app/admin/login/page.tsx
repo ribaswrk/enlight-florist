@@ -1,5 +1,5 @@
 "use client";
-import { useSession } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -7,16 +7,15 @@ const LoginPage = () => {
   const [uname, setUname] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { data: session, status } = useSession(); // ✅ Get session data
+  const { data: session, status } = useSession();
   const router = useRouter();
 
-  // ✅ If session exists, redirect to /admin
+  // ✅ Redirect if already logged in
   useEffect(() => {
     if (status === "authenticated") {
       router.push("/admin");
     }
   }, [status, router]);
-  console.log("at login", session);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,14 +30,20 @@ const LoginPage = () => {
     const data = await res.json();
 
     if (res.ok) {
-      document.cookie = `next-auth.session-token=${data.token}; path=/; Secure`; // ✅ Store token in cookies
-      router.push("/admin"); // Redirect after login
+      // ✅ Use NextAuth to sync the session
+      await signIn("credentials", {
+        redirect: false, // Prevent full page reload
+        uname,
+        password,
+        res,
+      });
+
+      router.push("/admin"); // ✅ Redirect after login
     } else {
       setError(data.error);
     }
   };
 
-  // ✅ Show loading while checking session
   if (status === "loading") {
     return <p className="text-center">Checking session...</p>;
   }

@@ -42,8 +42,9 @@ export async function LoginUser(data: { uname: string; password: string }) {
 
   console.log("✅ User authenticated successfully");
 
+  // ✅ Generate a NextAuth-compatible JWT
   const token = sign(
-    { user: { id: user.uid, role: "admin" } },
+    { id: user.uid, role: "admin" }, // ✅ Remove extra "user" object
     process.env.NEXTAUTH_SECRET!,
     {
       expiresIn: "1h",
@@ -52,21 +53,12 @@ export async function LoginUser(data: { uname: string; password: string }) {
 
   console.log("✅ Token generated:", token);
 
-  const response = NextResponse.json({
+  // ✅ Return the token, but don't set it manually in cookies
+  return NextResponse.json({
     message: "Login successful",
     user: { id: user.uid, uname: user.uname, role: "admin" },
     token,
   });
-
-  response.cookies.set("next-auth.session-token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    path: "/",
-  });
-
-  console.log("✅ Token set in cookies");
-  return response;
 }
 
 export async function GetAllUsers() {

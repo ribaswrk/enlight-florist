@@ -41,8 +41,8 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id; // ✅ Pastikan id tersimpan
-        token.role = user.role;
+        token.id = user.id; // ✅ Ensure user ID is saved
+        token.role = user.role; // ✅ Ensure user role is saved
       }
       console.log("Updated JWT Token:", token); // Debugging
       return token;
@@ -50,13 +50,12 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       console.log("Session Callback Token:", token); // Debugging
-      // Type assertion to ensure token.user exists
-      const user = token.user as { id?: string; role?: string } | undefined;
 
+      // ✅ Ensure session receives `id` and `role`
       session.user = {
         ...session.user, // Preserve default user properties
-        id: user?.id ?? null, // ✅ Ensure id is copied correctly
-        role: user?.role ?? null, // ✅ Ensure role is copied correctly
+        id: token.id ?? null,
+        role: token.role ?? null,
       };
 
       console.log("Updated Session:", session); // Debugging
