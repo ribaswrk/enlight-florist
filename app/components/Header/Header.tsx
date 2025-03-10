@@ -7,7 +7,7 @@ const Header = () => {
     <header
       className={`top-0 left-0 w-full z-50 shadow-md transition-all duration-500 translate-y-0 bg-white`}
     >
-      <div className="container mx-auto flex flex-col items-center px-6 py-4">
+      <div className="container mx-auto flex flex-col items-center px-6 py-7">
         {/* Logo */}
         <div className="text-4xl font-serif font-extrabold text-center">
           <Link

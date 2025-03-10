@@ -19,6 +19,7 @@ model Product {
   categoryId Int
   name       String
   price      String
+  stock      String
   createdBy  String
   createdAt  DateTime @default(now())
   updateBy   String

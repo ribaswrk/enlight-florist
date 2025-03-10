@@ -292,14 +292,16 @@ export default function HomePage() {
           ))}
         </div>
       </div>
-
       {/* Product section*/}
-      <div className="container px-4 md:px-6">
+
+      <div className="container px-4 md:px-6 pt-20">
+        <div className="flex text-rose-500 dark:text-rose-400 items-center justify-center text-center">
+          <Flower2 className="h-8 w-8 animate-pulse" />
+        </div>
         {categories.map((category) => (
           <CategoryCarousel key={category.slug} category={category} />
         ))}
       </div>
-
       {/* Decorative Background */}
       <div className="flex flex-col items-center justify-center space-y-4 text-center pt-32">
         {/* Decorative Flower Icon */}
@@ -316,7 +318,6 @@ export default function HomePage() {
           </p>
         </div>
       </div>
-
       {/* Curved Decorative Line */}
       <div className="py-16 md:py-24 lg:py-32 relative overflow-hidden">
         <div className="relative mt-8 mb-12">

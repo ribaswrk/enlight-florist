@@ -66,7 +66,7 @@ export default function CategoryCarousel({
   };
 
   return (
-    <div className="mb-24 last:mb-0 pt-32">
+    <div className="mb-24 last:mb-0 pt-12">
       {/* Category Title */}
       <div className="text-center mb-8 space-y-2">
         <h2 className="text-3xl font-serif font-medium tracking-tight">

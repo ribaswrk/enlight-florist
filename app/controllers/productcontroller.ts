@@ -2,15 +2,32 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// ✅ Fetch all products
 export async function getProducts() {
-  return await prisma.product.findMany();
+  const products = await prisma.product.findMany({
+    include: {
+      category: {
+        select: {
+          name: true, // ✅ Fetch category name instead of ID
+        },
+      },
+    },
+  });
+
+  // ✅ Transform the result to match your `productlist` interface
+  return products.map(({ productid, name, price, stock, category }) => ({
+    id: productid, // ✅ Rename `productid` to `id`
+    name,
+    price,
+    stock,
+    category: category.name, // ✅ Flatten category name
+  }));
 }
 
 // ✅ Create a new product
 export async function createProduct(data: {
   name: string;
   price: string;
+  stock: string;
   categoryId: number;
   createdBy: string;
   updateBy: string;
