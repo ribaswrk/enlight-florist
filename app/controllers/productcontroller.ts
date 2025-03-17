@@ -32,7 +32,13 @@ export async function createProduct(data: {
   createdBy: string;
   updateBy: string;
 }) {
-  return await prisma.product.create({ data });
+  return await prisma.product.create({
+    data: {
+      ...data,
+      createdAt: new Date(),
+      updateAt: new Date(),
+    },
+  });
 }
 
 // ✅ Update a product
@@ -42,7 +48,10 @@ export async function updateProduct(
 ) {
   return await prisma.product.update({
     where: { productid },
-    data,
+    data: {
+      ...data,
+      updateAt: new Date(), // ✅ Correct way to set the current timestamp
+    },
   });
 }
 

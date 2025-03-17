@@ -30,6 +30,29 @@ export async function GET() {
 // ✅ POST: Create a new category
 export async function POST(req: NextRequest) {
   try {
+    // ✅ Extract Bearer token manually
+    const authHeader = req.headers.get("authorization");
+    const tokenString = authHeader?.split(" ")[1]; // Get token after "Bearer "
+
+    console.log("Extracted Token:", tokenString); // Debugging
+
+    if (!tokenString) {
+      return NextResponse.json({ error: "No token provided" }, { status: 401 });
+    }
+
+    // ✅ Decode the token manually (since getToken won't work with Authorization header)
+    const token = await getToken({
+      req,
+      raw: true,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+
+    console.log("Decoded Token:", token); // Debugging
+
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
+    }
+
     const body = await req.json();
     const newcategory = await createcategory(body);
     return NextResponse.json(newcategory, { status: 201 });
@@ -45,18 +68,36 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     const { id, ...data } = await req.json();
-    const token = (await getToken({ req })) as UserToken | null; // ✅ Fix type
 
-    if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // ✅ Extract Bearer token manually
+    const authHeader = req.headers.get("authorization");
+    const tokenString = authHeader?.split(" ")[1]; // Get token after "Bearer "
+
+    console.log("Extracted Token:", tokenString); // Debugging
+
+    if (!tokenString) {
+      return NextResponse.json({ error: "No token provided" }, { status: 401 });
     }
 
-    data.updateBy = token.user.id; // ✅ Get authenticated user ID
+    // ✅ Decode the token manually (since getToken won't work with Authorization header)
+    const token = await getToken({
+      req,
+      raw: true,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
 
-    // ✅ Pass userId to createcategory
+    console.log("Decoded Token:", token); // Debugging
+
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
+    }
+
+    data.updateBy = token.id; // ✅ Attach user ID
+
     const updatedcategory = await updatecategory(Number(id), data);
     return NextResponse.json(updatedcategory);
-  } catch {
+  } catch (error) {
+    console.error("Update Error:", error);
     return NextResponse.json(
       { error: "Failed to update category" },
       { status: 500 }

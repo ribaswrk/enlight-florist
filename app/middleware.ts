@@ -15,7 +15,10 @@ export async function middleware(req: NextRequest) {
   // ✅ Protect API routes (POST, PUT, DELETE)
   if (isApiRoute && req.method !== "GET") {
     if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { error: "Unauthorized Middleware" },
+        { status: 401 }
+      );
     }
 
     // Attach user ID to headers

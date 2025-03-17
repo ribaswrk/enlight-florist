@@ -45,13 +45,30 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     const { id, ...data } = await req.json();
-    const token = (await getToken({ req })) as UserToken | null; // ✅ Fix type
+    // ✅ Extract Bearer token manually
+    const authHeader = req.headers.get("authorization");
+    const tokenString = authHeader?.split(" ")[1]; // Get token after "Bearer "
 
-    if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    console.log("Extracted Token:", tokenString); // Debugging
+
+    if (!tokenString) {
+      return NextResponse.json({ error: "No token provided" }, { status: 401 });
     }
 
-    data.updateBy = token.user.id; // ✅ Get authenticated user ID
+    // ✅ Decode the token manually (since getToken won't work with Authorization header)
+    const token = await getToken({
+      req,
+      raw: true,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+
+    console.log("Decoded Token:", token); // Debugging
+
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
+    }
+
+    data.updateBy = token.id; // ✅ Get authenticated user ID
 
     // ✅ Pass userId to createProduct
     const updatedProduct = await updateProduct(Number(id), data);
