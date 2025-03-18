@@ -261,7 +261,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="bg-white min-h-screen">
+    <main className="bg-customBg min-h-screen">
       {/* Carousel event Section */}
       <div className="relative w-full h-[60vh] overflow-hidden">
         {carouselImages.map((image, index) => (

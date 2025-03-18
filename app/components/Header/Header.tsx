@@ -5,7 +5,7 @@ import React from "react";
 const Header = () => {
   return (
     <header
-      className={`top-0 left-0 w-full z-50 shadow-md transition-all duration-500 translate-y-0 bg-white`}
+      className={`top-0 left-0 w-full z-50 shadow-md transition-all duration-500 translate-y-0 bg-customBg`}
     >
       <div className="container mx-auto flex flex-col items-center px-6 py-7">
         {/* Logo */}
