@@ -5,15 +5,17 @@ declare module "next-auth" {
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
+    accessToken?: string; // ✅ Add accessToken to session
     user: {
-      role: string | undefined | null;
-      id: string | undefined | null;
-    } & DefaultSession["user"];
+      id: string | null;
+      role: string | null;
+    };
   }
 
   interface User {
     id: string;
     role?: string;
+    accessToken?: string;
   }
 }
 
