@@ -14,9 +14,17 @@ interface UserToken {
   };
 }
 // ✅ GET: Fetch all products
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const products = await getProducts();
+    // ✅ Parse query parameters
+    const { searchParams } = new URL(req.url);
+    const categoryId = searchParams.get("categoryId");
+
+    // ✅ Convert categoryId to a number (or use undefined if not provided)
+    const products = await getProducts(
+      categoryId ? parseInt(categoryId, 10) : undefined
+    );
+
     return NextResponse.json(products);
   } catch (error) {
     console.error(error);

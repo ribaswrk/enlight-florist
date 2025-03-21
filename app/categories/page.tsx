@@ -15,47 +15,47 @@ export interface CategoryRes {
 }
 
 // Simulasi data produk
-const categories = [
-  {
-    id: 1,
-    categoryName: "Bouquet Bunga",
-    slug: "bouquetbunga",
-  },
-  {
-    id: 2,
-    categoryName: "Bouquet Uang",
-    slug: "bouquetuang",
-  },
-  {
-    id: 3,
-    imageUrl: "/placeholder.svg?height=300&width=400",
-    categoryName: "Papan Bunga",
-    slug: "papanbunga",
-  },
-  {
-    id: 4,
-    imageUrl: "/placeholder.svg?height=300&width=400",
-    categoryName: "Standing Flower",
-    slug: "standingflower",
-  },
-  {
-    id: 5,
-    imageUrl: "/placeholder.svg?height=300&width=400",
-    categoryName: "Balon",
-    slug: "balon",
-  },
-  {
-    id: 6,
-    imageUrl: "/placeholder.svg?height=300&width=400",
-    categoryName: "Box Bunga",
-    slug: "boxbunga",
-  },
-];
+// const categories = [
+//   {
+//     id: 1,
+//     categoryName: "Bouquet Bunga",
+//     slug: "bouquetbunga",
+//   },
+//   {
+//     id: 2,
+//     categoryName: "Bouquet Uang",
+//     slug: "bouquetuang",
+//   },
+//   {
+//     id: 3,
+//     imageUrl: "/placeholder.svg?height=300&width=400",
+//     categoryName: "Papan Bunga",
+//     slug: "papanbunga",
+//   },
+//   {
+//     id: 4,
+//     imageUrl: "/placeholder.svg?height=300&width=400",
+//     categoryName: "Standing Flower",
+//     slug: "standingflower",
+//   },
+//   {
+//     id: 5,
+//     imageUrl: "/placeholder.svg?height=300&width=400",
+//     categoryName: "Balon",
+//     slug: "balon",
+//   },
+//   {
+//     id: 6,
+//     imageUrl: "/placeholder.svg?height=300&width=400",
+//     categoryName: "Box Bunga",
+//     slug: "boxbunga",
+//   },
+// ];
 
 
   
 export default function CategoriesPage() {
-    const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
    
   useEffect(() => {
     const fetchCategory = async () => {
