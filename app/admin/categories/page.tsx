@@ -17,12 +17,13 @@ type Category = {
 export default function CategoriesManagement() {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [searchTerm, setSearchTerm] = useState("");
-  const [showDialog, setShowDialog] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [newCategory, setNewCategory] = useState("");
+	const [showDialog, setShowDialog] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const [categoryName, setCategoryName] = useState("");
+	const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 	const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
 	const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
-  const { data: session } = useSession();
+	const { data: session } = useSession();
 
 	// Filter kategori berdasarkan pencarian
 	const filteredCategories = categories.filter((category) =>
@@ -45,29 +46,28 @@ export default function CategoriesManagement() {
 		}
 	};
 
-  const saveCategory = async () => {
-		if (!newCategory.trim()) return;
+	const saveCategory = async () => {
+		if (!categoryName.trim()) return;
 		setLoading(true);
-
 		try {
-			// ✅ Ambil token dari session
-			const token = session;
-
+			const token = session?.accessToken;
 			if (!token) throw new Error("No token available");
-
+			const method = editingCategory ? "PUT" : "POST";
+			const body = editingCategory
+				? JSON.stringify({ id: editingCategory.categoryId, name: categoryName })
+				: JSON.stringify({ name: categoryName });
 			const res = await fetch("/api/category", {
-				method: "POST",
+				method,
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`, // ✅ Tambahkan token ke header
+					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({ name: newCategory }),
+				body,
 			});
-
 			if (!res.ok) throw new Error("Failed to save category");
-
-			setNewCategory("");
+			setCategoryName("");
 			setShowDialog(false);
+			setEditingCategory(null);
 			fetchCategory();
 		} catch (error) {
 			console.error("Error saving category:", error);
@@ -101,6 +101,12 @@ export default function CategoriesManagement() {
 		}
 	};
 
+	const openDialog = (category?: Category) => {
+		setEditingCategory(category || null);
+		setCategoryName(category?.name || "");
+		setShowDialog(true);
+	};
+
 	const confirmDelete = (categoryId: number) => {
 		setSelectedCategoryId(categoryId);
 		setShowConfirmDialog(true);
@@ -115,7 +121,7 @@ export default function CategoriesManagement() {
 			<div className="flex justify-between items-center mb-6">
 				<h1 className="text-2xl font-bold">Manajemen Kategori</h1>
 				<button
-					onClick={() => setShowDialog(true)}
+					onClick={() => openDialog()}
 					className="p-1.5 inline-flex items-center"
 				>
 					<PlusCircleIcon className="h-10 w-10" />
@@ -156,13 +162,9 @@ export default function CategoriesManagement() {
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap">{category.name}</td>
 								<td className="px-6 py-4 whitespace-nowrap flex items-center space-x-2">
-									<Link
-										href={`/admin/categories/edit/${category.categoryId}`}
-										className="p-1.5inline-flex items-center justify-center"
-									>
+									<button onClick={() => openDialog(category)}>
 										<PencilIcon className="h-4 w-4" />
-										<span className="sr-only">Edit</span>
-									</Link>
+									</button>
 									<button
 										onClick={() => confirmDelete(category.categoryId)}
 										className="p-1.5 inline-flex items-center justify-center"
@@ -202,13 +204,15 @@ export default function CategoriesManagement() {
 			{showDialog && (
 				<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
 					<div className="bg-white p-6 rounded-lg shadow-lg">
-						<h2 className="text-lg font-bold mb-4">Tambah Kategori</h2>
+						<h2 className="text-lg font-bold mb-4">
+							{editingCategory ? "Edit" : "Tambah"} Kategori
+						</h2>
 						<input
 							type="text"
 							placeholder="Nama kategori"
 							className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
-							value={newCategory}
-							onChange={(e) => setNewCategory(e.target.value)}
+							value={categoryName}
+							onChange={(e) => setCategoryName(e.target.value)}
 						/>
 						<div className="flex justify-end space-x-2">
 							<button
