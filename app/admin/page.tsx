@@ -10,6 +10,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (status === "loading") return; // Wait for session to load
     console.log("at admin", session);
+    console.log("✅ Token from session:", session?.accessToken);
     if (!session) {
       console.log("at admin", session);
       router.push("/admin/login"); // Redirect non-admin users

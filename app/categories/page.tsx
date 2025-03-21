@@ -16,7 +16,6 @@ export interface CategoryRes {
 
 export default function CategoriesPage() {
 	const [categories, setCategories] = useState<Category[]>([]);
-
 	const fetchCategory = async () => {
 		try {
 			const res = await fetch("/api/category", {

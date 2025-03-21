@@ -2,8 +2,13 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function getProducts() {
+export async function getProducts(catId?: number) {
+  const whereCondition = catId
+    ? { categoryId: catId } // ✅ Filter based on category ID
+    : undefined; // ✅ Avoid passing an empty object
+
   const products = await prisma.product.findMany({
+    where: whereCondition, // ✅ Only applies the filter when categoryId is provided
     include: {
       category: {
         select: {
@@ -13,7 +18,7 @@ export async function getProducts() {
     },
   });
 
-  // ✅ Transform the result to match your `productlist` interface
+  // ✅ Transform the result to match your expected structure
   return products.map(({ productid, name, price, stock, category }) => ({
     id: productid, // ✅ Rename `productid` to `id`
     name,
@@ -22,7 +27,6 @@ export async function getProducts() {
     category: category.name, // ✅ Flatten category name
   }));
 }
-
 // ✅ Create a new product
 export async function createProduct(data: {
   name: string;

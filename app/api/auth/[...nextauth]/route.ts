@@ -32,47 +32,47 @@ export const authOptions: NextAuthOptions = {
 
         const isValid = await compare(credentials.password, user.password);
         if (!isValid) throw new Error("Invalid credentials");
-        console.log("User in authorize():", user);
 
-        return { id: String(user.uid), name: user.uname, role: "admin" };
+        console.log("✅ User authenticated successfully");
+
+        // ✅ Generate JWT token separately (but don’t return it in user)
+        const accessToken = jwt.sign(
+          { id: user.uid, role: "admin" },
+          process.env.NEXTAUTH_SECRET!,
+          { expiresIn: "1h" }
+        );
+
+        console.log("✅ Generated Token:", accessToken);
+
+        // ✅ Return only NextAuth-compatible user object
+        return {
+          id: String(user.uid),
+          name: user.uname,
+          role: "admin",
+          accessToken,
+        };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id; // ✅ Ensure user ID is saved
-        token.role = user.role; // ✅ Ensure user role is saved
+        token.id = user.id;
+        token.role = user.role;
+        token.accessToken = user.accessToken; // ✅ Store accessToken properly
       }
-      console.log("Updated JWT Token:", token); // Debugging
       return token;
     },
 
     async session({ session, token }) {
-      console.log("Session Callback Token:", token); // Debugging
-
-      // ✅ Ensure session receives `id` and `role`
       session.user = {
-        ...session.user, // Preserve default user properties
+        ...session.user,
         id: token.id ?? null,
         role: token.role ?? null,
       };
 
-      console.log("Updated Session:", session); // Debugging
+      session.accessToken = token.accessToken as string | undefined; // ✅ Explicitly cast accessToken
       return session;
-    },
-  },
-
-  jwt: {
-    encode: async ({ secret, token }) => {
-      return jwt.sign(token as object, secret, { algorithm: "HS256" });
-    },
-    decode: async ({ secret, token }) => {
-      try {
-        return jwt.verify(token as string, secret) as JWT; // Pastikan tipe JWT dikembalikan
-      } catch {
-        return null; // Jika terjadi error saat decode, kembalikan null
-      }
     },
   },
 };
