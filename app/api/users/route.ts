@@ -21,10 +21,23 @@ export async function GET() {
 
 // ✅ POST: Create a new user
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const newUser = await CreateUser(body);
-  console.log("new user return", newUser);
-  return newUser;
+  try {
+		const body = await req.json();
+
+		if (!body) {
+			return NextResponse.json(
+				{ error: "Invalid request body" },
+				{ status: 400 }
+			);
+		}
+
+		return await CreateUser(body);
+	} catch (error) {
+		return NextResponse.json(
+			{ error: "Failed to process request", details: error.message },
+			{ status: 500 }
+		);
+	}
 }
 
 export async function PUT(req: NextRequest) {
