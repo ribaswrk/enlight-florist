@@ -8,6 +8,7 @@ declare module "next-auth" {
     accessToken?: string; // ✅ Add accessToken to session
     user: {
       id: string | null;
+      name: string | null;
       role: string | null;
     };
   }

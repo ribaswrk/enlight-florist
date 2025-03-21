@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
 
         // ✅ Generate JWT token separately (but don’t return it in user)
         const accessToken = jwt.sign(
-          { id: user.uid, role: "admin" },
+          { id: user.uid, role: "admin", name: user.uname },
           process.env.NEXTAUTH_SECRET!,
           { expiresIn: "1h" }
         );
@@ -58,6 +58,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.name = user.name;
         token.role = user.role;
         token.accessToken = user.accessToken; // ✅ Store accessToken properly
       }
@@ -68,6 +69,7 @@ export const authOptions: NextAuthOptions = {
       session.user = {
         ...session.user,
         id: token.id ?? null,
+        name: token.name ?? null,
         role: token.role ?? null,
       };
 
