@@ -2,158 +2,322 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  PencilIcon,
-  TrashIcon,
-  PlusCircleIcon,
+	PencilIcon,
+	TrashIcon,
+	PlusCircleIcon,
 } from "@heroicons/react/24/outline";
+import { useSession } from "next-auth/react";
 
 // Tipe data untuk produk
-interface productlist {
-  id: number;
-  name: string;
-  price: string;
-  stock: number;
-  category: string;
-}
+type Product = {
+	productId: number;
+	name: string;
+	categoryId: number;
+	price: number;
+	stock: number;
+};
+
+type Category = {
+	categoryId: number;
+	name: string;
+};
 
 export default function ProductsManagement() {
-  // Data produk contoh (ganti dengan data sebenarnya dari API/database)
-  const [products, setProducts] = useState<productlist[]>([]);
+	// Data produk contoh (ganti dengan data sebenarnya dari API/database)
+	const [products, setProducts] = useState<Product[]>([]);
+	const [categories, setCategories] = useState<Category[]>([]);
+	const [searchTerm, setSearchTerm] = useState("");
+	const [showDialog, setShowDialog] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const [productName, setProductName] = useState("");
+	const [productStock, setProductStock] = useState<number | string>("");
+	const [productPrice, setProductPrice] = useState<number | string>("");
+	const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+	const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+	const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+	const [selectedProductId, setSelectedProductId] = useState<number>(0);
+	const { data: session } = useSession();
 
-  const [searchTerm, setSearchTerm] = useState("");
+	// Filter produk berdasarkan pencarian
+	const filteredProducts = products.filter((product) =>
+		product.name.toLowerCase().includes(searchTerm.toLowerCase())
+	);
 
-  // Filter produk berdasarkan pencarian
-  const filteredProducts = products!.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+	const fetchProducts = async () => {
+		try {
+			const res = await fetch("/api/protected/products", {
+				method: "GET",
+				headers: { "Content-Type": "application/json" },
+			});
 
-  // Fungsi untuk menghapus produk
-  const deleteProduct = async (id: number) => {
-    if (!window.confirm("Apakah Anda yakin ingin menghapus produk ini?"))
-      return;
+			if (!res.ok) throw new Error("Failed to fetch products");
 
-    try {
-      const res = await fetch(`/api/protected/products/${id}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
+			const data = await res.json();
+			setProducts(data);
+		} catch (error) {
+			console.error("Error fetching products:", error);
+		}
+	};
 
-      if (!res.ok) throw new Error("Failed to delete product");
+	const fetchCategories = async () => {
+		try {
+			const res = await fetch("/api/protected/category", {
+				method: "GET",
+				headers: { "Content-Type": "application/json" },
+			});
 
-      setProducts((prev) => prev?.filter((product) => product.id !== id));
-    } catch (error) {
-      console.error("Error deleting product:", error);
-    }
-  };
+			if (!res.ok) throw new Error("Failed to fetch categories");
 
-  // Fungsi untuk memformat harga dengan konsisten
-  const formatPrice = (price: string) => {
-    // Gunakan format yang konsisten dengan titik sebagai pemisah ribuan
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  };
+			const data = await res.json();
+			setCategories(data);
+		} catch (error) {
+			console.error("Error fetching categories:", error);
+		}
+	};
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch("/api/protected/products", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
+	const saveProduct = async () => {
+		if (!productName.trim() || !selectedCategory || productPrice === "") return;
+		setLoading(true);
+		try {
+			const token = session?.accessToken;
+			if (!token) throw new Error("No token available");
 
-        if (!res.ok) throw new Error("Failed to fetch products");
+			const method = editingProduct ? "PUT" : "POST";
+			const body = editingProduct
+				? JSON.stringify({
+						id: editingProduct.productId,
+						name: productName,
+						categoryId: selectedCategory,
+						price: Number(productPrice),
+						stock: Number(productStock),
+				  })
+				: JSON.stringify({
+						name: productName,
+						categoryId: selectedCategory,
+						price: Number(productPrice),
+						stock: Number(productStock),
+				  });
 
-        const data = await res.json();
-        setProducts(data); // ✅ Store actual data, not a promise
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
+			const res = await fetch("/api/protected/products", {
+				method,
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body,
+			});
 
-    fetchProducts();
-  }, []);
+			if (!res.ok) throw new Error("Failed to save product");
 
-  return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Manajemen Produk</h1>
-        <Link
-          href="/admin/products/add"
-          className="p-1.5 inline-flex items-center justify-center"
-        >
-          <PlusCircleIcon className="h-10 w-10" />
-          <span className="sr-only">Tambah Produk</span>
-        </Link>
-      </div>
+			setProductName("");
+			setProductPrice("");
+      setProductStock("");
+			setSelectedCategory(null);
+			setShowDialog(false);
+			setEditingProduct(null);
+			fetchProducts();
+		} catch (error) {
+			console.error("Error saving product:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
-      <div className="mb-6">
-        <input
-          type="text"
-          placeholder="Cari produk..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-md"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+	const deleteProduct = async () => {
+		if (!selectedProductId) return;
+		try {
+			const res = await fetch("/api/protected/products", {
+				method: "DELETE",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ id: selectedProductId }),
+			});
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                ID
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Nama Produk
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Harga
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Stok
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Kategori
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Aksi
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {filteredProducts.map((product) => (
-              <tr key={product.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">{product.id}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  Rp {formatPrice(product.price)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">{product.stock}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {product.category}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap flex items-center space-x-2">
-                  <Link
-                    href={`/admin/categories/edit/${product.id}`}
-                    className="p-1.5 inline-flex items-center justify-center"
-                  >
-                    <PencilIcon className="h-4 w-4" />
-                    <span className="sr-only">Edit</span>
-                  </Link>
-                  <button
-                    onClick={() => deleteProduct(product.id)}
-                    className="p-1.5 inline-flex items-center justify-center"
-                  >
-                    <TrashIcon className="h-4 w-4" />
-                    <span className="sr-only">Delete</span>
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+			if (!res.ok) throw new Error("Failed to delete product");
+
+			fetchProducts();
+		} catch (error) {
+			console.error("Error deleting product:", error);
+		} finally {
+			setShowConfirmDialog(false);
+			setSelectedProductId(0);
+		}
+	};
+
+	const openDialog = (product?: Product) => {
+		setEditingProduct(product || null);
+		setProductName(product?.name || "");
+		setProductPrice(product?.price || "");
+		setSelectedCategory(product?.categoryId || null);
+		setShowDialog(true);
+	};
+
+	const confirmDelete = (productId: number) => {
+		setSelectedProductId(productId);
+		setShowConfirmDialog(true);
+	};
+
+	// Fungsi untuk memformat harga dengan konsisten
+	const formatPrice = (price: string) => {
+		// Gunakan format yang konsisten dengan titik sebagai pemisah ribuan
+		return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+	};
+
+	useEffect(() => {
+		fetchProducts();
+		fetchCategories();
+	}, []);
+
+	return (
+		<div className="p-6">
+			<div className="flex justify-between items-center mb-6">
+				<h1 className="text-2xl font-bold">Manajemen Produk</h1>
+				<button
+					onClick={() => openDialog()}
+					className="p-1.5 inline-flex items-center"
+				>
+					<PlusCircleIcon className="h-10 w-10" />
+					<span className="sr-only">Tambah Produk</span>
+				</button>
+			</div>
+
+			<div className="mb-6">
+				<input
+					type="text"
+					placeholder="Cari produk..."
+					className="w-full px-4 py-2 border border-gray-300 rounded-md"
+					value={searchTerm}
+					onChange={(e) => setSearchTerm(e.target.value)}
+				/>
+			</div>
+			<div className="overflow-x-auto">
+				<table className="min-w-full bg-white border border-gray-200">
+					<thead>
+						<tr className="bg-gray-100">
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								ID
+							</th>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Nama Produk
+							</th>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Kategori
+							</th>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Harga
+							</th>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Stok
+							</th>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Aksi
+							</th>
+						</tr>
+					</thead>
+					<tbody className="divide-y divide-gray-200">
+						{filteredProducts.map((product) => (
+							<tr key={product.productId} className="hover:bg-gray-50">
+								<td className="px-6 py-4">{product.productId}</td>
+								<td className="px-6 py-4">{product.name}</td>
+								<td className="px-6 py-4">
+									{categories.find((c) => c.categoryId === product.categoryId)
+										?.name || "Unknown"}
+								</td>
+								<td className="px-6 py-4">{product.price}</td>
+								<td className="px-6 py-4">{product.stock}</td>
+								<td className="px-6 py-4 flex items-center space-x-2">
+									<button onClick={() => openDialog(product)}>
+										<PencilIcon className="h-4 w-4" />
+									</button>
+									<button onClick={() => confirmDelete(product.productId)}>
+										<TrashIcon className="h-4 w-4" />
+									</button>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+			{showConfirmDialog && (
+				<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+					<div className="bg-white p-6 rounded-lg shadow-lg">
+						<h2 className="text-lg font-bold mb-4">Hapus Produk</h2>
+						<p>Apakah Anda yakin ingin menghapus Produk ini?</p>
+						<div className="flex justify-end mt-4 space-x-2">
+							<button
+								onClick={() => setShowConfirmDialog(false)}
+								className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+							>
+								Batal
+							</button>
+							<button
+								onClick={deleteProduct}
+								className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+							>
+								Hapus
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
+			{showDialog && (
+				<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+					<div className="bg-white p-6 rounded-lg shadow-lg w-96">
+						<h2 className="text-lg font-bold mb-4">
+							{editingProduct ? "Edit" : "Tambah"} Produk
+						</h2>
+
+						{/* Nama Produk */}
+						<input
+							type="text"
+							placeholder="Nama produk"
+							className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
+							value={productName}
+							onChange={(e) => setProductName(e.target.value)}
+						/>
+
+						{/* Harga */}
+						<input
+							type="number"
+							placeholder="Harga produk"
+							className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
+							value={productPrice}
+							onChange={(e) => setProductPrice(e.target.value)}
+						/>
+
+						{/* Stok */}
+						<input
+							type="number"
+							placeholder="Stok produk"
+							className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
+							value={productStock}
+							onChange={(e) => setProductStock(e.target.value)}
+						/>
+
+						{/* Kategori */}
+						<select
+							className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
+							value={selectedCategory || ""}
+							onChange={(e) => setSelectedCategory(Number(e.target.value))}
+						>
+							<option value="">Pilih Kategori</option>
+							{categories.map((category) => (
+								<option key={category.categoryId} value={category.categoryId}>
+									{category.name}
+								</option>
+							))}
+						</select>
+
+						{/* Tombol Simpan */}
+						<button
+							onClick={saveProduct}
+							disabled={loading}
+							className="w-full bg-blue-500 text-white py-2 rounded-md"
+						>
+							{loading ? "Menyimpan..." : "Simpan"}
+						</button>
+					</div>
+				</div>
+			)}
+		</div>
+	);
 }
