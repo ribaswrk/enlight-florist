@@ -4,7 +4,7 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-} from "../../controllers/productcontroller";
+} from "../../../controllers/productcontroller";
 import jwt from "jsonwebtoken";
 
 interface UserToken {

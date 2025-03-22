@@ -21,7 +21,7 @@ const LoginPage = () => {
     e.preventDefault();
     setError("");
 
-    const res = await fetch("/api/users", {
+    const res = await fetch("/api/protected/users", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ uname, password }),
@@ -38,6 +38,7 @@ const LoginPage = () => {
         res,
       });
 
+      console.log("status", status);
       router.push("/admin"); // ✅ Redirect after login
     } else {
       setError(data.error);

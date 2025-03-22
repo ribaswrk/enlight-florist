@@ -2,8 +2,19 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
-  console.log("MIDDDLWEEE");
   const token = await getToken({ req });
+
+  // ✅ Login Access
+  const isLoginRoute = req.nextUrl.pathname.startsWith("/api/protected/users");
+
+  if (
+    isLoginRoute &&
+    req.nextUrl.pathname === "/api/protected/users" &&
+    req.method === "PUT"
+  ) {
+    console.log("MIDDDLWEEE");
+    return NextResponse.next();
+  }
 
   // ✅ Protect API routes (POST, PUT, DELETE)
   if (req.method !== "GET") {
@@ -15,7 +26,7 @@ export async function middleware(req: NextRequest) {
     }
     const currentTime = Math.floor(Date.now() / 1000); // Convert to seconds
     console.log("current time", currentTime);
-    if (token.exp && Number(token.exp) > currentTime) {
+    if (token.exp && Number(token.exp) < currentTime) {
       return NextResponse.json({ error: "Session expired" }, { status: 401 });
     }
 
@@ -41,7 +52,8 @@ export async function middleware(req: NextRequest) {
     }
     const currentTime = Math.floor(Date.now() / 1000); // Convert to seconds
     console.log("current time", currentTime);
-    if (token.exp && Number(token.exp) > currentTime) {
+    if (token.exp && Number(token.exp) < currentTime) {
+      console.log("Unauthorized access to admin, redirecting..."); // 🔍 Debuggingw
       return NextResponse.redirect(new URL("/admin/login", req.url));
     }
   }
@@ -51,5 +63,5 @@ export async function middleware(req: NextRequest) {
 
 // Configure which paths the middleware runs on
 export const config = {
-  matcher: ["/admin/:path*", "/api/:path*"],
+  matcher: ["/admin/:path*", "/api/protected/:path*"],
 };

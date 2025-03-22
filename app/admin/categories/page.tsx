@@ -31,7 +31,7 @@ export default function CategoriesManagement() {
 
   const fetchCategory = async () => {
     try {
-      const res = await fetch("/api/category", {
+      const res = await fetch("/api/protected/category", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -55,7 +55,7 @@ export default function CategoriesManagement() {
       const body = editingCategory
         ? JSON.stringify({ id: editingCategory.categoryId, name: categoryName })
         : JSON.stringify({ name: categoryName });
-      const res = await fetch("/api/category", {
+      const res = await fetch("/api/protected/category", {
         method,
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +79,7 @@ export default function CategoriesManagement() {
   const deleteCategory = async () => {
     if (!selectedCategoryId) return;
     try {
-      const res = await fetch("/api/category", {
+      const res = await fetch("/api/protected/category", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: selectedCategoryId }),

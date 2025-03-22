@@ -35,7 +35,7 @@ export default function ProductsManagement() {
       return;
 
     try {
-      const res = await fetch(`/api/products/${id}`, {
+      const res = await fetch(`/api/protected/products/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
@@ -57,7 +57,7 @@ export default function ProductsManagement() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("/api/products", {
+        const res = await fetch("/api/protected/products", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });

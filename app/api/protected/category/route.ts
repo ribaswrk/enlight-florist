@@ -4,7 +4,7 @@ import {
   createcategory,
   updatecategory,
   deletecategory,
-} from "../../controllers/categorycontroller";
+} from "../../../controllers/categorycontroller";
 import jwt from "jsonwebtoken";
 
 interface UserToken {

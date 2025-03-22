@@ -39,8 +39,8 @@ interface Product {
 async function getProducts(slug: string): Promise<Product[]> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"; // ✅ Adjust for deployment
   const url = slug
-    ? `${baseUrl}/api/products?categoryId=${encodeURIComponent(slug)}`
-    : `${baseUrl}/api/products`;
+    ? `${baseUrl}/api/protected/products?categoryId=${encodeURIComponent(slug)}`
+    : `${baseUrl}/api/protected/products`;
 
   const res = await fetch(url, {
     method: "GET",
