@@ -41,33 +41,48 @@ export default async function CategoryPage({
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center capitalize">
-        {products[0].category} Products
-      </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map((product) => (
-          <Link href={"/productdetail"}>
-            <div
-              key={product.id}
-              className="border rounded-lg overflow-hidden shadow-md"
-            >
-              <div className="relative aspect-square">
-                <Image
-                  src={product.image || "/placeholder.svg"}
-                  alt={product.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h2 className="text-lg font-semibold">{product.name}</h2>
-                <p className="text-gray-600">${product.price}</p>
-              </div>
-            </div>
-          </Link>
-        ))}
+      {/* Back Button */}
+      <div className="mb-4">
+        <Link href="/categories">
+          <button className="flex items-center text-black-500 hover:underline">
+            ← Back to Categories
+          </button>
+        </Link>
       </div>
+
+      {products && products.length > 0 ? (
+        <>
+          <h1 className="text-3xl font-bold mb-8 text-center capitalize">
+            {products[0].category} Products
+          </h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <Link href={"/productdetail"}>
+                <div
+                  key={product.id}
+                  className="border rounded-lg overflow-hidden shadow-md"
+                >
+                  <div className="relative aspect-square">
+                    <Image
+                      src={product.image || "/placeholder.svg"}
+                      alt={product.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h2 className="text-lg font-semibold">{product.name}</h2>
+                    <p className="text-gray-600">${product.price}</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="text-center text-gray-500">This category is empty</div>
+      )}
     </div>
   );
 }
