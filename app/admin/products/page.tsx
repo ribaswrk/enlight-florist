@@ -10,9 +10,9 @@ import { useSession } from "next-auth/react";
 
 // Tipe data untuk produk
 type Product = {
-	productId: number;
+	id: number;
 	name: string;
-	categoryId: number;
+	category: string;
 	price: number;
 	stock: number;
 };
@@ -32,7 +32,10 @@ export default function ProductsManagement() {
 	const [productName, setProductName] = useState("");
 	const [productStock, setProductStock] = useState<number | string>("");
 	const [productPrice, setProductPrice] = useState<number | string>("");
-	const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+	const [selectedCategory, setSelectedCategory] = useState<string>("");
+	const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+		null
+	);
 	const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 	const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 	const [selectedProductId, setSelectedProductId] = useState<number>(0);
@@ -85,15 +88,15 @@ export default function ProductsManagement() {
 			const method = editingProduct ? "PUT" : "POST";
 			const body = editingProduct
 				? JSON.stringify({
-						id: editingProduct.productId,
+						id: editingProduct.id,
 						name: productName,
-						categoryId: selectedCategory,
+						categoryId: selectedCategoryId,
 						price: Number(productPrice),
 						stock: Number(productStock),
 				  })
 				: JSON.stringify({
 						name: productName,
-						categoryId: selectedCategory,
+						categoryId: selectedCategoryId,
 						price: Number(productPrice),
 						stock: Number(productStock),
 				  });
@@ -111,8 +114,9 @@ export default function ProductsManagement() {
 
 			setProductName("");
 			setProductPrice("");
-      setProductStock("");
-			setSelectedCategory(null);
+			setProductStock("");
+			setSelectedCategory("");
+			setSelectedCategoryId(null);
 			setShowDialog(false);
 			setEditingProduct(null);
 			fetchProducts();
@@ -144,10 +148,15 @@ export default function ProductsManagement() {
 	};
 
 	const openDialog = (product?: Product) => {
+		const matchedCategory = categories.find(
+			(cat) => cat.name === product?.category
+		);
 		setEditingProduct(product || null);
 		setProductName(product?.name || "");
 		setProductPrice(product?.price || "");
-		setSelectedCategory(product?.categoryId || null);
+    setProductStock(product?.stock || "");
+		setSelectedCategory(product?.category || "");
+		setSelectedCategoryId(matchedCategory?.categoryId || null);
 		setShowDialog(true);
 	};
 
@@ -215,20 +224,17 @@ export default function ProductsManagement() {
 					</thead>
 					<tbody className="divide-y divide-gray-200">
 						{filteredProducts.map((product) => (
-							<tr key={product.productId} className="hover:bg-gray-50">
-								<td className="px-6 py-4">{product.productId}</td>
+							<tr key={product.id} className="hover:bg-gray-50">
+								<td className="px-6 py-4">{product.id}</td>
 								<td className="px-6 py-4">{product.name}</td>
-								<td className="px-6 py-4">
-									{categories.find((c) => c.categoryId === product.categoryId)
-										?.name || "Unknown"}
-								</td>
+								<td className="px-6 py-4">{product.category}</td>
 								<td className="px-6 py-4">{product.price}</td>
 								<td className="px-6 py-4">{product.stock}</td>
 								<td className="px-6 py-4 flex items-center space-x-2">
 									<button onClick={() => openDialog(product)}>
 										<PencilIcon className="h-4 w-4" />
 									</button>
-									<button onClick={() => confirmDelete(product.productId)}>
+									<button onClick={() => confirmDelete(product.id)}>
 										<TrashIcon className="h-4 w-4" />
 									</button>
 								</td>
@@ -296,8 +302,8 @@ export default function ProductsManagement() {
 						{/* Kategori */}
 						<select
 							className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
-							value={selectedCategory || ""}
-							onChange={(e) => setSelectedCategory(Number(e.target.value))}
+							value={selectedCategoryId || 0}
+							onChange={(e) => setSelectedCategoryId(Number(e.target.value))}
 						>
 							<option value="">Pilih Kategori</option>
 							{categories.map((category) => (
