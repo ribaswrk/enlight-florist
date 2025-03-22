@@ -2,23 +2,21 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
+  console.log("MIDDDLWEEE");
   const token = await getToken({ req });
-  console.log("Middleware Token:", token); // 🔍 Debugging
-
-  const isApiRoute = req.nextUrl.pathname.startsWith("/api");
-
-  // ✅ Public Access
-  if (!isApiRoute && req.nextUrl.pathname === "/") {
-    return NextResponse.next();
-  }
 
   // ✅ Protect API routes (POST, PUT, DELETE)
-  if (isApiRoute && req.method !== "GET") {
+  if (req.method !== "GET") {
     if (!token) {
       return NextResponse.json(
         { error: "Unauthorized Middleware" },
         { status: 401 }
       );
+    }
+    const currentTime = Math.floor(Date.now() / 1000); // Convert to seconds
+    console.log("current time", currentTime);
+    if (token.exp && Number(token.exp) > currentTime) {
+      return NextResponse.json({ error: "Session expired" }, { status: 401 });
     }
 
     // Attach user ID to headers
@@ -39,6 +37,11 @@ export async function middleware(req: NextRequest) {
 
     if (!token || token.role !== "admin") {
       console.log("Unauthorized access to admin, redirecting..."); // 🔍 Debugging
+      return NextResponse.redirect(new URL("/admin/login", req.url));
+    }
+    const currentTime = Math.floor(Date.now() / 1000); // Convert to seconds
+    console.log("current time", currentTime);
+    if (token.exp && Number(token.exp) > currentTime) {
       return NextResponse.redirect(new URL("/admin/login", req.url));
     }
   }

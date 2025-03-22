@@ -5,7 +5,6 @@ import {
   updatecategory,
   deletecategory,
 } from "../../controllers/categorycontroller";
-import { getToken } from "next-auth/jwt";
 import jwt from "jsonwebtoken";
 
 interface UserToken {
@@ -59,14 +58,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
     }
 
-    if (!decodedToken) {
-      return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
-    }
-
     const body = await req.json();
     body.updateBy = decodedToken.name;
     body.createdBy = decodedToken.name;
-    console.log(body);
+
     const newcategory = await createcategory(body);
     return NextResponse.json(newcategory, { status: 201 });
   } catch {
@@ -92,20 +87,24 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "No token provided" }, { status: 401 });
     }
 
-    // ✅ Decode the token manually (since getToken won't work with Authorization header)
-    const token = await getToken({
-      req,
-      raw: true,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(tokenString, process.env.NEXTAUTH_SECRET!) as {
+        id: string;
+        name: string;
+        role: string;
+      };
+      console.log("Decoded Token:", decodedToken); // Debugging
+    } catch (error) {
+      console.error("JWT Verification Error:", error);
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    }
 
-    console.log("Decoded Token:", token); // Debugging
-
-    if (!token) {
+    if (!decodedToken) {
       return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
     }
 
-    data.updateBy = token.id; // ✅ Attach user ID
+    data.updateBy = decodedToken.name; // ✅ Attach user ID
 
     const updatedcategory = await updatecategory(Number(id), data);
     return NextResponse.json(updatedcategory);
