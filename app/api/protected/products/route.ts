@@ -69,6 +69,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     body.updateBy = decodedToken.name;
     body.createdBy = decodedToken.name;
+    body.price = String(body.price);
+    body.stock = String(body.stock);
+    console.log("products", body);
 
     const newProduct = await createProduct(body);
     return NextResponse.json(newProduct, { status: 201 });

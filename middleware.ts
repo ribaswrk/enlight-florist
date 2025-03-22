@@ -19,6 +19,7 @@ export async function middleware(req: NextRequest) {
   // ✅ Protect API routes (POST, PUT, DELETE)
   if (req.method !== "GET") {
     if (!token) {
+      console.log("TOKEN", token);
       return NextResponse.json(
         { error: "Unauthorized Middleware" },
         { status: 401 }
