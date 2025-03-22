@@ -79,7 +79,7 @@ export default function ProductsManagement() {
 	};
 
 	const saveProduct = async () => {
-		if (!productName.trim() || !selectedCategory || productPrice === "") return;
+		if (!productName.trim() || !selectedCategoryId || productPrice === "") return;
 		setLoading(true);
 		try {
 			const token = session?.accessToken;
