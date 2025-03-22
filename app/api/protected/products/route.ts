@@ -86,7 +86,6 @@ export async function POST(req: NextRequest) {
 // ✅ PUT: Update a product
 export async function PUT(req: NextRequest) {
   try {
-    const { id, ...data } = await req.json();
     // ✅ Extract Bearer token manually
     const authHeader = req.headers.get("authorization");
     const tokenString = authHeader?.split(" ")[1]; // Get token after "Bearer "
@@ -112,10 +111,13 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
     }
 
-    const body = await req.json();
+    const { id, ...body } = await req.json();
     body.updateBy = decodedToken.name;
+    body.price = String(body.price);
+    body.stock = String(body.stock);
+    console.log("BODY", body);
     // ✅ Pass userId to createProduct
-    const updatedProduct = await updateProduct(Number(id), data);
+    const updatedProduct = await updateProduct(Number(id), body);
     return NextResponse.json(updatedProduct);
   } catch {
     return NextResponse.json(
