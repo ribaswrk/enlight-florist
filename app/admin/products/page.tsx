@@ -165,10 +165,12 @@ export default function ProductsManagement() {
 		setShowConfirmDialog(true);
 	};
 
-	// Fungsi untuk memformat harga dengan konsisten
-	const formatPrice = (price: string) => {
-		// Gunakan format yang konsisten dengan titik sebagai pemisah ribuan
-		return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+	const formatRupiah = (price: number) => {
+		return new Intl.NumberFormat("id-ID", {
+			style: "currency",
+			currency: "IDR",
+			minimumFractionDigits: 0,
+		}).format(price);
 	};
 
 	useEffect(() => {
@@ -228,7 +230,7 @@ export default function ProductsManagement() {
 								<td className="px-6 py-4">{product.id}</td>
 								<td className="px-6 py-4">{product.name}</td>
 								<td className="px-6 py-4">{product.category}</td>
-								<td className="px-6 py-4">{product.price}</td>
+								<td className="px-6 py-4">{formatRupiah(product.price)}</td>
 								<td className="px-6 py-4">{product.stock}</td>
 								<td className="px-6 py-4 flex items-center space-x-2">
 									<button onClick={() => openDialog(product)}>
