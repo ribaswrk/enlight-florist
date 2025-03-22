@@ -9,32 +9,6 @@ interface Product {
   category: string;
 }
 
-// // This is a server component, so we can fetch data here
-// async function getProducts(slug: string): Promise<Product[]> {
-// 	// In a real application, fetch products based on the slug
-// 	// For now, we'll return dummy data
-// 	return [
-// 		{
-// 			id: 1,
-// 			name: "Red Rose Bouquet",
-// 			image: "/placeholder.svg?height=200&width=200",
-// 			price: 50,
-// 		},
-// 		{
-// 			id: 2,
-// 			name: "Sunflower Arrangement",
-// 			image: "/placeholder.svg?height=200&width=200",
-// 			price: 45,
-// 		},
-// 		{
-// 			id: 3,
-// 			name: "Mixed Flower Basket",
-// 			image: "/placeholder.svg?height=200&width=200",
-// 			price: 60,
-// 		},
-// 	];
-// }
-
 // Fetch products from the API
 async function getProducts(slug: string): Promise<Product[]> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"; // ✅ Adjust for deployment
@@ -68,7 +42,7 @@ export default async function CategoryPage({
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8 text-center capitalize">
-        {products[1].category} Products
+        {products[0].category} Products
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product) => (

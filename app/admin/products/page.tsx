@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import {
 	PencilIcon,
 	TrashIcon,
 	PlusCircleIcon,
+	XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 
@@ -32,7 +32,6 @@ export default function ProductsManagement() {
 	const [productName, setProductName] = useState("");
 	const [productStock, setProductStock] = useState<number | string>("");
 	const [productPrice, setProductPrice] = useState<number | string>("");
-	const [selectedCategory, setSelectedCategory] = useState<string>("");
 	const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
 		null
 	);
@@ -115,7 +114,6 @@ export default function ProductsManagement() {
 			setProductName("");
 			setProductPrice("");
 			setProductStock("");
-			setSelectedCategory("");
 			setSelectedCategoryId(null);
 			setShowDialog(false);
 			setEditingProduct(null);
@@ -155,7 +153,6 @@ export default function ProductsManagement() {
 		setProductName(product?.name || "");
 		setProductPrice(product?.price || "");
     setProductStock(product?.stock || "");
-		setSelectedCategory(product?.category || "");
 		setSelectedCategoryId(matchedCategory?.categoryId || null);
 		setShowDialog(true);
 	};
@@ -269,7 +266,15 @@ export default function ProductsManagement() {
 			)}
 			{showDialog && (
 				<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-					<div className="bg-white p-6 rounded-lg shadow-lg w-96">
+					<div className="relative bg-white p-6 rounded-lg shadow-lg w-96">
+						{/* Tombol silang untuk menutup dialog */}
+						<button
+							onClick={() => setShowDialog(false)}
+							className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+						>
+							<XMarkIcon className="w-6 h-6" />
+						</button>
+
 						<h2 className="text-lg font-bold mb-4">
 							{editingProduct ? "Edit" : "Tambah"} Produk
 						</h2>
@@ -289,7 +294,13 @@ export default function ProductsManagement() {
 							placeholder="Harga produk"
 							className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
 							value={productPrice}
-							onChange={(e) => setProductPrice(e.target.value)}
+							onChange={(e) => {
+								const value = e.target.value;
+								if (/^\d*$/.test(value)) {
+									// Hanya angka yang diperbolehkan
+									setProductPrice(value);
+								}
+							}}
 						/>
 
 						{/* Stok */}
@@ -298,7 +309,13 @@ export default function ProductsManagement() {
 							placeholder="Stok produk"
 							className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
 							value={productStock}
-							onChange={(e) => setProductStock(e.target.value)}
+							onChange={(e) => {
+								const value = e.target.value;
+								if (/^\d*$/.test(value)) {
+									// Hanya angka yang diperbolehkan
+									setProductStock(value);
+								}
+							}}
 						/>
 
 						{/* Kategori */}
