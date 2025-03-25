@@ -20,6 +20,7 @@ model Product {
   name       String
   price      String
   stock      String
+  imageUrl   String?
   createdBy  String
   createdAt  DateTime @default(now())
   updateBy   String
