@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
   if (
     isLoginRoute &&
     req.nextUrl.pathname === "/api/protected/users" &&
-    req.method === "PUT"
+    (req.method === "PUT" || req.method === "POST")
   ) {
     console.log("MIDDDLWEEE");
     return NextResponse.next();

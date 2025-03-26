@@ -12,12 +12,9 @@ export async function GET(req: Request) {
   try {
     // ✅ Parse query parameters
     const { searchParams } = new URL(req.url);
-    const categoryId = searchParams.get("categoryId");
+    const eventId = searchParams.get("eventId");
 
-    // ✅ Convert categoryId to a number (or use undefined if not provided)
-    const events = await getEvent(
-      categoryId ? parseInt(categoryId, 10) : undefined
-    );
+    const events = await getEvent(eventId ? parseInt(eventId, 10) : undefined);
 
     return NextResponse.json(events);
   } catch (error) {
@@ -63,12 +60,10 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     body.updateBy = decodedToken.name;
     body.createdBy = decodedToken.name;
-    body.price = String(body.price);
-    body.stock = String(body.stock);
     console.log("events", body);
 
-    const newProduct = await createEvent(body);
-    return NextResponse.json(newProduct, { status: 201 });
+    const newEvent = await createEvent(body);
+    return NextResponse.json(newEvent, { status: 201 });
   } catch {
     return NextResponse.json(
       { error: "Failed to create event" },
@@ -107,12 +102,9 @@ export async function PUT(req: NextRequest) {
 
     const { id, ...body } = await req.json();
     body.updateBy = decodedToken.name;
-    body.price = String(body.price);
-    body.stock = String(body.stock);
-    console.log("BODY", body);
-    // ✅ Pass userId to createProduct
-    const updatedProduct = await updateEvent(Number(id), body);
-    return NextResponse.json(updatedProduct);
+
+    const updatedEvent = await updateEvent(Number(id), body);
+    return NextResponse.json(updatedEvent);
   } catch {
     return NextResponse.json(
       { error: "Failed to update event" },
@@ -126,7 +118,7 @@ export async function DELETE(req: NextRequest) {
   try {
     const { id } = await req.json();
     await deleteEvent(Number(id));
-    return NextResponse.json({ message: "Product deleted successfully" });
+    return NextResponse.json({ message: "Event deleted successfully" });
   } catch {
     return NextResponse.json(
       { error: "Failed to delete event" },

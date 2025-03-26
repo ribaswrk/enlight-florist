@@ -56,13 +56,16 @@ export async function getProducts(catId?: number) {
   });
 
   // ✅ Transform the result to match your expected structure
-  return products.map(({ productid, name, price, stock, category }) => ({
-    id: productid, // ✅ Rename `productid` to `id`
-    name,
-    price,
-    stock,
-    category: category.name, // ✅ Flatten category name
-  }));
+  return products.map(
+    ({ productid, name, price, stock, category, homeView }) => ({
+      id: productid, // ✅ Rename `productid` to `id`
+      name,
+      price,
+      stock,
+      homeView,
+      category: category.name, // ✅ Flatten category name
+    })
+  );
 }
 // ✅ Create a new product
 export async function createProduct(data: {
@@ -70,6 +73,7 @@ export async function createProduct(data: {
   price: string;
   stock: string;
   categoryId: number;
+  homeView: number;
   createdBy: string;
   updateBy: string;
   file?: File; // Optional image file
@@ -96,6 +100,7 @@ export async function updateProduct(
     name: string;
     price: string;
     stock: string;
+    homeView: number;
     categoryId: number;
     updateBy: string;
     file?: File;
