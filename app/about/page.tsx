@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import { ArrowRight, Heart, Leaf, MapPin, Phone } from "lucide-react";
@@ -166,6 +166,22 @@ export default function AboutUs() {
 								>
 									Contact Us
 								</Link>
+							</div>
+						</div>
+						<div className="h-[300px] overflow-hidden rounded-lg border-4 border-white shadow-md md:h-[400px] mt-8">
+							<div className="relative h-full w-full">
+								<iframe
+									src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.5020913572107!2d106.61944447499022!3d-6.197291893790373!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ffbd858823a7%3A0xee4e5017afd5de62!2sEnlight%20Florist!5e0!3m2!1sen!2sid!4v1743009563070!5m2!1sen!2sid"
+									width="100%"
+									height="100%"
+									style={{ border: 0 }}
+									allowFullScreen={false}
+									loading="lazy"
+									referrerPolicy="no-referrer-when-downgrade"
+									title="Flower Shop Location"
+									className="absolute inset-0"
+								></iframe>
+								<div className="absolute inset-0 pointer-events-none border border-[#9f6564]/20"></div>
 							</div>
 						</div>
 					</div>
