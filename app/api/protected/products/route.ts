@@ -7,12 +7,6 @@ import {
 } from "../../../controllers/productcontroller";
 import jwt from "jsonwebtoken";
 
-interface UserToken {
-  user: {
-    id: string;
-    role: string;
-  };
-}
 // ✅ GET: Fetch all products
 export async function GET(req: Request) {
   try {

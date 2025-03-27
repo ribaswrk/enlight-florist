@@ -15,7 +15,6 @@ export async function middleware(req: NextRequest) {
     console.log("MIDDDLWEEE");
     return NextResponse.next();
   }
-
   // ✅ Protect API routes (POST, PUT, DELETE)
   if (req.method !== "GET") {
     if (!token) {
@@ -54,7 +53,7 @@ export async function middleware(req: NextRequest) {
     const currentTime = Math.floor(Date.now() / 1000); // Convert to seconds
     console.log("current time", currentTime);
     if (token.exp && Number(token.exp) < currentTime) {
-      console.log("Unauthorized access to admin, redirecting..."); // 🔍 Debuggingw
+      console.log("Session expired"); // 🔍 Debuggingw
       return NextResponse.redirect(new URL("/admin/login", req.url));
     }
   }

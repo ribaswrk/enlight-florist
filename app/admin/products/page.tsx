@@ -328,10 +328,8 @@ export default function ProductsManagement() {
               <input
                 type="checkbox"
                 className="w-5 h-5 border-gray-300 rounded"
-                checked={productHomeView === "1"} // Jika `productHomeView` adalah "1", maka dicentang
-                onChange={(e) =>
-                  setProductHomeView(e.target.checked ? "1" : "0")
-                } // Toggle antara 1 dan 0
+                checked={productHomeView === 1} // Jika `productHomeView` adalah "1", maka dicentang
+                onChange={(e) => setProductHomeView(e.target.checked ? 1 : 0)} // Toggle antara 1 dan 0
               />
             </label>
 
