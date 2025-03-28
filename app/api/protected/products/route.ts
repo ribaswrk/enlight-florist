@@ -13,11 +13,14 @@ export async function GET(req: Request) {
     // ✅ Parse query parameters
     const { searchParams } = new URL(req.url);
     const categoryId = searchParams.get("categoryId");
+    const homeView = searchParams.get("homeView");
 
-    // ✅ Convert categoryId to a number (or use undefined if not provided)
-    const products = await getProducts(
-      categoryId ? parseInt(categoryId, 10) : undefined
-    );
+    // ✅ Convert query parameters to appropriate types
+    const parsedCategoryId = categoryId ? parseInt(categoryId, 10) : undefined;
+    const parsedHomeView = homeView ? parseInt(homeView, 10) : undefined;
+
+    // ✅ Fetch events based on query params
+    const products = await getProducts(parsedCategoryId, parsedHomeView);
 
     return NextResponse.json(products);
   } catch (error) {

@@ -7,14 +7,20 @@ import {
 } from "../../../controllers/eventcontroller";
 import jwt from "jsonwebtoken";
 
-// ✅ GET: Fetch all events
+// ✅ GET: Fetch events with optional filtering by eventId and homeView
 export async function GET(req: Request) {
   try {
     // ✅ Parse query parameters
     const { searchParams } = new URL(req.url);
     const eventId = searchParams.get("eventId");
+    const homeView = searchParams.get("homeView");
 
-    const events = await getEvent(eventId ? parseInt(eventId, 10) : undefined);
+    // ✅ Convert query parameters to appropriate types
+    const parsedEventId = eventId ? parseInt(eventId, 10) : undefined;
+    const parsedHomeView = homeView ? parseInt(homeView, 10) : undefined;
+
+    // ✅ Fetch events based on query params
+    const events = await getEvent(parsedEventId, parsedHomeView);
 
     return NextResponse.json(events);
   } catch (error) {

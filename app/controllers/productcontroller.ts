@@ -39,11 +39,15 @@ async function uploadImage(file: File): Promise<string | null> {
   return `${R2_PUBLIC_URL}/${fileKey}`;
 }
 
-export async function getProducts(catId?: number) {
-  const whereCondition = catId
-    ? { categoryId: catId } // ✅ Filter based on category ID
-    : undefined; // ✅ Avoid passing an empty object
+export async function getProducts(catId?: number, homeView?: number) {
+  const whereCondition: any = {};
+  if (catId) {
+    whereCondition.categoryId = catId; // ✅ Filter by event ID if provided
+  }
 
+  if (homeView !== undefined) {
+    whereCondition.homeView = homeView; // ✅ Filter by homeView if provided
+  }
   const products = await prisma.product.findMany({
     where: whereCondition, // ✅ Only applies the filter when categoryId is provided
     include: {

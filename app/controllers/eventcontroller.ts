@@ -39,10 +39,16 @@ async function uploadEventImage(file: File): Promise<string | null> {
   return `${R2_PUBLIC_URL}/${fileKey}`;
 }
 
-export async function getEvent(eventid?: number) {
-  const whereCondition = eventid
-    ? { eventId: eventid } // ✅ Filter based on category ID
-    : undefined; // ✅ Avoid passing an empty object
+export async function getEvent(eventid?: number, homeView?: number) {
+  const whereCondition: any = {};
+
+  if (eventid) {
+    whereCondition.eventId = eventid; // ✅ Filter by event ID if provided
+  }
+
+  if (homeView !== undefined) {
+    whereCondition.show = homeView; // ✅ Filter by homeView if provided
+  }
 
   const event = await prisma.event.findMany({
     where: whereCondition, // ✅ Only applies the filter when categoryId is provided
