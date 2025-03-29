@@ -70,7 +70,7 @@ export default async function CategoryPage({
 					</h1>
 					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 						{products.map((product) => (
-							<Link href={"/productdetail"} key={product.id}>
+							<Link href={`/productdetail/${product.id}`} key={product.id}>
 								<div className="border rounded-lg overflow-hidden shadow-md">
 									<div className="relative aspect-square">
 										<Image
