@@ -1,81 +1,78 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-// This would typically come from a database or API
-const product = {
-  id: 1,
-  name: 'Sunshine Bouquet',
-  price: 59.99,
-  description:
-    'A vibrant mix of sunflowers, roses, and daisies that brings warmth and joy to any room.',
-  fullDescription:
-    "Our Sunshine Bouquet is a radiant arrangement that captures the essence of a perfect summer day. Featuring a stunning combination of golden sunflowers, soft pink roses, and pure white daisies, this bouquet is designed to uplift spirits and brighten any space. Each flower is carefully selected for freshness and arranged by our expert florists to ensure a perfect balance of color and texture. Whether it's for a birthday, to cheer someone up, or simply to bring a touch of sunshine into your home, this bouquet is an ideal choice.",
-  image: '/placeholder.svg?height=600&width=600',
-  sizes: ['Small', 'Medium', 'Large'],
-  addOns: ['Vase', 'Chocolate Box', 'Greeting Card'],
-};
+// ✅ Define types for products
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  category: string;
+  homeView: number;
+  stock: string;
+}
 
 const relatedProducts = [
   {
     id: 2,
-    name: 'Rose Elegance',
+    name: "Rose Elegance",
     price: 49.99,
-    image: '/placeholder.svg?height=300&width=300',
+    image: "/placeholder.svg?height=300&width=300",
   },
   {
     id: 3,
-    name: 'Tropical Paradise',
+    name: "Tropical Paradise",
     price: 64.99,
-    image: '/placeholder.svg?height=300&width=300',
+    image: "/placeholder.svg?height=300&width=300",
   },
   {
     id: 4,
-    name: 'Lavender Dreams',
+    name: "Lavender Dreams",
     price: 54.99,
-    image: '/placeholder.svg?height=300&width=300',
+    image: "/placeholder.svg?height=300&width=300",
   },
 ];
 
 export default function ProductDetailPage() {
-  const {id} = useParams();
-  const [productDetail, setProductDetail] = useState({})
-  const [selectedSize, setSelectedSize] = useState(product.sizes[1]);
-  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+  const { id } = useParams();
+  const [product, setProduct] = useState<Product>();
 
-  const fetchProductDetail = async () => {
-    try {
-      const res = await fetch('/api/protected/products', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+  useEffect(() => {
+    if (!id) return;
 
-      if (!res.ok) throw new Error('Failed to fetch products');
+    const fetchProductDetail = async () => {
+      try {
+        const res = await fetch(`/api/protected/products?productId=${id}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
 
-      const data = await res.json();
-      setProductDetail(data);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    }
-  };
+        if (!res.ok) throw new Error("Failed to fetch product");
 
-  const handleAddOnToggle = (addOn: string) => {
-    setSelectedAddOns(prev =>
-      prev.includes(addOn)
-        ? prev.filter(item => item !== addOn)
-        : [...prev, addOn]
-    );
-  };
+        const data = await res.json();
+        console.log("Fetched product:", data);
+
+        setProduct(data);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+    };
+
+    fetchProductDetail();
+  }, [id]); // ✅ Ensure useEffect re-runs when id changes
+
+  if (!product) return <p className="text-center py-10">Loading...</p>;
+  console.log("isi product", product);
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <Image
-            src={product.image || '/placeholder.svg'}
+            src={"/placeholder.svg"}
             alt={product.name}
             width={600}
             height={600}
@@ -84,23 +81,28 @@ export default function ProductDetailPage() {
         </div>
         <div>
           <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            {product.name}
+            {product?.name || "Product Name"}
           </h1>
           <p className="text-2xl text-pink-600 font-semibold mb-4">
-            ${product.price.toFixed(2)}
+            ${product.price}
           </p>
-          <p className="text-gray-600 mb-6">{product.description}</p>
+          <p className="text-gray-600 mb-6">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget
+            felis vel justo vulputate gravida. Integer convallis, nisl at congue
+            vehicula, purus sapien tincidunt nunc, ac fermentum purus augue ac
+            eros. Mauris malesuada, sapien nec accumsan vehicula, enim sapien...
+          </p>
 
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <h2 className="text-lg font-semibold mb-2">Size</h2>
             <div className="flex space-x-2">
-              {product.sizes.map(size => (
+              {product.sizes.map((size) => (
                 <button
                   key={size}
                   className={`px-4 py-2 rounded-full ${
                     selectedSize === size
-                      ? 'bg-pink-500 text-white'
-                      : 'bg-gray-200 text-gray-800 hover:bg-pink-100'
+                      ? "bg-pink-500 text-white"
+                      : "bg-gray-200 text-gray-800 hover:bg-pink-100"
                   }`}
                   onClick={() => setSelectedSize(size)}
                 >
@@ -108,12 +110,12 @@ export default function ProductDetailPage() {
                 </button>
               ))}
             </div>
-          </div>
+          </div> */}
 
           <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">Add-ons</h2>
+            {/* <h2 className="text-lg font-semibold mb-2">Add-ons</h2>
             <div className="space-y-2">
-              {product.addOns.map(addOn => (
+              {product.addOns.map((addOn) => (
                 <label key={addOn} className="flex items-center">
                   <input
                     type="checkbox"
@@ -124,7 +126,7 @@ export default function ProductDetailPage() {
                   <span className="ml-2">{addOn}</span>
                 </label>
               ))}
-            </div>
+            </div> */}
           </div>
 
           <button className="w-full bg-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-pink-600 transition duration-300">
@@ -137,7 +139,24 @@ export default function ProductDetailPage() {
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
           Product Details
         </h2>
-        <p className="text-gray-600">{product.fullDescription}</p>
+        <p className="text-gray-600">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget
+          felis vel justo vulputate gravida. Integer convallis, nisl at congue
+          vehicula, purus sapien tincidunt nunc, ac fermentum purus augue ac
+          eros. Mauris malesuada, sapien nec accumsan vehicula, enim sapien
+          fermentum nulla, ac eleifend justo urna at nisi. Vivamus ac dui felis.
+          Sed pharetra sapien ut felis tristique, et varius ligula rhoncus.
+          Suspendisse potenti. Ut at risus eu orci lobortis tempus. Nulla
+          facilisi. Proin quis lacus eu libero dignissim sodales. Curabitur nec
+          fermentum mauris. Fusce bibendum justo nec massa gravida, vel vehicula
+          risus faucibus. Duis rhoncus erat sit amet libero sodales, ac auctor
+          mauris molestie. Vestibulum posuere elit vitae pharetra pharetra. Cras
+          facilisis, purus non sodales dignissim, sapien dui interdum felis, vel
+          feugiat sapien neque nec metus. Pellentesque habitant morbi tristique
+          senectus et netus et malesuada fames ac turpis egestas. In id est non
+          purus fringilla tincidunt. Mauris rhoncus sem sed magna facilisis, in
+          congue nulla interdum.
+        </p>
       </div>
 
       <div className="mt-12">
@@ -145,13 +164,13 @@ export default function ProductDetailPage() {
           You May Also Like
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {relatedProducts.map(relatedProduct => (
+          {relatedProducts.map((relatedProduct) => (
             <div
               key={relatedProduct.id}
               className="border rounded-lg p-4 hover:shadow-lg transition duration-300"
             >
               <Image
-                src={relatedProduct.image || '/placeholder.svg'}
+                src={relatedProduct.image || "/placeholder.svg"}
                 alt={relatedProduct.name}
                 width={300}
                 height={300}

@@ -14,13 +14,19 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const categoryId = searchParams.get("categoryId");
     const homeView = searchParams.get("homeView");
+    const productId = searchParams.get("productId");
 
     // ✅ Convert query parameters to appropriate types
     const parsedCategoryId = categoryId ? parseInt(categoryId, 10) : undefined;
     const parsedHomeView = homeView ? parseInt(homeView, 10) : undefined;
-
+    const parsedProductId = productId ? parseInt(productId, 10) : undefined;
+    console.log("parsedProductId", parsedProductId);
     // ✅ Fetch events based on query params
-    const products = await getProducts(parsedCategoryId, parsedHomeView);
+    const products = await getProducts(
+      parsedCategoryId,
+      parsedHomeView,
+      parsedProductId
+    );
 
     return NextResponse.json(products);
   } catch (error) {
