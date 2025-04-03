@@ -41,17 +41,13 @@ export async function GET(req: Request) {
 // ✅ POST: Create a new product
 export async function POST(req: NextRequest) {
   try {
-    // ✅ Extract Bearer token manually
     const authHeader = req.headers.get("authorization");
-    const tokenString = authHeader?.split(" ")[1]; // Get token after "Bearer "
-
-    console.log("Extracted Token:", tokenString); // Debugging
+    const tokenString = authHeader?.split(" ")[1];
 
     if (!tokenString) {
       return NextResponse.json({ error: "No token provided" }, { status: 401 });
     }
 
-    // ✅ Manually decode the token using `jsonwebtoken`
     let decodedToken;
     try {
       decodedToken = jwt.verify(tokenString, process.env.NEXTAUTH_SECRET!) as {
@@ -59,9 +55,7 @@ export async function POST(req: NextRequest) {
         name: string;
         role: string;
       };
-      console.log("Decoded Token:", decodedToken); // Debugging
-    } catch (error) {
-      console.error("JWT Verification Error:", error);
+    } catch {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
@@ -69,14 +63,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
     }
 
-    const body = await req.json();
-    body.updateBy = decodedToken.name;
-    body.createdBy = decodedToken.name;
-    body.price = String(body.price);
-    body.stock = String(body.stock);
-    console.log("products", body);
+    const formData = await req.formData();
+    formData.set("createdBy", decodedToken.name);
+    formData.set("updateBy", decodedToken.name);
 
-    const newProduct = await createProduct(body);
+    const newProduct = await createProduct(formData);
     return NextResponse.json(newProduct, { status: 201 });
   } catch {
     return NextResponse.json(
@@ -114,19 +105,16 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
     }
 
-    const { id, ...body } = await req.json();
-    body.updateBy = decodedToken.name;
-    body.price = String(body.price);
-    body.stock = String(body.stock);
-    console.log("BODY", body);
+    const formData = await req.formData();
+    formData.set("updateBy", decodedToken.name);
     // ✅ Pass userId to createProduct
-    const updatedProduct = await updateProduct(Number(id), body);
-    return NextResponse.json(updatedProduct);
-  } catch {
-    return NextResponse.json(
-      { error: "Failed to update product" },
-      { status: 500 }
+    const updatedProduct = await updateProduct(
+      Number(formData.get("id")),
+      formData
     );
+    return NextResponse.json(updatedProduct);
+  } catch (error) {
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }
 

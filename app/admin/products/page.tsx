@@ -7,6 +7,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 // Tipe data untuk produk
 type Product = {
@@ -16,6 +17,7 @@ type Product = {
   price: number;
   homeView: number;
   stock: number;
+  imageUrl?: string;
 };
 
 type Category = {
@@ -41,6 +43,8 @@ export default function ProductsManagement() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<number>(0);
   const { data: session } = useSession();
+  const [productImage, setProductImage] = useState<File | null>(null);
+  const [productImageUrl, setProductImageUrl] = useState<string>("");
 
   // Filter produk berdasarkan pencarian
   const filteredProducts = products.filter((product) =>
@@ -90,33 +94,41 @@ export default function ProductsManagement() {
       const token = session?.accessToken;
       if (!token) throw new Error("No token available");
 
+      const formData = new FormData();
+      formData.append("name", productName);
+      formData.append("price", String(productPrice));
+      formData.append("stock", String(productStock));
+      formData.append("categoryId", String(selectedCategoryId));
+      formData.append("homeView", String(productHomeView));
+      formData.append("updateBy", session?.user?.name || "Admin"); // Update user
+      formData.append("createdBy", session?.user?.name || "Admin"); // Created user
+      if (productImage) {
+        formData.append("file", productImage); // Attach file
+      }
+
       const method = editingProduct ? "PUT" : "POST";
-      const body = JSON.stringify({
-        id: editingProduct?.id,
-        name: productName,
-        categoryId: selectedCategoryId,
-        price: Number(productPrice),
-        homeView: Number(productHomeView),
-        stock: Number(productStock),
-      });
+      if (editingProduct) {
+        formData.append("id", String(editingProduct.id));
+      }
 
       const res = await fetch("/api/protected/products", {
         method,
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body,
+        body: formData, // ✅ Send FormData
       });
 
       if (!res.ok) throw new Error("Failed to save product");
 
-      // ✅ Clear the form after successful submission
+      // Reset form
       setProductName("");
       setProductPrice("");
       setProductStock("");
       setProductHomeView(0);
       setSelectedCategoryId(null);
+      setProductImage(null);
+      setProductImageUrl("");
       setShowDialog(false);
       setEditingProduct(null);
       fetchProducts();
@@ -221,6 +233,9 @@ export default function ProductsManagement() {
                 Stok
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Gambar
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Aksi
               </th>
             </tr>
@@ -233,6 +248,17 @@ export default function ProductsManagement() {
                 <td className="px-6 py-4">{product.category}</td>
                 <td className="px-6 py-4">{formatRupiah(product.price)}</td>
                 <td className="px-6 py-4">{product.stock}</td>
+                <td className="px-6 py-4">
+                  {product.imageUrl && (
+                    <Image
+                      src={product.imageUrl}
+                      alt={product.name}
+                      width={150} // ✅ Set a default width
+                      height={100} // ✅ Set a default height
+                      className="object-cover rounded"
+                    />
+                  )}
+                </td>
                 <td className="px-6 py-4 flex items-center space-x-2">
                   <button onClick={() => openDialog(product)}>
                     <PencilIcon className="h-4 w-4" />
@@ -346,6 +372,28 @@ export default function ProductsManagement() {
                 </option>
               ))}
             </select>
+
+            {/* Gambar */}
+            {productImageUrl && (
+              <Image
+                src={productImageUrl}
+                alt="Preview"
+                width={200} // ✅ Set a default width
+                height={200} // ✅ Set a default height
+                className="rounded-lg shadow-md"
+              />
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  setProductImage(e.target.files[0]); // Store the selected image
+                  setProductImageUrl(URL.createObjectURL(e.target.files[0])); // Show preview
+                }
+              }}
+            />
 
             {/* Tombol Simpan */}
             <button
