@@ -52,11 +52,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
     }
 
-    const body = await req.json();
-    body.updateBy = decodedToken.name;
-    body.createdBy = decodedToken.name;
+    const formData = await req.formData();
+    formData.set("createdBy", decodedToken.name);
+    formData.set("updateBy", decodedToken.name);
 
-    const newcategory = await createcategory(body);
+    const newcategory = await createcategory(formData);
     return NextResponse.json(newcategory, { status: 201 });
   } catch {
     return NextResponse.json(
@@ -69,8 +69,6 @@ export async function POST(req: NextRequest) {
 // ✅ PUT: Update a category
 export async function PUT(req: NextRequest) {
   try {
-    const { id, ...data } = await req.json();
-
     // ✅ Extract Bearer token manually
     const authHeader = req.headers.get("authorization");
     const tokenString = authHeader?.split(" ")[1]; // Get token after "Bearer "
@@ -98,9 +96,15 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
     }
 
-    data.updateBy = decodedToken.name; // ✅ Attach user ID
-
-    const updatedcategory = await updatecategory(Number(id), data);
+    const formData = await req.formData();
+    if (!formData.get("id")) {
+      return NextResponse.json({ error: "Missing ID" }, { status: 401 });
+    }
+    formData.set("updateBy", decodedToken.name);
+    const updatedcategory = await updatecategory(
+      Number(formData.get("id")),
+      formData
+    );
     return NextResponse.json(updatedcategory);
   } catch (error) {
     console.error("Update Error:", error);

@@ -106,6 +106,9 @@ export async function PUT(req: NextRequest) {
     }
 
     const formData = await req.formData();
+    if (!formData.get("id")) {
+      return NextResponse.json({ error: "Missing ID" }, { status: 401 });
+    }
     formData.set("updateBy", decodedToken.name);
     // ✅ Pass userId to createProduct
     const updatedProduct = await updateProduct(

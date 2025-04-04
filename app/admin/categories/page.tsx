@@ -59,7 +59,7 @@ export default function CategoriesManagement() {
       if (!token) throw new Error("No token available");
       const method = editingCategory ? "PUT" : "POST";
       const formData = new FormData();
-      formData.append("catname", categoryName);
+      formData.append("name", categoryName);
       formData.append("categoryId", String(selectedCategoryId));
       formData.append("updateBy", session?.user?.name || "Admin"); // Update user
       formData.append("createdBy", session?.user?.name || "Admin"); // Created user
@@ -73,13 +73,13 @@ export default function CategoriesManagement() {
       const res = await fetch("/api/protected/category", {
         method,
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
       if (!res.ok) throw new Error("Failed to save category");
       setCategoryName("");
+      setCategoryImage(null);
       setShowDialog(false);
       setEditingCategory(null);
       fetchCategory();
