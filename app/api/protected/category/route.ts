@@ -7,12 +7,6 @@ import {
 } from "../../../controllers/categorycontroller";
 import jwt from "jsonwebtoken";
 
-interface UserToken {
-  user: {
-    id: string;
-    role: string;
-  };
-}
 // ✅ GET: Fetch all category
 export async function GET() {
   try {

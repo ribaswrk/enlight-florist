@@ -29,13 +29,14 @@ model Product {
 }
 
 model Category {
-  categoryId Int       @id @default(autoincrement())
-  name       String
-  createdBy  String
-  createdAt  DateTime  @default(now())
-  updateBy   String
-  updateAt   DateTime  @default(now())
-  Product    Product[]
+  categoryId  Int       @id @default(autoincrement())
+  name        String
+  imageCatUrl String?
+  createdBy   String
+  createdAt   DateTime  @default(now())
+  updateBy    String
+  updateAt    DateTime  @default(now())
+  Product     Product[]
 }
 
 model Event {
