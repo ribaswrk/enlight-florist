@@ -1,9 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectCommand,
-} from "@aws-sdk/client-s3";
+f
 import { v4 as uuidv4 } from "uuid";
 
 const prisma = new PrismaClient();

@@ -1,5 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 
 const prisma = new PrismaClient();
@@ -39,6 +43,21 @@ async function uploadEventImage(file: File): Promise<string | null> {
   return `${R2_PUBLIC_URL}/${fileKey}`;
 }
 
+// ✅ Helper function to delete image
+async function deleteImage(imageUrl: string) {
+  if (!imageUrl) return;
+
+  // Extract Key from URL
+  const fileKey = imageUrl.replace(`${R2_PUBLIC_URL}/`, "");
+
+  await s3.send(
+    new DeleteObjectCommand({
+      Bucket: R2_BUCKET_NAME,
+      Key: fileKey,
+    })
+  );
+}
+
 export async function getEvent(eventid?: number, homeView?: number) {
   const whereCondition: any = {};
 
@@ -62,21 +81,20 @@ export async function getEvent(eventid?: number, homeView?: number) {
   }));
 }
 // ✅ Create a new event
-export async function createEvent(data: {
-  name: string;
-  show: number;
-  createdBy: string;
-  updateBy: string;
-  file?: File; // Optional image file
-}) {
+export async function createEvent(data: FormData) {
   let imageEventUrl: string | null = null;
 
-  if (data.file) {
-    imageEventUrl = await uploadEventImage(data.file);
+  const file = data.get("file") as File | null;
+
+  if (file) {
+    imageEventUrl = await uploadEventImage(file);
   }
   return await prisma.event.create({
     data: {
-      ...data,
+      name: String(data.get("name")),
+      show: Number(data.get("show")),
+      createdBy: data.get("createdBy") as string,
+      updateBy: data.get("updateBy") as string,
       createdAt: new Date(),
       updateAt: new Date(),
       imageEventUrl,
@@ -85,29 +103,31 @@ export async function createEvent(data: {
 }
 
 // ✅ Update a event
-export async function updateEvent(
-  eventId: number,
-  data: {
-    name: string;
-    price: string;
-    stock: string;
-    categoryId: number;
-    updateBy: string;
-    file?: File;
-  }
-) {
-  let imageUrl: string | null = null;
+export async function updateEvent(eventId: number, data: FormData) {
+  let imageEventUrl: string | null = null;
 
-  if (data.file) {
-    imageUrl = await uploadEventImage(data.file);
-  }
+  const file = data.get("file") as File | null;
 
+  if (file) {
+    const existingProduct = await prisma.event.findUnique({
+      where: { eventId },
+      select: { imageEventUrl: true },
+    });
+
+    if (existingProduct?.imageEventUrl) {
+      await deleteImage(existingProduct.imageEventUrl); // ✅ Delete old image
+    }
+
+    imageEventUrl = await uploadEventImage(file);
+  }
   return await prisma.event.update({
     where: { eventId },
     data: {
-      ...data,
+      name: data.get("name") as string,
+      show: Number(data.get("homeView")),
+      updateBy: data.get("updateBy") as string,
       updateAt: new Date(), // ✅ Correct way to set the current timestamp
-      ...(imageUrl && { imageUrl }),
+      ...(imageEventUrl && { imageEventUrl }),
     },
   });
 }

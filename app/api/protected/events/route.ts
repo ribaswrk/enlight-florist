@@ -63,12 +63,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
     }
 
-    const body = await req.json();
-    body.updateBy = decodedToken.name;
-    body.createdBy = decodedToken.name;
-    console.log("events", body);
+    const formData = await req.formData();
 
-    const newEvent = await createEvent(body);
+    const newEvent = await createEvent(formData);
     return NextResponse.json(newEvent, { status: 201 });
   } catch {
     return NextResponse.json(
@@ -106,10 +103,10 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized API" }, { status: 401 });
     }
 
-    const { id, ...body } = await req.json();
-    body.updateBy = decodedToken.name;
+    const formData = await req.formData();
+    const eventId = formData.get("id");
 
-    const updatedEvent = await updateEvent(Number(id), body);
+    const updatedEvent = await updateEvent(Number(eventId), formData);
     return NextResponse.json(updatedEvent);
   } catch {
     return NextResponse.json(

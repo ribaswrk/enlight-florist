@@ -25,6 +25,8 @@ export default function EventsManagement() {
   const [eventName, setEventName] = useState("");
   const [eventShow, setEventShow] = useState(0);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+  const [eventImage, setEventImage] = useState<File | null>(null);
+
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [selectedEventId, setSelectedEventId] = useState<number>(0);
   const { data: session } = useSession();
@@ -56,18 +58,24 @@ export default function EventsManagement() {
     try {
       const token = session?.accessToken;
       if (!token) throw new Error("No token available");
-      console.log(token);
+      const formData = new FormData();
+      formData.append("name", eventName);
+      formData.append("show", String(eventShow));
+      formData.append("updateBy", session?.user?.name || "Admin"); // Update user
+      formData.append("createdBy", session?.user?.name || "Admin"); // Created user
+      if (eventImage) {
+        formData.append("file", eventImage); // Attach file
+      }
       const method = editingEvent ? "PUT" : "POST";
-      const body = editingEvent
-        ? JSON.stringify({ id: editingEvent.id, name: eventName })
-        : JSON.stringify({ name: eventName, show: eventShow });
+      if (editingEvent) {
+        formData.append("id", String(editingEvent.id));
+      }
       const res = await fetch("/api/protected/events", {
         method,
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body,
+        body: formData,
       });
       if (!res.ok) throw new Error("Failed to save event");
       setEventName("");
@@ -236,10 +244,22 @@ export default function EventsManagement() {
                 <input
                   type="checkbox"
                   className="w-5 h-5 border-gray-300 rounded"
-                  checked={eventShow === 1} // Jika `productHomeView` adalah "1", maka dicentang
+                  checked={eventShow === 1} // Jika `event` adalah "1", maka dicentang
                   onChange={(e) => setEventShow(e.target.checked ? 1 : 0)} // Toggle antara 1 dan 0
                 />
               </label>
+
+              {/*Foto Event*/}
+              <input
+                type="file"
+                accept="image/*"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    setEventImage(e.target.files[0]); // Store the selected image
+                  }
+                }}
+              />
               <div className="flex justify-end space-x-2">
                 <button
                   onClick={() => setShowDialog(false)}
