@@ -21,7 +21,7 @@ type Product = {
 };
 
 type Category = {
-  categoryId: number;
+  id: number;
   name: string;
 };
 
@@ -169,7 +169,7 @@ export default function ProductsManagement() {
     setProductPrice(product?.price || "");
     setProductStock(product?.stock || "");
     setProductHomeView(product?.homeView || 0);
-    setSelectedCategoryId(matchedCategory?.categoryId || null);
+    setSelectedCategoryId(matchedCategory?.id || null);
     setShowDialog(true);
   };
 
@@ -367,7 +367,7 @@ export default function ProductsManagement() {
             >
               <option value="">Pilih Kategori</option>
               {categories.map((category) => (
-                <option key={category.categoryId} value={category.categoryId}>
+                <option key={category.id} value={category.id}>
                   {category.name}
                 </option>
               ))}

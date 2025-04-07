@@ -1,5 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-f
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 
 const prisma = new PrismaClient();
@@ -101,21 +105,25 @@ export async function createProduct(data: FormData) {
   if (file) {
     imageUrl = await uploadImage(file);
   }
-
-  return await prisma.product.create({
-    data: {
-      name: data.get("name") as string,
-      price: String(data.get("price")),
-      stock: String(data.get("stock")),
-      categoryId: Number(data.get("categoryId")),
-      homeView: Number(data.get("homeView")),
-      createdBy: data.get("createdBy") as string,
-      updateBy: data.get("updateBy") as string,
-      createdAt: new Date(),
-      updateAt: new Date(),
-      imageUrl,
-    },
-  });
+  try {
+    return await prisma.product.create({
+      data: {
+        name: data.get("name") as string,
+        price: String(data.get("price")),
+        stock: String(data.get("stock")),
+        categoryId: Number(data.get("categoryId")),
+        homeView: Number(data.get("homeView")),
+        createdBy: data.get("createdBy") as string,
+        updateBy: data.get("updateBy") as string,
+        createdAt: new Date(),
+        updateAt: new Date(),
+        imageUrl,
+      },
+    });
+  } catch (error: any) {
+    console.error("❌ Failed to create product:", error.message || error);
+    throw error;
+  }
 }
 
 // ✅ Update Product (Deletes Old Image)
@@ -135,20 +143,27 @@ export async function updateProduct(productid: number, data: FormData) {
 
     imageUrl = await uploadImage(file);
   }
+  try {
+    const updatedProduct = await prisma.product.update({
+      where: { productid },
+      data: {
+        name: data.get("name") as string,
+        price: String(data.get("price")),
+        stock: String(data.get("stock")),
+        categoryId: Number(data.get("categoryId")),
+        homeView: Number(data.get("homeView")),
+        updateBy: data.get("updateBy") as string,
+        updateAt: new Date(),
+        ...(imageUrl && { imageUrl }),
+      },
+    });
 
-  return await prisma.product.update({
-    where: { productid },
-    data: {
-      name: data.get("name") as string,
-      price: String(data.get("price")),
-      stock: String(data.get("stock")),
-      categoryId: Number(data.get("categoryId")),
-      homeView: Number(data.get("homeView")),
-      updateBy: data.get("updateBy") as string,
-      updateAt: new Date(),
-      ...(imageUrl && { imageUrl }), // ✅ Only update image if new file is uploaded
-    },
-  });
+    console.log("✅ Product updated:", updatedProduct);
+    return updatedProduct;
+  } catch (error: any) {
+    console.error("❌ Failed to update product:", error.message || error);
+    throw error;
+  }
 }
 
 // ✅ Delete Product (Deletes Image)

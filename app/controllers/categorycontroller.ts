@@ -85,20 +85,24 @@ export async function createcategory(data: FormData) {
   if (file) {
     imageCatUrl = await uploadImage(file);
   }
-
-  return await prisma.category.create({
-    data: {
-      name: data.get("name") as string,
-      createdBy: data.get("createdBy") as string,
-      updateBy: data.get("updateBy") as string,
-      imageCatUrl,
-    },
-  });
+  try {
+    return await prisma.category.create({
+      data: {
+        name: data.get("name") as string,
+        createdBy: data.get("createdBy") as string,
+        updateBy: data.get("updateBy") as string,
+        imageCatUrl,
+      },
+    });
+  } catch (error: any) {
+    console.error("❌ Failed to create category:", error.message || error);
+    throw error;
+  }
 }
 
 // ✅ Update Category (Deletes Old Image)
 export async function updatecategory(categoryId: number, data: FormData) {
-  let imageUrl: string | null = null;
+  let imageCatUrl: string | null = null;
   const file = data.get("file") as File | null;
 
   if (file) {
@@ -111,17 +115,21 @@ export async function updatecategory(categoryId: number, data: FormData) {
       await deleteImage(existingCategory.imageCatUrl);
     }
 
-    imageUrl = await uploadImage(file);
+    imageCatUrl = await uploadImage(file);
   }
-
-  return await prisma.category.update({
-    where: { categoryId: categoryId },
-    data: {
-      name: data.get("name") as string,
-      updateBy: data.get("updateBy") as string,
-      ...(imageUrl && { imageUrl }),
-    },
-  });
+  try {
+    return await prisma.category.update({
+      where: { categoryId: categoryId },
+      data: {
+        name: data.get("name") as string,
+        updateBy: data.get("updateBy") as string,
+        ...(imageCatUrl && { imageCatUrl }),
+      },
+    });
+  } catch (error: any) {
+    console.error("❌ Failed to update category:", error.message || error);
+    throw error;
+  }
 }
 
 // ✅ Delete Category (Deletes Image)

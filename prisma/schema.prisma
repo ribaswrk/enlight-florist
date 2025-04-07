@@ -21,7 +21,7 @@ model Product {
   price      String
   stock      String
   homeView   Int
-  imageUrl   String?
+  imageUrl   String?  @db.Text
   createdBy  String
   createdAt  DateTime @default(now())
   updateBy   String
@@ -31,7 +31,7 @@ model Product {
 model Category {
   categoryId  Int       @id @default(autoincrement())
   name        String
-  imageCatUrl String?
+  imageCatUrl String?   @db.Text
   createdBy   String
   createdAt   DateTime  @default(now())
   updateBy    String
@@ -42,7 +42,7 @@ model Category {
 model Event {
   eventId       Int      @id @default(autoincrement())
   name          String
-  imageEventUrl String?
+  imageEventUrl String?  @db.Text
   show          Int
   createdBy     String
   createdAt     DateTime @default(now())

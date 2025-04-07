@@ -27,20 +27,23 @@ const s3 = new S3Client({
 // ✅ Helper function to upload image to Cloudflare R2
 async function uploadEventImage(file: File): Promise<string | null> {
   if (!file) return null;
+  try {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const fileKey = `event/${uuidv4()}-${file.name}`;
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const fileKey = `event/${uuidv4()}-${file.name}`;
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: R2_BUCKET_NAME,
+        Key: fileKey,
+        Body: buffer,
+        ContentType: file.type,
+      })
+    );
 
-  await s3.send(
-    new PutObjectCommand({
-      Bucket: R2_BUCKET_NAME,
-      Key: fileKey,
-      Body: buffer,
-      ContentType: file.type,
-    })
-  );
-
-  return `${R2_PUBLIC_URL}/${fileKey}`;
+    return `${R2_PUBLIC_URL}/${fileKey}`;
+  } catch (error) {
+    return ``;
+  }
 }
 
 // ✅ Helper function to delete image
@@ -74,9 +77,10 @@ export async function getEvent(eventid?: number, homeView?: number) {
   });
 
   // ✅ Transform the result to match your expected structure
-  return event.map(({ eventId, name, imageEventUrl }) => ({
+  return event.map(({ eventId, show, name, imageEventUrl }) => ({
     id: eventId, // ✅ Rename `eventid` to `id`
     name,
+    show,
     image: imageEventUrl, // ✅ Flatten category name
   }));
 }
@@ -89,17 +93,23 @@ export async function createEvent(data: FormData) {
   if (file) {
     imageEventUrl = await uploadEventImage(file);
   }
-  return await prisma.event.create({
-    data: {
-      name: String(data.get("name")),
-      show: Number(data.get("show")),
-      createdBy: data.get("createdBy") as string,
-      updateBy: data.get("updateBy") as string,
-      createdAt: new Date(),
-      updateAt: new Date(),
-      imageEventUrl,
-    },
-  });
+  try {
+    const result = await prisma.event.create({
+      data: {
+        name: String(data.get("name")),
+        show: Number(data.get("show")),
+        createdBy: data.get("createdBy") as string,
+        updateBy: data.get("updateBy") as string,
+        createdAt: new Date(),
+        updateAt: new Date(),
+        imageEventUrl: String(imageEventUrl),
+      },
+    });
+    return result;
+  } catch (error: any) {
+    console.error("❌ Failed to create event:", error.message || error);
+    throw error;
+  }
 }
 
 // ✅ Update a event
@@ -120,16 +130,21 @@ export async function updateEvent(eventId: number, data: FormData) {
 
     imageEventUrl = await uploadEventImage(file);
   }
-  return await prisma.event.update({
-    where: { eventId },
-    data: {
-      name: data.get("name") as string,
-      show: Number(data.get("homeView")),
-      updateBy: data.get("updateBy") as string,
-      updateAt: new Date(), // ✅ Correct way to set the current timestamp
-      ...(imageEventUrl && { imageEventUrl }),
-    },
-  });
+  try {
+    return await prisma.event.update({
+      where: { eventId },
+      data: {
+        name: data.get("name") as string,
+        show: Number(data.get("show")),
+        updateBy: data.get("updateBy") as string,
+        updateAt: new Date(), // ✅ Correct way to set the current timestamp
+        ...(imageEventUrl && { imageEventUrl }),
+      },
+    });
+  } catch (error: any) {
+    console.error("❌ Failed to update event:", error.message || error);
+    throw error;
+  }
 }
 
 // ✅ Delete a event

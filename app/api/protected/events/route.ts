@@ -105,14 +105,11 @@ export async function PUT(req: NextRequest) {
 
     const formData = await req.formData();
     const eventId = formData.get("id");
-
     const updatedEvent = await updateEvent(Number(eventId), formData);
     return NextResponse.json(updatedEvent);
-  } catch {
-    return NextResponse.json(
-      { error: "Failed to update event" },
-      { status: 500 }
-    );
+  } catch (error) {
+    console.log("updateevet", error);
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }
 
