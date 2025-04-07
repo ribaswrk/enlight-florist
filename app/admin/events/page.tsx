@@ -7,6 +7,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 // Tipe data untuk produk
 type Event = {
@@ -177,7 +178,17 @@ export default function EventsManagement() {
               <tr key={event.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">{event.id}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{event.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{event.image}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {event.image && (
+                    <Image
+                      src={event.image}
+                      alt={event.name}
+                      width={150} // ✅ Set a default width
+                      height={100} // ✅ Set a default height
+                      className="object-cover rounded"
+                    />
+                  )}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap flex items-center space-x-2">
                   <button onClick={() => openDialog(event)}>
                     <PencilIcon className="h-4 w-4" />
