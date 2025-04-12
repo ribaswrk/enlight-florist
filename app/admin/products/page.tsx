@@ -15,9 +15,11 @@ type Product = {
   name: string;
   category: string;
   price: number;
+  priceDisc: number;
   homeView: number;
   stock: number;
   imageUrl?: string;
+  sold?: number;
 };
 
 type Category = {
@@ -36,6 +38,7 @@ export default function ProductsManagement() {
   const [productStock, setProductStock] = useState<number | string>("");
   const [productHomeView, setProductHomeView] = useState<number | string>("");
   const [productPrice, setProductPrice] = useState<number | string>("");
+  const [productPriceDisc, setProductPriceDisc] = useState<number | string>("");
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null
   );
@@ -45,6 +48,7 @@ export default function ProductsManagement() {
   const { data: session } = useSession();
   const [productImage, setProductImage] = useState<File | null>(null);
   const [productImageUrl, setProductImageUrl] = useState<string>("");
+  const [sold, setSold] = useState<string | number>("");
 
   // Filter produk berdasarkan pencarian
   const filteredProducts = products.filter((product) =>
@@ -100,6 +104,7 @@ export default function ProductsManagement() {
       formData.append("stock", String(productStock));
       formData.append("categoryId", String(selectedCategoryId));
       formData.append("homeView", String(productHomeView));
+      formData.append('sold', String(sold));
       formData.append("updateBy", session?.user?.name || "Admin"); // Update user
       formData.append("createdBy", session?.user?.name || "Admin"); // Created user
       if (productImage) {
@@ -131,6 +136,8 @@ export default function ProductsManagement() {
       setProductImageUrl("");
       setShowDialog(false);
       setEditingProduct(null);
+      setProductPriceDisc("");
+      setSold(0);
       fetchProducts();
     } catch (error) {
       console.error("Error saving product:", error);
@@ -170,6 +177,7 @@ export default function ProductsManagement() {
     setProductStock(product?.stock || "");
     setProductHomeView(product?.homeView || 0);
     setSelectedCategoryId(matchedCategory?.id || null);
+    setSold(product?.sold || 0);
     setShowDialog(true);
   };
 
@@ -210,7 +218,7 @@ export default function ProductsManagement() {
           placeholder="Cari produk..."
           className="w-full px-4 py-2 border border-gray-300 rounded-md"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={e => setSearchTerm(e.target.value)}
         />
       </div>
       <div className="overflow-x-auto">
@@ -227,10 +235,13 @@ export default function ProductsManagement() {
                 Kategori
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Harga
+                Harga Asli
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Stok
+                Harga Promo
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Terjual
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Gambar
@@ -241,13 +252,14 @@ export default function ProductsManagement() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {filteredProducts.map((product) => (
+            {filteredProducts.map(product => (
               <tr key={product.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4">{product.id}</td>
                 <td className="px-6 py-4">{product.name}</td>
                 <td className="px-6 py-4">{product.category}</td>
                 <td className="px-6 py-4">{formatRupiah(product.price)}</td>
-                <td className="px-6 py-4">{product.stock}</td>
+                <td className="px-6 py-4">{formatRupiah(product.priceDisc)}</td>
+                <td className="px-6 py-4">{product.sold}</td>
                 <td className="px-6 py-4">
                   {product.imageUrl && (
                     <Image
@@ -306,7 +318,7 @@ export default function ProductsManagement() {
             </button>
 
             <h2 className="text-lg font-bold mb-4">
-              {editingProduct ? "Edit" : "Tambah"} Produk
+              {editingProduct ? 'Edit' : 'Tambah'} Produk
             </h2>
 
             {/* Nama Produk */}
@@ -315,7 +327,7 @@ export default function ProductsManagement() {
               placeholder="Nama produk"
               className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
               value={productName}
-              onChange={(e) => setProductName(e.target.value)}
+              onChange={e => setProductName(e.target.value)}
             />
 
             {/* Harga */}
@@ -324,7 +336,7 @@ export default function ProductsManagement() {
               placeholder="Harga produk"
               className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
               value={productPrice}
-              onChange={(e) => {
+              onChange={e => {
                 const value = e.target.value;
                 if (/^\d*$/.test(value)) {
                   // Hanya angka yang diperbolehkan
@@ -333,17 +345,32 @@ export default function ProductsManagement() {
               }}
             />
 
-            {/* Stok */}
+            {/* Harga Promo */}
             <input
               type="number"
-              placeholder="Stok produk"
+              placeholder="Harga produk"
               className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
-              value={productStock}
-              onChange={(e) => {
+              value={productPriceDisc}
+              onChange={e => {
                 const value = e.target.value;
                 if (/^\d*$/.test(value)) {
                   // Hanya angka yang diperbolehkan
-                  setProductStock(value);
+                  setProductPriceDisc(value);
+                }
+              }}
+            />
+
+            {/* Sold */}
+            <input
+              type="number"
+              placeholder="Produk Terjual"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
+              value={sold}
+              onChange={e => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) {
+                  // Hanya angka yang diperbolehkan
+                  setSold(value);
                 }
               }}
             />
@@ -355,7 +382,7 @@ export default function ProductsManagement() {
                 type="checkbox"
                 className="w-5 h-5 border-gray-300 rounded"
                 checked={productHomeView === 1} // Jika `productHomeView` adalah "1", maka dicentang
-                onChange={(e) => setProductHomeView(e.target.checked ? 1 : 0)} // Toggle antara 1 dan 0
+                onChange={e => setProductHomeView(e.target.checked ? 1 : 0)} // Toggle antara 1 dan 0
               />
             </label>
 
@@ -363,10 +390,10 @@ export default function ProductsManagement() {
             <select
               className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
               value={selectedCategoryId || 0}
-              onChange={(e) => setSelectedCategoryId(Number(e.target.value))}
+              onChange={e => setSelectedCategoryId(Number(e.target.value))}
             >
               <option value="">Pilih Kategori</option>
-              {categories.map((category) => (
+              {categories.map(category => (
                 <option key={category.id} value={category.id}>
                   {category.name}
                 </option>
@@ -387,7 +414,7 @@ export default function ProductsManagement() {
               type="file"
               accept="image/*"
               className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
-              onChange={(e) => {
+              onChange={e => {
                 if (e.target.files && e.target.files[0]) {
                   setProductImage(e.target.files[0]); // Store the selected image
                   setProductImageUrl(URL.createObjectURL(e.target.files[0])); // Show preview
@@ -401,7 +428,7 @@ export default function ProductsManagement() {
               disabled={loading}
               className="w-full bg-blue-500 text-white py-2 rounded-md"
             >
-              {loading ? "Menyimpan..." : "Simpan"}
+              {loading ? 'Menyimpan...' : 'Simpan'}
             </button>
           </div>
         </div>
