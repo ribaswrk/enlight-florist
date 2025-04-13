@@ -10,7 +10,7 @@ export interface Category {
 }
 
 export interface CategoryRes {
-  categoryId: number;
+  id: number;
   name: string;
 }
 
@@ -26,10 +26,11 @@ export default function CategoriesPage() {
       if (!res.ok) throw new Error("Failed to fetch category");
 
       const data = await res.json();
+      console.log("data", data);
       const transformedCategories = data.map((category: CategoryRes) => ({
-        id: category.categoryId,
+        id: category.id,
         categoryName: category.name,
-        slug: category.categoryId,
+        slug: category.id,
       }));
       console.log(transformedCategories);
 
@@ -47,14 +48,15 @@ export default function CategoriesPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8 text-center">Our Products</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {categories.map((cat) => (
-          <CategoryCard
-            key={cat.id}
-            imageUrl={""}
-            categoryName={cat.categoryName}
-            slug={cat.slug}
-          />
+          <div key={cat.id}>
+            <CategoryCard
+              imageUrl={""}
+              categoryName={cat.categoryName}
+              slug={cat.slug}
+            />
+          </div>
         ))}
       </div>
     </div>
