@@ -166,6 +166,9 @@ export default function EventsManagement() {
                 Nama Event
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Tampilkan di Home
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Banner
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -178,6 +181,9 @@ export default function EventsManagement() {
               <tr key={event.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">{event.id}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{event.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {event.show ? "Ya" : "Tidak"}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {event.image && (
                     <Image
