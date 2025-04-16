@@ -98,6 +98,7 @@ export async function PUT(req: NextRequest) {
       console.log("Decoded Token:", decodedToken); // Debugging
     } catch (error) {
       console.error("JWT Verification Error:", error);
+      console.error("JWT string :", tokenString);
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 

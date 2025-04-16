@@ -3,7 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
-import { JWT } from "next-auth/jwt"; // ✅ Impor tipe JWT
 
 const prisma = new PrismaClient();
 
@@ -11,6 +10,7 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
+    maxAge: 3600, // 1 hour in seconds
   },
   providers: [
     CredentialsProvider({
