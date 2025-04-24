@@ -27,7 +27,7 @@ const Header = () => {
                 className={`text-lg font-medium text-black hover:text-gray-500
                 transition-colors duration-200`}
               >
-                Home
+                Halaman Utama
               </Link>
             </li>
             <li>
@@ -36,7 +36,7 @@ const Header = () => {
                 className={`text-lg font-medium text-black hover:text-gray-500
                   transition-colors duration-200`}
               >
-                About
+                Tentang Kami
               </Link>
             </li>
             <li>
@@ -45,7 +45,7 @@ const Header = () => {
                 className={`text-lg font-medium text-black hover:text-gray-500
                   transition-colors duration-200`}
               >
-                Our Product
+                Produk kami
               </Link>
             </li>
             <li>
@@ -63,7 +63,7 @@ const Header = () => {
                 className={`text-lg font-medium text-black hover:text-gray-500
                   transition-colors duration-200`}
               >
-                Cooporate Deals
+                Cooporate Partnership
               </Link>
             </li>
           </ul>

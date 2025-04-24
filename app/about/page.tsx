@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { ArrowRight, Heart, Leaf, MapPin, Phone } from "lucide-react";
+import { Wind, Heart, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
 export default function AboutUs() {
@@ -9,23 +8,11 @@ export default function AboutUs() {
 		<div className="min-h-screen bg-white">
 			{/* Hero Section */}
 			<section className="relative h-[50vh] overflow-hidden">
-				<div className="absolute inset-0 bg-[#9f6564]/10">
-					<Image
-						src="/placeholder.svg?height=800&width=1600"
-						alt="Floral arrangement"
-						fill
-						className="object-cover opacity-40"
-						priority
-					/>
-				</div>
+				<div className="absolute inset-0 bg-[#9f6564]/10"></div>
 				<div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
 					<h1 className="font-serif text-4xl font-light tracking-wide text-gray-800 md:text-6xl">
-						Our Floral Story
+						Tentang Kami
 					</h1>
-					<div className="mt-4 h-0.5 w-24 bg-[#9f6564]"></div>
-					<p className="mt-6 max-w-2xl text-lg text-gray-700">
-						Crafting beautiful moments with nature's finest blooms since 2010
-					</p>
 				</div>
 				<div className="absolute bottom-0 left-0 right-0">
 					<svg
@@ -48,37 +35,26 @@ export default function AboutUs() {
 					<div className="flex flex-col items-center justify-between gap-12 md:flex-row">
 						<div className="md:w-1/2">
 							<h2 className="font-serif text-3xl font-light text-gray-800">
-								Our Blooming Journey
+								Kisah Kami
 							</h2>
 							<div className="mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
 							<p className="mt-6 text-gray-600">
-								Our story began with a simple passion for flowers and their
-								ability to transform moments into memories. Founded in 2010, our
-								little flower shop has grown into a beloved part of the
-								community, bringing joy and beauty to countless celebrations.
+								Sejak didirikan pada tahun 2016, Enlight Florist telah tumbuh
+								dari sebuah usaha rumahan menjadi penyedia rangkaian bunga
+								profesional yang dipercaya oleh banyak pelanggan, termasuk
+								perusahaan besar seperti BCA, OCBC, dan Maybank.
 							</p>
 							<p className="mt-4 text-gray-600">
-								We believe in the power of nature's artistry. Each arrangement
-								we create is a unique expression of beauty, crafted with care
-								and attention to detail. Our dedicated team of florists combines
-								traditional techniques with contemporary design to create
-								stunning floral compositions for any occasion.
+								Kami menghadirkan berbagai jenis karangan bunga—mulai dari
+								buket, balon dekoratif, vas bunga, papan ucapan, hingga layanan
+								dekorasi untuk berbagai acara spesial.
 							</p>
-							<Link
-								href="/contact"
-								className="mt-8 inline-flex items-center text-[#9f6564] hover:underline"
-							>
-								Get in touch with us <ArrowRight className="ml-2 h-4 w-4" />
-							</Link>
-						</div>
-						<div className="relative h-80 w-full overflow-hidden rounded-lg md:w-2/5">
-							<Image
-								src="/placeholder.svg?height=600&width=500"
-								alt="Our flower shop"
-								fill
-								className="object-cover"
-							/>
-							<div className="absolute inset-0 border-8 border-white/30"></div>
+							<p className="mt-4 text-gray-600">
+								Dengan komitmen dan ketulusan, setiap rangkaian bunga kami buat
+								secara personal untuk menemani momen berharga Anda. Kepuasan
+								pelanggan adalah prioritas utama kami, karena kami percaya bahwa
+								setiap bunga membawa pesan dan perasaan yang tak tergantikan.
+							</p>
 						</div>
 					</div>
 				</div>
@@ -96,14 +72,15 @@ export default function AboutUs() {
 					<div className="grid gap-8 md:grid-cols-3">
 						<div className="rounded-lg bg-white p-8 text-center shadow-sm transition-all hover:shadow-md">
 							<div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#9f6564]/10">
-								<Leaf className="h-8 w-8 text-[#9f6564]" />
+								<Wind className="h-8 w-8 text-[#9f6564]" />
 							</div>
 							<h3 className="mt-6 font-serif text-xl font-medium text-gray-800">
-								Sustainability
+								Fleksibel
 							</h3>
 							<p className="mt-4 text-gray-600">
-								We source our flowers ethically and strive to minimize our
-								environmental impact through eco-friendly practices.
+								Kami menyediakan berbagai macam pilihan bunga dan tidak terpaku
+								pada produk yang kami tampilkan di katalog, anda bisa merubah
+								warna, jenis bunga dan lain lain sesuai dengan keinginan anda
 							</p>
 						</div>
 						<div className="rounded-lg bg-white p-8 text-center shadow-sm transition-all hover:shadow-md">
@@ -111,11 +88,12 @@ export default function AboutUs() {
 								<Heart className="h-8 w-8 text-[#9f6564]" />
 							</div>
 							<h3 className="mt-6 font-serif text-xl font-medium text-gray-800">
-								Passion
+								Hati
 							</h3>
 							<p className="mt-4 text-gray-600">
-								Our love for flowers drives everything we do, from selecting the
-								freshest blooms to creating breathtaking arrangements.
+								Setiap rangkaian bunga yang kami buat adalah hasil dari cinta
+								dan perhatian kami terhadap detail. Kami percaya bahwa setiap
+								bunga memiliki cerita dan makna yang mendalam.
 							</p>
 						</div>
 						<div className="rounded-lg bg-white p-8 text-center shadow-sm transition-all hover:shadow-md">
@@ -123,11 +101,14 @@ export default function AboutUs() {
 								<MapPin className="h-8 w-8 text-[#9f6564]" />
 							</div>
 							<h3 className="mt-6 font-serif text-xl font-medium text-gray-800">
-								Community
+								Kualitas
 							</h3>
 							<p className="mt-4 text-gray-600">
-								We're proud to be part of our local community, supporting local
-								events and celebrating life's special moments together.
+								Kami percaya bahwa setiap detail memiliki makna. Karena itu,
+								kami selalu mengutamakan kualitas—mulai dari pemilihan bahan,
+								proses pengerjaan, hingga pelayanan kepada pelanggan. Kualitas
+								bagi kami bukan sekadar hasil akhir, tapi pengalaman menyeluruh
+								yang memuaskan dan tahan lama.
 							</p>
 						</div>
 					</div>
@@ -141,31 +122,23 @@ export default function AboutUs() {
 						<div className="flex flex-col items-center justify-between gap-8 md:flex-row">
 							<div>
 								<h2 className="font-serif text-2xl font-light text-gray-800 md:text-3xl">
-									Visit Our Flower Shop
+									Kunjungi Toko Kami
 								</h2>
 								<div className="mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
 								<p className="mt-4 text-gray-600">
-									We'd love to meet you in person and help you find the perfect
-									flowers for any occasion.
+									Kami dengan senang hati menyambut anda semua di toko kami.
 								</p>
 								<div className="mt-6 flex items-center">
 									<MapPin className="mr-2 h-5 w-5 text-[#9f6564]" />
 									<span className="text-gray-600">
-										123 Blossom Street, Flowertown
+										Jl. Imam Bonjol No.238d, RT.001/RW.004, Bojong Jaya, Kec.
+										Karawaci, Kota Tangerang, Banten 15115
 									</span>
 								</div>
 								<div className="mt-2 flex items-center">
 									<Phone className="mr-2 h-5 w-5 text-[#9f6564]" />
-									<span className="text-gray-600">(555) 123-4567</span>
+									<span className="text-gray-600">+62 819 9857 0313</span>
 								</div>
-							</div>
-							<div>
-								<Link
-									href="/contact"
-									className="inline-flex items-center justify-center rounded-md bg-[#9f6564] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#9f6564]/90"
-								>
-									Contact Us
-								</Link>
 							</div>
 						</div>
 						<div className="h-[300px] overflow-hidden rounded-lg border-4 border-white shadow-md md:h-[400px] mt-8">
