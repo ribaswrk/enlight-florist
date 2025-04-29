@@ -14,18 +14,28 @@ model User {
 }
 
 model Product {
-  productid  Int      @id @default(autoincrement())
-  category   Category @relation(fields: [categoryId], references: [categoryId])
-  categoryId Int
-  name       String
-  price      String
-  stock      String
-  homeView   Int
-  imageUrl   String?  @db.Text
-  createdBy  String
-  createdAt  DateTime @default(now())
-  updateBy   String
-  updateAt   DateTime @default(now())
+  productid    Int            @id @default(autoincrement())
+  category     Category       @relation(fields: [categoryId], references: [categoryId])
+  categoryId   Int
+  name         String
+  price        String
+  promoPrice   String
+  soldqty      String
+  homeView     Int
+  createdBy    String
+  createdAt    DateTime       @default(now())
+  updateBy     String
+  updateAt     DateTime       @default(now())
+  ProductImage ProductImage[]
+}
+
+model ProductImage {
+  id        Int      @id @default(autoincrement())
+  Product   Product  @relation(fields: [productid], references: [productid])
+  productid Int
+  imageUrl  String?  @db.Text
+  createdBy String
+  createdAt DateTime @default(now())
 }
 
 model Category {

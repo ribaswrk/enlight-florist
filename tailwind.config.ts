@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
-export default {
+const config: Config = {
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -72,7 +73,26 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      animation: {
+        "glow-effect": "glow-effect 1.5s infinite ease-in-out",
+      },
+      keyframes: {
+        "glow-effect": {
+          "0%, 100%": {
+            boxShadow:
+              "0 0 10px var(--muted-foreground), 0 0 20px var(--muted)",
+            opacity: "1",
+          },
+          "50%": {
+            boxShadow:
+              "0 0 20px var(--primary), 0 0 40px var(--primary-foreground)",
+            opacity: "0.5",
+          },
+        },
+      },
     },
   },
-  plugins: [],
-} satisfies Config;
+  plugins: [animate],
+};
+
+export default config;

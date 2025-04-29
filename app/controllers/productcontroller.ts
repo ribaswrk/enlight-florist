@@ -1,66 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectCommand,
-} from "@aws-sdk/client-s3";
-import { v4 as uuidv4 } from "uuid";
 
 const prisma = new PrismaClient();
-
-const R2_ENDPOINT = process.env.R2_ENDPOINT!;
-const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID!;
-const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY!;
-const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME!;
-const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL!; // Cloudflare public URL
-
-// ✅ Cloudflare R2 Client
-const s3 = new S3Client({
-  region: "auto",
-  endpoint: R2_ENDPOINT,
-  credentials: {
-    accessKeyId: R2_ACCESS_KEY_ID,
-    secretAccessKey: R2_SECRET_ACCESS_KEY,
-  },
-});
-
-// ✅ Helper function to upload image
-async function uploadImage(file: File): Promise<string | null> {
-  if (!file) return null;
-  try {
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const fileKey = `products/${uuidv4()}-${file.name}`;
-
-    await s3.send(
-      new PutObjectCommand({
-        Bucket: R2_BUCKET_NAME,
-        Key: fileKey,
-        Body: buffer,
-        ContentType: file.type,
-      })
-    );
-
-    return `${R2_PUBLIC_URL}/${fileKey}`;
-  } catch (error) {
-    console.log(error);
-    return ``;
-  }
-}
-
-// ✅ Helper function to delete image
-async function deleteImage(imageUrl: string) {
-  if (!imageUrl) return;
-
-  // Extract Key from URL
-  const fileKey = imageUrl.replace(`${R2_PUBLIC_URL}/`, "");
-
-  await s3.send(
-    new DeleteObjectCommand({
-      Bucket: R2_BUCKET_NAME,
-      Key: fileKey,
-    })
-  );
-}
 
 // ✅ Get Products
 export async function getProducts(
@@ -81,30 +21,44 @@ export async function getProducts(
           name: true,
         },
       },
+      ProductImage: {
+        select: {
+          id: true,
+          imageUrl: true,
+        },
+      },
     },
   });
 
   return products.map(
-    ({ productid, name, price, stock, category, homeView, imageUrl }) => ({
+    ({
+      productid,
+      name,
+      price,
+      promoPrice,
+      soldqty,
+      category,
+      homeView,
+      ProductImage,
+    }) => ({
       id: productid,
       name,
       price,
-      stock,
+      priceDisc: promoPrice,
+      soldqty,
       homeView,
       category: category.name,
-      imageUrl, // ✅ Ensure image is included
+      images: ProductImage.map((img) => ({
+        url: img.imageUrl,
+      })),
     })
   );
 }
 
 // ✅ Create Product (Now Supports FormData)
 export async function createProduct(data: FormData) {
-  let imageUrl: string | null = null;
-  const file = data.get("file") as File | null;
+  const files = data.get("file") as string[] | null;
 
-  if (file) {
-    imageUrl = await uploadImage(file);
-  }
   try {
     return await prisma.product.create({
       data: {
@@ -117,8 +71,17 @@ export async function createProduct(data: FormData) {
         updateBy: data.get("updateBy") as string,
         createdAt: new Date(),
         updateAt: new Date(),
-        imageUrl,
+        ProductImage:
+          files && files.length > 0
+            ? {
+                create: files.map((file) => ({
+                  imageUrl: file,
+                  createdBy: data.get("createdBy") as string,
+                })),
+              }
+            : undefined,
       },
+      include: { ProductImage: true },
     });
   } catch (error: any) {
     console.error("❌ Failed to create product:", error.message || error);
@@ -128,21 +91,8 @@ export async function createProduct(data: FormData) {
 
 // ✅ Update Product (Deletes Old Image)
 export async function updateProduct(productid: number, data: FormData) {
-  let imageUrl: string | null = null;
-  const file = data.get("file") as File | null;
+  const files = data.get("file") as string[] | null;
 
-  if (file) {
-    const existingProduct = await prisma.product.findUnique({
-      where: { productid },
-      select: { imageUrl: true },
-    });
-
-    if (existingProduct?.imageUrl) {
-      await deleteImage(existingProduct.imageUrl); // ✅ Delete old image
-    }
-
-    imageUrl = await uploadImage(file);
-  }
   try {
     const updatedProduct = await prisma.product.update({
       where: { productid },
@@ -154,9 +104,25 @@ export async function updateProduct(productid: number, data: FormData) {
         homeView: Number(data.get("homeView")),
         updateBy: data.get("updateBy") as string,
         updateAt: new Date(),
-        ...(imageUrl && { imageUrl }),
+        ProductImage: {
+          deleteMany: {},
+        },
       },
     });
+
+    if (files && files.length > 0) {
+      await prisma.product.update({
+        where: { productid },
+        data: {
+          ProductImage: {
+            create: files.map((url) => ({
+              file: url,
+              createdBy: data.get("updateBy") as string,
+            })),
+          },
+        },
+      });
+    }
 
     console.log("✅ Product updated:", updatedProduct);
     return updatedProduct;
@@ -168,14 +134,17 @@ export async function updateProduct(productid: number, data: FormData) {
 
 // ✅ Delete Product (Deletes Image)
 export async function deleteProduct(productid: number) {
-  const product = await prisma.product.findUnique({
-    where: { productid },
-    select: { imageUrl: true },
-  });
+  try {
+    //delete the image that related to the products
+    await prisma.productImage.deleteMany({
+      where: { productid },
+    });
 
-  if (product?.imageUrl) {
-    await deleteImage(product.imageUrl); // ✅ Delete image
+    return await prisma.product.delete({
+      where: { productid },
+    });
+  } catch (error: any) {
+    console.error("❌ Failed to delete product:", error.message || error);
+    throw error;
   }
-
-  return await prisma.product.delete({ where: { productid } });
 }

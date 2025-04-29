@@ -8,8 +8,10 @@ import {
 } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { MultiImageUpload } from "@/components/MultiImage/multi-image-upload";
 
 // Tipe data untuk produk
+
 type Product = {
   id: number;
   name: string;
@@ -18,8 +20,8 @@ type Product = {
   priceDisc: number;
   homeView: number;
   stock: number;
-  imageUrl?: string;
-  sold?: number;
+  imagesUrl?: string[];
+  soldqty?: number;
 };
 
 type Category = {
@@ -35,7 +37,6 @@ export default function ProductsManagement() {
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [productName, setProductName] = useState("");
-  const [productStock, setProductStock] = useState<number | string>("");
   const [productHomeView, setProductHomeView] = useState<number | string>("");
   const [productPrice, setProductPrice] = useState<number | string>("");
   const [productPriceDisc, setProductPriceDisc] = useState<number | string>("");
@@ -47,8 +48,8 @@ export default function ProductsManagement() {
   const [selectedProductId, setSelectedProductId] = useState<number>(0);
   const { data: session } = useSession();
   const [productImage, setProductImage] = useState<File | null>(null);
-  const [productImageUrl, setProductImageUrl] = useState<string>("");
-  const [sold, setSold] = useState<string | number>("");
+  const [productImageUrl, setProductImageUrl] = useState<string[]>();
+  const [soldqty, setSoldQty] = useState<string | number>("");
 
   // Filter produk berdasarkan pencarian
   const filteredProducts = products.filter((product) =>
@@ -101,14 +102,13 @@ export default function ProductsManagement() {
       const formData = new FormData();
       formData.append("name", productName);
       formData.append("price", String(productPrice));
-      formData.append("stock", String(productStock));
       formData.append("categoryId", String(selectedCategoryId));
       formData.append("homeView", String(productHomeView));
-      formData.append("sold", String(sold));
+      formData.append("soldqty", String(soldqty));
       formData.append("updateBy", session?.user?.name || "Admin"); // Update user
       formData.append("createdBy", session?.user?.name || "Admin"); // Created user
-      if (productImage) {
-        formData.append("file", productImage); // Attach file
+      if (productImageUrl) {
+        formData.append("images", JSON.stringify(productImageUrl)); // Attach file
       }
 
       const method = editingProduct ? "PUT" : "POST";
@@ -129,15 +129,14 @@ export default function ProductsManagement() {
       // Reset form
       setProductName("");
       setProductPrice("");
-      setProductStock("");
       setProductHomeView(0);
       setSelectedCategoryId(null);
       setProductImage(null);
-      setProductImageUrl("");
+      setProductImageUrl([]);
       setShowDialog(false);
       setEditingProduct(null);
       setProductPriceDisc("");
-      setSold(0);
+      setSoldQty(0);
       fetchProducts();
     } catch (error) {
       console.error("Error saving product:", error);
@@ -174,10 +173,10 @@ export default function ProductsManagement() {
     setEditingProduct(product || null);
     setProductName(product?.name || "");
     setProductPrice(product?.price || "");
-    setProductStock(product?.stock || "");
     setProductHomeView(product?.homeView || 0);
+    setProductImageUrl(product?.imagesUrl);
     setSelectedCategoryId(matchedCategory?.id || null);
-    setSold(product?.sold || 0);
+    setSoldQty(product?.soldqty || 0);
     setShowDialog(true);
   };
 
@@ -264,14 +263,14 @@ export default function ProductsManagement() {
                 <td className="px-6 py-4">
                   {product.priceDisc ? formatRupiah(product.priceDisc) : "-"}
                 </td>
-                <td className="px-6 py-4">{product.sold}</td>
+                <td className="px-6 py-4">{product.soldqty}</td>
                 <td className="px-6 py-4">
                   {product.homeView ? "Ya" : "Tidak"}
                 </td>
                 <td className="px-6 py-4">
-                  {product.imageUrl && (
+                  {product.imagesUrl && (
                     <Image
-                      src={product.imageUrl}
+                      src={String(product.imagesUrl[0])}
                       alt={product.name}
                       width={150} // ✅ Set a default width
                       height={100} // ✅ Set a default height
@@ -368,17 +367,17 @@ export default function ProductsManagement() {
               }}
             />
 
-            {/* Sold */}
+            {/* soldqty */}
             <input
               type="number"
               placeholder="Produk Terjual"
               className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
-              value={sold}
+              value={soldqty}
               onChange={(e) => {
                 const value = e.target.value;
                 if (/^\d*$/.test(value)) {
                   // Hanya angka yang diperbolehkan
-                  setSold(value);
+                  setSoldQty(value);
                 }
               }}
             />
@@ -409,7 +408,7 @@ export default function ProductsManagement() {
             </select>
 
             {/* Gambar */}
-            {productImageUrl && (
+            {/* {productImageUrl && (
               <Image
                 src={productImageUrl}
                 alt="Preview"
@@ -428,6 +427,10 @@ export default function ProductsManagement() {
                   setProductImageUrl(URL.createObjectURL(e.target.files[0])); // Show preview
                 }
               }}
+            /> */}
+            <MultiImageUpload
+              value={productImageUrl || []}
+              onChange={setProductImageUrl}
             />
 
             {/* Tombol Simpan */}
