@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     formData.set("createdBy", decodedToken.name);
     formData.set("updateBy", decodedToken.name);
-
+    console.log("formdata content", formData);
     const newProduct = await createProduct(formData);
     return NextResponse.json(newProduct, { status: 201 });
   } catch {
@@ -111,6 +111,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Missing ID" }, { status: 401 });
     }
     formData.set("updateBy", decodedToken.name);
+    console.log("formdata content", formData);
     // ✅ Pass userId to createProduct
     const updatedProduct = await updateProduct(
       Number(formData.get("id")),

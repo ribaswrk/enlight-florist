@@ -20,7 +20,7 @@ type Product = {
   priceDisc: number;
   homeView: number;
   stock: number;
-  imagesUrl?: string[];
+  images?: string[];
   soldqty?: number;
 };
 
@@ -102,6 +102,7 @@ export default function ProductsManagement() {
       const formData = new FormData();
       formData.append("name", productName);
       formData.append("price", String(productPrice));
+      formData.append("promoPrice", String(productPriceDisc));
       formData.append("categoryId", String(selectedCategoryId));
       formData.append("homeView", String(productHomeView));
       formData.append("soldqty", String(soldqty));
@@ -174,10 +175,11 @@ export default function ProductsManagement() {
     setProductName(product?.name || "");
     setProductPrice(product?.price || "");
     setProductHomeView(product?.homeView || 0);
-    setProductImageUrl(product?.imagesUrl);
+    setProductImageUrl(product?.images);
     setSelectedCategoryId(matchedCategory?.id || null);
     setSoldQty(product?.soldqty || 0);
     setShowDialog(true);
+    console.log("setProductImageUrl", productImageUrl);
   };
 
   const confirmDelete = (productId: number) => {
@@ -268,15 +270,16 @@ export default function ProductsManagement() {
                   {product.homeView ? "Ya" : "Tidak"}
                 </td>
                 <td className="px-6 py-4">
-                  {product.imagesUrl && (
-                    <Image
-                      src={String(product.imagesUrl[0])}
-                      alt={product.name}
-                      width={150} // ✅ Set a default width
-                      height={100} // ✅ Set a default height
-                      className="object-cover rounded"
-                    />
-                  )}
+                  {product.images?.[0] &&
+                    typeof product.images[0] === "string" && (
+                      <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        width={150}
+                        height={100}
+                        className="object-cover rounded"
+                      />
+                    )}
                 </td>
                 <td className="px-6 py-4 flex items-center space-x-2">
                   <button onClick={() => openDialog(product)}>
@@ -340,7 +343,7 @@ export default function ProductsManagement() {
             {/* Harga */}
             <input
               type="number"
-              placeholder="Harga produk"
+              placeholder="Harga Produk"
               className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
               value={productPrice}
               onChange={(e) => {
@@ -355,7 +358,7 @@ export default function ProductsManagement() {
             {/* Harga Promo */}
             <input
               type="number"
-              placeholder="Harga produk"
+              placeholder="Harga Promo Produk"
               className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
               value={productPriceDisc}
               onChange={(e) => {

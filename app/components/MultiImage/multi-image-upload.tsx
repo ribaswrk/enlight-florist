@@ -199,6 +199,7 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
   accept = "image/*",
 }) => {
   // Initialize state with value directly
+  console.log("value multi", value);
   const [files, setFiles] = React.useState<UploadedFile[]>(() =>
     value.map((url, index) => ({
       id: `${index}-${Date.now()}`,

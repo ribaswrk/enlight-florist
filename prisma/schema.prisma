@@ -19,8 +19,8 @@ model Product {
   categoryId   Int
   name         String
   price        String
-  promoPrice   String
-  soldqty      String
+  promoPrice   String         @default("0")
+  soldqty      String         @default("0")
   homeView     Int
   createdBy    String
   createdAt    DateTime       @default(now())

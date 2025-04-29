@@ -48,23 +48,34 @@ export async function getProducts(
       soldqty,
       homeView,
       category: category.name,
-      images: ProductImage.map((img) => ({
-        url: img.imageUrl,
-      })),
+      images: ProductImage.map((img) => img.imageUrl),
     })
   );
 }
 
 // ✅ Create Product (Now Supports FormData)
 export async function createProduct(data: FormData) {
-  const files = data.get("file") as string[] | null;
+  let images: string[] = [];
+
+  try {
+    const rawImages = data.get("images");
+    if (rawImages) {
+      images = JSON.parse(rawImages as string);
+      if (!Array.isArray(images))
+        throw new Error("Parsed images is not an array");
+    }
+  } catch (err) {
+    console.error("❌ Invalid images JSON:", err);
+    images = [];
+  }
 
   try {
     return await prisma.product.create({
       data: {
         name: data.get("name") as string,
         price: String(data.get("price")),
-        stock: String(data.get("stock")),
+        promoPrice: String(data.get("promoPrice")),
+        soldqty: String(data.get("soldqty")),
         categoryId: Number(data.get("categoryId")),
         homeView: Number(data.get("homeView")),
         createdBy: data.get("createdBy") as string,
@@ -72,10 +83,10 @@ export async function createProduct(data: FormData) {
         createdAt: new Date(),
         updateAt: new Date(),
         ProductImage:
-          files && files.length > 0
+          images && images.length > 0
             ? {
-                create: files.map((file) => ({
-                  imageUrl: file,
+                create: images.map((image) => ({
+                  imageUrl: image,
                   createdBy: data.get("createdBy") as string,
                 })),
               }
@@ -91,7 +102,19 @@ export async function createProduct(data: FormData) {
 
 // ✅ Update Product (Deletes Old Image)
 export async function updateProduct(productid: number, data: FormData) {
-  const files = data.get("file") as string[] | null;
+  let images: string[] = [];
+
+  try {
+    const rawImages = data.get("images");
+    if (rawImages) {
+      images = JSON.parse(rawImages as string);
+      if (!Array.isArray(images))
+        throw new Error("Parsed images is not an array");
+    }
+  } catch (err) {
+    console.error("❌ Invalid images JSON:", err);
+    images = [];
+  }
 
   try {
     const updatedProduct = await prisma.product.update({
@@ -99,7 +122,8 @@ export async function updateProduct(productid: number, data: FormData) {
       data: {
         name: data.get("name") as string,
         price: String(data.get("price")),
-        stock: String(data.get("stock")),
+        promoPrice: String(data.get("promoPrice")),
+        soldqty: String(data.get("soldqty")),
         categoryId: Number(data.get("categoryId")),
         homeView: Number(data.get("homeView")),
         updateBy: data.get("updateBy") as string,
@@ -110,13 +134,13 @@ export async function updateProduct(productid: number, data: FormData) {
       },
     });
 
-    if (files && files.length > 0) {
+    if (images && images.length > 0) {
       await prisma.product.update({
         where: { productid },
         data: {
           ProductImage: {
-            create: files.map((url) => ({
-              file: url,
+            create: images.map((image) => ({
+              imageUrl: image,
               createdBy: data.get("updateBy") as string,
             })),
           },
