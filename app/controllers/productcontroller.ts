@@ -53,6 +53,52 @@ export async function getProducts(
   );
 }
 
+export async function getProductsHome() {
+  const categories = await prisma.category.findMany({
+    where: {
+      homeView: 1,
+    },
+    select: {
+      categoryId: true,
+      name: true,
+      Product: {
+        where: {
+          homeView: 1,
+        },
+        take: 10,
+        select: {
+          productid: true,
+          name: true,
+          price: true,
+          promoPrice: true,
+          ProductImage: {
+            take: 1,
+            select: {
+              imageUrl: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  console.log("categories", categories);
+  const categorySections = categories.map((cat) => ({
+    name: cat.name,
+    slug: cat.categoryId.toString(), // using categoryId as slug
+    products: cat.Product.map((prod) => ({
+      id: prod.productid.toString(),
+      name: prod.name,
+      price: parseFloat(prod.promoPrice !== "0" ? prod.promoPrice : prod.price),
+      image:
+        prod.ProductImage[0]?.imageUrl ||
+        "/placeholder.svg?height=400&width=400",
+      category: cat.categoryId.toString(),
+    })),
+  }));
+
+  return categorySections;
+}
+
 // ✅ Create Product (Now Supports FormData)
 export async function createProduct(data: FormData) {
   let images: string[] = [];

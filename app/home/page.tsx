@@ -33,196 +33,6 @@ const carouselImages = [
   },
 ];
 
-// Simulasi data produk
-const categories: CategorySection[] = [
-  {
-    name: "Fresh Flowers",
-    slug: "fresh-flowers",
-    products: [
-      {
-        id: "1",
-        name: "Rose Bouquet",
-        price: 49.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "fresh-flowers",
-      },
-      {
-        id: "2",
-        name: "Tulip Arrangement",
-        price: 39.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "fresh-flowers",
-      },
-      {
-        id: "3",
-        name: "Sunflower Bundle",
-        price: 29.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "fresh-flowers",
-      },
-      {
-        id: "4",
-        name: "Mixed Seasonal",
-        price: 59.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "fresh-flowers",
-      },
-      {
-        id: "5",
-        name: "Lily Bouquet",
-        price: 44.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "fresh-flowers",
-      },
-      {
-        id: "6",
-        name: "Orchid Display",
-        price: 69.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "fresh-flowers",
-      },
-      {
-        id: "7",
-        name: "Daisy Collection",
-        price: 34.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "fresh-flowers",
-      },
-      {
-        id: "8",
-        name: "Garden Mix",
-        price: 54.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "fresh-flowers",
-      },
-    ],
-  },
-  {
-    name: "Wedding Collections",
-    slug: "wedding",
-    products: [
-      {
-        id: "9",
-        name: "Bridal Bouquet",
-        price: 149.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "wedding",
-      },
-      {
-        id: "10",
-        name: "Centerpiece Set",
-        price: 199.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "wedding",
-      },
-      {
-        id: "11",
-        name: "Arch Decoration",
-        price: 299.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "wedding",
-      },
-      {
-        id: "12",
-        name: "Boutonnière Set",
-        price: 79.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "wedding",
-      },
-      {
-        id: "13",
-        name: "Bridesmaid Bundle",
-        price: 129.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "wedding",
-      },
-      {
-        id: "14",
-        name: "Aisle Markers",
-        price: 159.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "wedding",
-      },
-      {
-        id: "15",
-        name: "Reception Package",
-        price: 399.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "wedding",
-      },
-      {
-        id: "16",
-        name: "Flower Girl Set",
-        price: 89.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "wedding",
-      },
-    ],
-  },
-  {
-    name: "Dried Flowers",
-    slug: "dried-flowers",
-    products: [
-      {
-        id: "17",
-        name: "Preserved Roses",
-        price: 89.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "dried-flowers",
-      },
-      {
-        id: "18",
-        name: "Dried Lavender",
-        price: 34.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "dried-flowers",
-      },
-      {
-        id: "19",
-        name: "Pampas Grass",
-        price: 24.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "dried-flowers",
-      },
-      {
-        id: "20",
-        name: "Botanical Mix",
-        price: 44.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "dried-flowers",
-      },
-      {
-        id: "21",
-        name: "Dried Hydrangea",
-        price: 39.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "dried-flowers",
-      },
-      {
-        id: "22",
-        name: "Cotton Stems",
-        price: 29.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "dried-flowers",
-      },
-      {
-        id: "23",
-        name: "Wheat Bundle",
-        price: 19.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "dried-flowers",
-      },
-      {
-        id: "24",
-        name: "Forever Bouquet",
-        price: 79.99,
-        image: "/placeholder.svg?height=400&width=400",
-        category: "dried-flowers",
-      },
-    ],
-  },
-];
-
 const clients = [
   {
     name: "Vogue Wedding",
@@ -252,6 +62,42 @@ const clients = [
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [categories, setCategories] = useState<CategorySection[]>([]);
+  // Simulasi data produk
+  const fetchCategory = async () => {
+    try {
+      const res = await fetch("/api/protected/products?view=home", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch category");
+
+      const data: CategorySection[] = await res.json();
+      console.log("raw data", data);
+
+      const transformedCategories: CategorySection[] = data.map((category) => ({
+        name: category.name,
+        slug: category.slug,
+        products: category.products.map((product) => ({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          category: product.category,
+        })),
+      }));
+
+      setCategories(transformedCategories);
+      console.log("transformed", transformedCategories);
+    } catch (error) {
+      console.error("Error fetching category:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategory();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -298,9 +144,11 @@ export default function HomePage() {
         <div className="flex text-rose-500 dark:text-rose-400 items-center justify-center text-center">
           <Flower2 className="h-8 w-8 animate-pulse" />
         </div>
-        {categories.map((category) => (
-          <CategoryCarousel key={category.slug} category={category} />
-        ))}
+        {categories
+          .filter((category) => category.products.length > 0)
+          .map((category) => (
+            <CategoryCarousel key={category.slug} category={category} />
+          ))}
       </div>
       {/* Decorative Background */}
       <div className="flex flex-col items-center justify-center space-y-4 text-center pt-32">

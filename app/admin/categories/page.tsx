@@ -13,6 +13,7 @@ import Image from "next/image";
 type Category = {
   id: number;
   name: string;
+  homeView: number;
   imageCatUrl: string;
 };
 
@@ -25,6 +26,7 @@ export default function CategoriesManagement() {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+  const [catHomeView, setCatHomeView] = useState<number>(0);
   const [categoryImage, setCategoryImage] = useState<File | null>(null);
 
   const { data: session } = useSession();
@@ -60,6 +62,7 @@ export default function CategoriesManagement() {
       const method = editingCategory ? "PUT" : "POST";
       const formData = new FormData();
       formData.append("name", categoryName);
+      formData.append("homeView", String(catHomeView));
       formData.append("categoryId", String(selectedCategoryId));
       formData.append("updateBy", session?.user?.name || "Admin"); // Update user
       formData.append("createdBy", session?.user?.name || "Admin"); // Created user
@@ -118,6 +121,7 @@ export default function CategoriesManagement() {
   const openDialog = (category?: Category) => {
     setEditingCategory(category || null);
     setCategoryName(category?.name || "");
+    setCatHomeView(category?.homeView || 0);
     setShowDialog(true);
   };
 
@@ -167,6 +171,9 @@ export default function CategoriesManagement() {
                 Nama Kategori
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Tampilkan di Home
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Aksi
               </th>
             </tr>
@@ -187,6 +194,9 @@ export default function CategoriesManagement() {
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">{category.name}</td>
+                <td className="px-6 py-4">
+                  {category.homeView ? "Ya" : "Tidak"}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap flex items-center space-x-2">
                   <button onClick={() => openDialog(category)}>
                     <PencilIcon className="h-4 w-4" />
@@ -248,6 +258,16 @@ export default function CategoriesManagement() {
               value={categoryName}
               onChange={(e) => setCategoryName(e.target.value)}
             />
+            {/* home view */}
+            <label className="flex items-center space-x-2 mb-4">
+              <span>Home View</span>
+              <input
+                type="checkbox"
+                className="w-5 h-5 border-gray-300 rounded"
+                checked={catHomeView === 1} // Jika `productHomeView` adalah "1", maka dicentang
+                onChange={(e) => setCatHomeView(e.target.checked ? 1 : 0)} // Toggle antara 1 dan 0
+              />
+            </label>
             <input
               type="file"
               className="w-full mb-4"

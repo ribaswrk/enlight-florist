@@ -21,7 +21,7 @@ model Product {
   price        String
   promoPrice   String         @default("0")
   soldqty      String         @default("0")
-  homeView     Int
+  homeView     Int            @default(0)
   createdBy    String
   createdAt    DateTime       @default(now())
   updateBy     String
@@ -42,6 +42,7 @@ model Category {
   categoryId  Int       @id @default(autoincrement())
   name        String
   imageCatUrl String?   @db.Text
+  homeView    Int       @default(0)
   createdBy   String
   createdAt   DateTime  @default(now())
   updateBy    String

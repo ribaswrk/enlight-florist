@@ -66,13 +66,15 @@ export async function getcategory() {
     select: {
       categoryId: true, // Select only the necessary fields
       name: true,
+      homeView: true,
       updateBy: true,
       imageCatUrl: true, // Include image if needed
     },
   });
-  return category.map(({ categoryId, name, imageCatUrl }) => ({
+  return category.map(({ categoryId, name, imageCatUrl, homeView }) => ({
     id: categoryId,
     name,
+    homeView,
     imageCatUrl, // ✅ Ensure image is included
   }));
 }
@@ -89,6 +91,7 @@ export async function createcategory(data: FormData) {
     return await prisma.category.create({
       data: {
         name: data.get("name") as string,
+        homeView: Number(data.get("homeView")),
         createdBy: data.get("createdBy") as string,
         updateBy: data.get("updateBy") as string,
         imageCatUrl,
@@ -122,6 +125,7 @@ export async function updatecategory(categoryId: number, data: FormData) {
       where: { categoryId: categoryId },
       data: {
         name: data.get("name") as string,
+        homeView: Number(data.get("homeView")),
         updateBy: data.get("updateBy") as string,
         ...(imageCatUrl && { imageCatUrl }),
       },

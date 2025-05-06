@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `category` ADD COLUMN `homeView` INTEGER NOT NULL DEFAULT 0;

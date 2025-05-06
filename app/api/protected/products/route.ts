@@ -4,31 +4,37 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  getProductsHome,
 } from "../../../controllers/productcontroller";
 import jwt from "jsonwebtoken";
 
 // ✅ GET: Fetch all products
 export async function GET(req: Request) {
   try {
-    // ✅ Parse query parameters
     const { searchParams } = new URL(req.url);
+    const view = searchParams.get("view"); // e.g. 'home' or 'admin'
     const categoryId = searchParams.get("categoryId");
     const homeView = searchParams.get("homeView");
     const productId = searchParams.get("productId");
 
-    // ✅ Convert query parameters to appropriate types
     const parsedCategoryId = categoryId ? parseInt(categoryId, 10) : undefined;
     const parsedHomeView = homeView ? parseInt(homeView, 10) : undefined;
     const parsedProductId = productId ? parseInt(productId, 10) : undefined;
-    console.log("parsedProductId", parsedProductId);
-    // ✅ Fetch events based on query params
-    const products = await getProducts(
-      parsedCategoryId,
-      parsedHomeView,
-      parsedProductId
-    );
 
-    return NextResponse.json(products);
+    let result;
+    console.log("view", view);
+    if (view === "home") {
+      result = await getProductsHome();
+    } else {
+      result = await getProducts(
+        parsedCategoryId,
+        parsedHomeView,
+        parsedProductId
+      );
+    }
+    console.log("return", result);
+
+    return NextResponse.json(result);
   } catch (error) {
     console.error(error);
     return NextResponse.json(
