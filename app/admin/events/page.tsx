@@ -14,7 +14,7 @@ type Event = {
   id: number;
   name: string;
   show: number;
-  image: string;
+  urls: string;
 };
 
 export default function EventsManagement() {
@@ -25,6 +25,7 @@ export default function EventsManagement() {
   const [loading, setLoading] = useState(false);
   const [eventName, setEventName] = useState("");
   const [eventShow, setEventShow] = useState(0);
+  const [savedEventImage, setSavedImageShow] = useState("");
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [eventImage, setEventImage] = useState<File | null>(null);
 
@@ -120,6 +121,7 @@ export default function EventsManagement() {
     setEditingEvent(event || null);
     setEventName(event?.name || "");
     setEventShow(event?.show || 0);
+    setSavedImageShow(event?.urls || "");
     setShowDialog(true);
   };
 
@@ -185,9 +187,9 @@ export default function EventsManagement() {
                   {event.show ? "Ya" : "Tidak"}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {event.image && (
+                  {event.urls && (
                     <Image
-                      src={event.image}
+                      src={event.urls}
                       alt={event.name}
                       width={150} // ✅ Set a default width
                       height={100} // ✅ Set a default height
@@ -267,6 +269,15 @@ export default function EventsManagement() {
               </label>
 
               {/*Foto Event*/}
+              {savedEventImage && (
+                <Image
+                  src={savedEventImage}
+                  alt={eventName}
+                  width={150} // ✅ Set a default width
+                  height={100} // ✅ Set a default height
+                  className="object-cover rounded"
+                />
+              )}
               <input
                 type="file"
                 accept="image/*"

@@ -81,7 +81,7 @@ export async function getEvent(eventid?: number, homeView?: number) {
     id: eventId, // ✅ Rename `eventid` to `id`
     name,
     show,
-    image: imageEventUrl, // ✅ Flatten category name
+    urls: imageEventUrl, // ✅ Flatten category name
   }));
 }
 // ✅ Create a new event

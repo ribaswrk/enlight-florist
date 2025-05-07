@@ -18,18 +18,23 @@ interface CategorySection {
   products: Product[];
 }
 
-const carouselImages = [
+interface events {
+  name: string;
+  urls: string;
+}
+
+const carouselImages: events[] = [
   {
-    src: "https://cdn.rri.co.id/berita/Fak_Fak/o/1719405685005-pexels-pixabay-bunga_matahari/t3u3g0x7y1jswn2.jpeg",
-    alt: "Rangkaian bunga indah 1",
+    urls: "https://cdn.rri.co.id/berita/Fak_Fak/o/1719405685005-pexels-pixabay-bunga_matahari/t3u3g0x7y1jswn2.jpeg",
+    name: "Rangkaian bunga indah 1",
   },
   {
-    src: "https://www.quipper.com/id/blog/wp-content/uploads/2023/01/pexels-pixabay-36753.webp",
-    alt: "Rangkaian bunga indah 2",
+    urls: "https://www.quipper.com/id/blog/wp-content/uploads/2023/01/pexels-pixabay-36753.webp",
+    name: "Rangkaian bunga indah 2",
   },
   {
-    src: "https://asset.kompas.com/crops/ILXe4fpUJp5syKO801bvechD-j4=/0x0:1000x667/1200x800/data/photo/2022/07/25/62de3dc731bfa.jpg",
-    alt: "Rangkaian bunga indah 3",
+    urls: "https://asset.kompas.com/crops/ILXe4fpUJp5syKO801bvechD-j4=/0x0:1000x667/1200x800/data/photo/2022/07/25/62de3dc731bfa.jpg",
+    name: "Rangkaian bunga indah 3",
   },
 ];
 
@@ -63,6 +68,8 @@ const clients = [
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [categories, setCategories] = useState<CategorySection[]>([]);
+  const [events, setEvents] = useState<events[]>([]);
+
   // Simulasi data produk
   const fetchCategory = async () => {
     try {
@@ -95,22 +102,44 @@ export default function HomePage() {
     }
   };
 
+  const fetchEvents = async () => {
+    try {
+      const res = await fetch("/api/protected/events?homeView=1", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch events");
+
+      const data: events[] = await res.json();
+      console.log("raw event data", data);
+
+      setEvents(data);
+    } catch (error) {
+      console.error("Error fetching category:", error);
+    }
+  };
+
   useEffect(() => {
+    fetchEvents();
     fetchCategory();
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % carouselImages.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
+    if (events.length <= 1) return; // ✅ Prevent carousel logic if only 1 image
+
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % events.length);
+    }, 5000); // 5 seconds or whatever your timing is
+
+    return () => clearInterval(interval);
+  }, [events]);
 
   return (
     <main className="bg-customBg min-h-screen">
       {/* Carousel event Section */}
       <div className="relative w-full h-[60vh] overflow-hidden">
-        {carouselImages.map((image, index) => (
+        {events.map((image, index) => (
           <div
             key={index}
             className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ${
@@ -118,8 +147,8 @@ export default function HomePage() {
             }`}
           >
             <Image
-              src={image.src || "/placeholder.svg"}
-              alt={image.alt}
+              src={image.urls || "/placeholder.svg"}
+              alt={image.name}
               layout="fill"
               objectFit="cover"
               priority
@@ -127,13 +156,15 @@ export default function HomePage() {
           </div>
         ))}
         <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-          {carouselImages.map((_, index) => (
+          {events.map((_, index) => (
             <button
               key={index}
               className={`w-3 h-3 rounded-full ${
                 index === currentSlide ? "bg-white" : "bg-white/50"
               }`}
-              onClick={() => setCurrentSlide(index)}
+              onClick={() => {
+                if (events.length > 1) setCurrentSlide(index);
+              }}
             />
           ))}
         </div>
