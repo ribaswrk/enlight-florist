@@ -7,11 +7,13 @@ export interface Category {
   id: number;
   categoryName: string;
   slug: string;
+  imageUrl: string;
 }
 
 export interface CategoryRes {
   id: number;
   name: string;
+  imageCatUrl: string;
 }
 
 export default function CategoriesPage() {
@@ -30,6 +32,7 @@ export default function CategoriesPage() {
       const transformedCategories = data.map((category: CategoryRes) => ({
         id: category.id,
         categoryName: category.name,
+        imageUrl: category.imageCatUrl,
         slug: category.id,
       }));
       console.log(transformedCategories);
@@ -52,7 +55,7 @@ export default function CategoriesPage() {
         {categories.map((cat) => (
           <div key={cat.id}>
             <CategoryCard
-              imageUrl={""}
+              imageUrl={cat.imageUrl}
               categoryName={cat.categoryName}
               slug={cat.slug}
             />
