@@ -23,48 +23,6 @@ interface events {
   urls: string;
 }
 
-const carouselImages: events[] = [
-  {
-    urls: "https://cdn.rri.co.id/berita/Fak_Fak/o/1719405685005-pexels-pixabay-bunga_matahari/t3u3g0x7y1jswn2.jpeg",
-    name: "Rangkaian bunga indah 1",
-  },
-  {
-    urls: "https://www.quipper.com/id/blog/wp-content/uploads/2023/01/pexels-pixabay-36753.webp",
-    name: "Rangkaian bunga indah 2",
-  },
-  {
-    urls: "https://asset.kompas.com/crops/ILXe4fpUJp5syKO801bvechD-j4=/0x0:1000x667/1200x800/data/photo/2022/07/25/62de3dc731bfa.jpg",
-    name: "Rangkaian bunga indah 3",
-  },
-];
-
-const clients = [
-  {
-    name: "Vogue Wedding",
-    logo: "/placeholder.svg?height=80&width=160",
-  },
-  {
-    name: "Elegant Venues",
-    logo: "/placeholder.svg?height=80&width=160",
-  },
-  {
-    name: "Luxury Hotels",
-    logo: "/placeholder.svg?height=80&width=160",
-  },
-  {
-    name: "Wedding Magazine",
-    logo: "/placeholder.svg?height=80&width=160",
-  },
-  {
-    name: "Event Planners",
-    logo: "/placeholder.svg?height=80&width=160",
-  },
-  {
-    name: "Bridal Magazine",
-    logo: "/placeholder.svg?height=80&width=160",
-  },
-];
-
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [categories, setCategories] = useState<CategorySection[]>([]);
@@ -180,55 +138,6 @@ export default function HomePage() {
           .map((category) => (
             <CategoryCarousel key={category.slug} category={category} />
           ))}
-      </div>
-      {/* Decorative Background */}
-      <div className="flex flex-col items-center justify-center space-y-4 text-center pt-32">
-        {/* Decorative Flower Icon */}
-        <div className="text-rose-500 dark:text-rose-400">
-          <Flower2 className="h-8 w-8 animate-pulse" />
-        </div>
-
-        <div className="space-y-2">
-          <h2 className="font-serif text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">
-            Our Clients
-          </h2>
-          <p className="mx-auto max-w-[700px] text-muted-foreground italic md:text-lg">
-            Proudly creating floral magic for these wonderful partners
-          </p>
-        </div>
-      </div>
-      {/* Curved Decorative Line */}
-      <div className="py-16 md:py-24 lg:py-32 relative overflow-hidden">
-        <div className="relative mt-8 mb-12">
-          <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-rose-200 dark:via-rose-800 to-transparent" />
-        </div>
-
-        <div className="mx-auto grid grid-cols-2 gap-8 md:grid-cols-3 lg:gap-12 [&_img]:mx-auto max-w-5xl">
-          {clients.map((client) => (
-            <div
-              key={client.name}
-              className="group relative flex items-center justify-center p-6 transition-all duration-300 hover:scale-105"
-            >
-              {/* Subtle Hover Effect Background */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-rose-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity dark:from-rose-950/20" />
-
-              <Image
-                src={client.logo || "/placeholder.svg"}
-                alt={`${client.name} logo`}
-                width={160}
-                height={80}
-                className="relative object-contain transition-all duration-300 group-hover:brightness-110"
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom Decorative Elements */}
-        <div className="mt-16 flex items-center justify-center gap-4">
-          <div className="h-px w-12 bg-gradient-to-r from-transparent to-rose-200 dark:to-rose-800" />
-          <Flower2 className="h-5 w-5 text-rose-400 rotate-45" />
-          <div className="h-px w-12 bg-gradient-to-l from-transparent to-rose-200 dark:to-rose-800" />
-        </div>
       </div>
       {/* Store Information Section */}
       <div className="max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
