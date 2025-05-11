@@ -100,8 +100,8 @@ export default function Corporate() {
 								Hampers Eksklusif
 							</h3>
 							<p className="mt-4 text-gray-600">
-								Kami memberikan hampers eksklusif saat hari besar atau momen
-								spesial.
+								Kami siap menerima pesanan dalam jumlah banyak untuk hari besar
+								atau event perusahaan.
 							</p>
 						</div>
 
