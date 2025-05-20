@@ -2,14 +2,14 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "../../components/ui/button";
+import Link from "next/link";
 
 interface Product {
   id: string;
   name: string;
-  price: number;
+  price: string;
+  priceDisc: string;
   image: string;
   category: string;
 }
@@ -65,6 +65,14 @@ export default function CategoryCarousel({
     setTimeout(() => setIsTransitioning(false), 500);
   };
 
+  const formatRupiah = (price: number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(price);
+  };
+
   return (
     <div className="mb-24 last:mb-0 pt-12">
       {/* Category Title */}
@@ -92,20 +100,38 @@ export default function CategoryCarousel({
                 {slide.map((product) => (
                   <div key={product.id} className="flex-1 group">
                     <div className="relative bg-white dark:bg-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow h-full">
-                      <div className="aspect-square relative overflow-hidden rounded-md mb-4">
-                        <Image
-                          src={product.image || "/placeholder.svg"}
-                          alt={product.name}
-                          fill
-                          className="object-cover transition-transform group-hover:scale-105"
-                        />
-                      </div>
-                      <h3 className="font-medium text-lg mb-2">
-                        {product.name}
-                      </h3>
-                      <p className="text-rose-600 dark:text-rose-400 font-semibold">
-                        ${product.price.toFixed(2)}
-                      </p>
+                      <Link
+                        href={`/productdetail/${product.id}`}
+                        key={product.id}
+                      >
+                        <div className="aspect-square relative overflow-hidden rounded-md mb-4">
+                          <Image
+                            src={product.image || "/placeholder.svg"}
+                            alt={product.name}
+                            fill
+                            className="object-cover transition-transform group-hover:scale-105"
+                          />
+                        </div>
+                        <h3 className="font-medium text-lg mb-2">
+                          {product.name}
+                        </h3>
+                        <p className="text-rose-600 dark:text-rose-400 font-semibold">
+                          {product.priceDisc !== "0" ? (
+                            <>
+                              <span className="text-red-400 line-through text-sm">
+                                {formatRupiah(Number(product.price))}
+                              </span>
+                              <span className="text-red-500 font-bold">
+                                {formatRupiah(Number(product.priceDisc))}
+                              </span>
+                            </>
+                          ) : (
+                            <span className="text-red-600 font-semibold">
+                              {formatRupiah(Number(product.price))}
+                            </span>
+                          )}
+                        </p>
+                      </Link>
                     </div>
                   </div>
                 ))}

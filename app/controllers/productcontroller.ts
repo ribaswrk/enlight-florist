@@ -18,6 +18,7 @@ export async function getProducts(
     include: {
       category: {
         select: {
+          categoryId: true,
           name: true,
         },
       },
@@ -47,6 +48,7 @@ export async function getProducts(
       priceDisc: promoPrice,
       soldqty,
       homeView,
+      categoryId: category.categoryId,
       category: category.name,
       images: ProductImage.map((img) => img.imageUrl),
     })
@@ -88,11 +90,12 @@ export async function getProductsHome() {
     products: cat.Product.map((prod) => ({
       id: prod.productid.toString(),
       name: prod.name,
-      price: parseFloat(prod.promoPrice !== "0" ? prod.promoPrice : prod.price),
+      price: prod.price,
       image:
         prod.ProductImage[0]?.imageUrl ||
         "/placeholder.svg?height=400&width=400",
       category: cat.categoryId.toString(),
+      priceDisc: prod.promoPrice,
     })),
   }));
 

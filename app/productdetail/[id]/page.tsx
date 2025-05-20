@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import AutoSlider from '@/components/MultiImage/autoslider';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import AutoSlider from "@/components/MultiImage/autoslider";
+import Image from "next/image";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface Product {
   id: number;
@@ -24,9 +24,9 @@ export default function ProductDetailPage() {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
   const formatRupiah = (price: number) =>
-    new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
+    new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
       minimumFractionDigits: 0,
     }).format(price);
 
@@ -35,7 +35,7 @@ export default function ProductDetailPage() {
     excludeId: number,
     limit = 3
   ): Product[] => {
-    const filtered = products.filter(p => p.id !== excludeId);
+    const filtered = products.filter((p) => p.id !== excludeId);
     if (filtered.length <= limit) return filtered;
 
     return filtered.sort(() => Math.random() - 0.5).slice(0, limit);
@@ -44,7 +44,7 @@ export default function ProductDetailPage() {
   const fetchProductDetail = async () => {
     try {
       const res = await fetch(`/api/protected/products?productId=${id}`);
-      if (!res.ok) throw new Error('Failed to fetch product');
+      if (!res.ok) throw new Error("Failed to fetch product");
 
       const [productData] = await res.json();
       setProduct(productData);
@@ -53,7 +53,7 @@ export default function ProductDetailPage() {
         fetchRelatedProducts(productData.categoryId, productData.id);
       }
     } catch (error) {
-      console.error('Error fetching product:', error);
+      console.error("Error fetching product:", error);
     }
   };
 
@@ -65,13 +65,13 @@ export default function ProductDetailPage() {
       const res = await fetch(
         `/api/protected/products?categoryId=${categoryId}`
       );
-      if (!res.ok) throw new Error('Failed to fetch related products');
+      if (!res.ok) throw new Error("Failed to fetch related products");
 
       const data: Product[] = await res.json();
       const limited = getRandomProducts(data, excludeProductId);
       setRelatedProducts(limited);
     } catch (error) {
-      console.error('Error fetching related products:', error);
+      console.error("Error fetching related products:", error);
     }
   };
 
@@ -82,7 +82,7 @@ export default function ProductDetailPage() {
   if (!product) return <p className="text-center py-10">Loading...</p>;
 
   const displayPrice = (price: string, priceDisc: string) =>
-    formatRupiah(priceDisc !== '0' ? Number(priceDisc) : Number(price));
+    formatRupiah(priceDisc !== "0" ? Number(priceDisc) : Number(price));
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -113,13 +113,13 @@ export default function ProductDetailPage() {
           <p>Tidak ada produk lain di kategori ini.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {relatedProducts.map(relatedProduct => (
+            {relatedProducts.map((relatedProduct) => (
               <div
                 key={relatedProduct.id}
                 className="border rounded-lg p-4 hover:shadow-lg transition duration-300"
               >
                 <Image
-                  src={relatedProduct.images[0] || '/placeholder.svg'}
+                  src={relatedProduct.images[0] || "/placeholder.svg"}
                   alt={relatedProduct.name}
                   width={300}
                   height={300}

@@ -9,6 +9,7 @@ interface Product {
   id: string;
   name: string;
   price: number;
+  priceDisc: string;
   image: string;
   category: string;
 }
@@ -48,6 +49,7 @@ export default function HomePage() {
           id: product.id,
           name: product.name,
           price: product.price,
+          priceDisc: product.priceDisc,
           image: product.image,
           category: product.category,
         })),
