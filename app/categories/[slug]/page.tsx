@@ -1,6 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
+import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import Link from 'next/link';
 
 interface Product {
   id: number;
@@ -8,21 +8,24 @@ interface Product {
   images: string[];
   price: number;
   category: string;
+  soldqty: string;
+  priceDisc: string;
+  homeView: number;
 }
 
 async function getProducts(slug: string): Promise<Product[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
   const url = slug
     ? `${baseUrl}/api/protected/products?categoryId=${encodeURIComponent(slug)}`
     : `${baseUrl}/api/protected/products`;
 
   const res = await fetch(url, {
-    method: "GET",
-    cache: "no-store",
+    method: 'GET',
+    cache: 'no-store',
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch products");
+    throw new Error('Failed to fetch products');
   }
 
   return res.json();
@@ -39,11 +42,11 @@ export default async function CategoryPage({
   }
 
   const products = await getProducts(slug);
-
+  console.log('products', products);
   const formatRupiah = (price: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
       minimumFractionDigits: 0,
     }).format(price);
   };
@@ -65,20 +68,13 @@ export default async function CategoryPage({
             {products[0].category} Products
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((product) => {
-              // ✅ Dummy promoPrice dari hardcode
-              const promoPrice =
-                product.id % 2 === 0 ? product.price - 10000 : 0; // misal: produk id genap dapet diskon
-              const sold = Math.floor(Math.random() * 500) + 1;
-
-              const hasPromo = promoPrice > 0 && promoPrice < product.price;
-
+            {products.map(product => {
               return (
                 <Link href={`/productdetail/${product.id}`} key={product.id}>
                   <div className="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
                     <div className="relative aspect-square">
                       <Image
-                        src={product.images[0] || "/placeholder.svg"}
+                        src={product.images[0] || '/placeholder.svg'}
                         alt={product.name}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
@@ -90,24 +86,26 @@ export default async function CategoryPage({
 
                       {/* Harga */}
                       <div className="flex items-center gap-2">
-                        {hasPromo ? (
+                        {product.priceDisc !== '0' ? (
                           <>
-                            <span className="text-gray-400 line-through text-sm">
-                              {formatRupiah(product.price)}
+                            <span className="text-red-400 line-through text-sm">
+                              {formatRupiah(Number(product.price))}
                             </span>
                             <span className="text-red-500 font-bold">
-                              {formatRupiah(promoPrice)}
+                              {formatRupiah(Number(product.priceDisc))}
                             </span>
                           </>
                         ) : (
-                          <span className="text-gray-600 font-semibold">
-                            {formatRupiah(product.price)}
+                          <span className="text-red-600 font-semibold">
+                            {formatRupiah(Number(product.price))}
                           </span>
                         )}
                       </div>
 
                       {/* Terjual */}
-                      <p className="text-sm text-gray-500">{sold} terjual</p>
+                      <p className="text-sm text-gray-500">
+                        {product.soldqty} terjual
+                      </p>
                     </div>
                   </div>
                 </Link>
