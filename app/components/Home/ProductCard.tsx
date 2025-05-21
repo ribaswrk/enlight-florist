@@ -8,10 +8,11 @@ import Link from "next/link";
 interface Product {
   id: string;
   name: string;
-  price: string;
+  price: number;
   priceDisc: string;
   image: string;
   category: string;
+  soldQty: string;
 }
 
 interface CategorySection {
@@ -130,6 +131,10 @@ export default function CategoryCarousel({
                               {formatRupiah(Number(product.price))}
                             </span>
                           )}
+                        </p>
+                        {/* Terjual */}
+                        <p className="text-sm text-gray-500">
+                          {product.soldQty} terjual
                         </p>
                       </Link>
                     </div>

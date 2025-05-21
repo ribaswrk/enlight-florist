@@ -73,6 +73,7 @@ export async function getProductsHome() {
           name: true,
           price: true,
           promoPrice: true,
+          soldqty:true,
           ProductImage: {
             take: 1,
             select: {
@@ -96,6 +97,7 @@ export async function getProductsHome() {
         "/placeholder.svg?height=400&width=400",
       category: cat.categoryId.toString(),
       priceDisc: prod.promoPrice,
+      soldQty: prod.soldqty
     })),
   }));
 

@@ -12,6 +12,7 @@ interface Product {
   priceDisc: string;
   image: string;
   category: string;
+  soldQty: string;
 }
 interface CategorySection {
   name: string;
@@ -52,6 +53,7 @@ export default function HomePage() {
           priceDisc: product.priceDisc,
           image: product.image,
           category: product.category,
+          soldQty: product.soldQty,
         })),
       }));
 
