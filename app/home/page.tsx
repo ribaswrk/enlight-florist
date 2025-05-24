@@ -145,8 +145,8 @@ export default function HomePage() {
       </div>
       {/* Store Information Section */}
       <div className="max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-        <div className="bg-rose-50 rounded-lg shadow-lg p-8">
-          <h2 className="text-3xl font-semibold text-center text-rose-600 mb-6">
+        <div className="rounded-lg shadow-lg p-8 bg-[#9f6564]/10">
+          <h2 className="text-3xl font-semibold text-center text-rose-500 mb-6">
             Selamat Datang di Toko Bunga Kami
           </h2>
           <p className="text-center text-gray-700 mb-8">
@@ -217,7 +217,7 @@ export default function HomePage() {
           <div className="mt-8 text-center">
             <Link
               href="/"
-              className="inline-block px-6 py-3 text-lg font-semibold text-white bg-rose-500 rounded-full hover:bg-rose-600 transition duration-300 ease-in-out"
+              className="inline-block px-6 py-3 text-lg font-semibold text-white bg-rose-400 rounded-full hover:bg-rose-600 transition duration-300 ease-in-out"
             >
               Hubungi Kami
             </Link>

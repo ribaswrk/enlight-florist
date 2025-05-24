@@ -155,14 +155,14 @@ export default function CategoryCarousel({
         {/* Navigation Buttons */}
         <button
           onClick={handlePrevSlide}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white/80 dark:bg-rose-700/80 p-2 rounded-full shadow-md hover:bg-white dark:hover:bg-rose-400 transition-colors"
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-[#9f6564]/20 p-2 rounded-full shadow-md dark:hover:bg-rose-400 transition-colors"
           disabled={isTransitioning}
         >
           <ChevronLeft className="h-6 w-6" />
         </button>
         <button
           onClick={handleNextSlide}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white/80 dark:bg-rose-700/80 p-2 rounded-full shadow-md hover:bg-white dark:hover:bg-rose-400 transition-colors"
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-[#9f6564]/20 p-2 rounded-full shadow-md dark:hover:bg-rose-400 transition-colors"
           disabled={isTransitioning}
         >
           <ChevronRight className="h-6 w-6" />
