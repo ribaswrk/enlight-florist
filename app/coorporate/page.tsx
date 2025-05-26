@@ -168,34 +168,6 @@ export default function Corporate() {
                 </div>
               ))}
             </div>
-
-            {/* Elegant "many more" indicator */}
-            <div className="mt-8 flex justify-center">
-              <div className="flex items-center space-x-4 rounded-full bg-white px-8 py-4 shadow-sm border border-[#9f6564]/10">
-                <div className="flex -space-x-2">
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-[#9f6564] to-[#b87776] flex items-center justify-center">
-                    <span className="text-xs font-semibold text-white">+</span>
-                  </div>
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-[#b87776] to-[#c98887] flex items-center justify-center">
-                    <span className="text-xs font-semibold text-white">1</span>
-                  </div>
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-[#c98887] to-[#da9998] flex items-center justify-center">
-                    <span className="text-xs font-semibold text-white">0</span>
-                  </div>
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-[#da9998] to-[#ebaaa9] flex items-center justify-center">
-                    <span className="text-xs font-semibold text-white">0</span>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-medium text-gray-700">
-                    perusahaan lainnya
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    telah mempercayai kami
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
