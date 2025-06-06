@@ -27,4 +27,4 @@ RUN if [ "$NODE_ENV" = "production" ]; then npm run build;
 EXPOSE 3000
 
 # Run appropriate command based on env
-CMD if [ "$NODE_ENV" = "production" ]; then npm start; else npm run dev; fi
+CMD if [ "$NODE_ENV" = "production" ]; then npm start; else npm run dev;
