@@ -5,4 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE `product` DROP COLUMN `imageUrl`;
+ALTER TABLE `Product` DROP COLUMN `imageUrl`;

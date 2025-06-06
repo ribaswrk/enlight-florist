@@ -13,14 +13,14 @@
 
 */
 -- AlterTable
-ALTER TABLE `product` DROP PRIMARY KEY,
+ALTER TABLE `Product` DROP PRIMARY KEY,
     DROP COLUMN `id`,
     ADD COLUMN `categoryId` INTEGER NOT NULL,
     ADD COLUMN `productid` INTEGER NOT NULL AUTO_INCREMENT,
     ADD PRIMARY KEY (`productid`);
 
 -- AlterTable
-ALTER TABLE `user` DROP PRIMARY KEY,
+ALTER TABLE `User` DROP PRIMARY KEY,
     DROP COLUMN `createdAt`,
     DROP COLUMN `id`,
     DROP COLUMN `name`,
@@ -28,7 +28,7 @@ ALTER TABLE `user` DROP PRIMARY KEY,
     ADD PRIMARY KEY (`uid`);
 
 -- CreateTable
-CREATE TABLE `category` (
+CREATE TABLE `Category` (
     `categoryId` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `createdBy` VARCHAR(191) NOT NULL,
@@ -40,4 +40,4 @@ CREATE TABLE `category` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `product` ADD CONSTRAINT `Product_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `category`(`categoryId`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Product` ADD CONSTRAINT `Product_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`categoryId`) ON DELETE RESTRICT ON UPDATE CASCADE;

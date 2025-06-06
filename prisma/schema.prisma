@@ -8,17 +8,17 @@ datasource db {
   url      = env("DATABASE_URL") // Read DB URL from .env
 }
 
-model user {
+model User {
   uid      Int    @id @default(autoincrement())
   uname    String @unique
   password String
 
-  @@map("user")
+  @@map("User")
 }
 
-model product {
+model Product {
   productid    Int            @id @default(autoincrement())
-  category     category       @relation(fields: [categoryId], references: [categoryId])
+  category     Category       @relation(fields: [categoryId], references: [categoryId])
   categoryId   Int
   name         String
   price        String
@@ -31,21 +31,21 @@ model product {
   updateAt     DateTime       @default(now())
   ProductImage productImage[]
 
-  @@map("product")
+  @@map("Product")
 }
 
 model productImage {
   id        Int      @id @default(autoincrement())
-  Product   product  @relation(fields: [productid], references: [productid])
+  Product   Product  @relation(fields: [productid], references: [productid])
   productid Int
   imageUrl  String?  @db.Text
   createdBy String
   createdAt DateTime @default(now())
 
-  @@map("productImage")
+  @@map("ProductImage")
 }
 
-model category {
+model Category {
   categoryId  Int       @id @default(autoincrement())
   name        String
   imageCatUrl String?   @db.Text
@@ -54,12 +54,12 @@ model category {
   createdAt   DateTime  @default(now())
   updateBy    String
   updateAt    DateTime  @default(now())
-  Product     product[]
+  Product     Product[]
 
-  @@map("category")
+  @@map("Category")
 }
 
-model event {
+model Event {
   eventId       Int      @id @default(autoincrement())
   name          String
   imageEventUrl String?  @db.Text
@@ -69,7 +69,7 @@ model event {
   updateBy      String
   updateAt      DateTime @default(now())
 
-  @@map("event")
+  @@map("Event")
 }
 
 //Use this for migration :

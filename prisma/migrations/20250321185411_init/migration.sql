@@ -8,9 +8,9 @@
 
 */
 -- AlterTable
-ALTER TABLE `category` MODIFY `createdBy` INTEGER NOT NULL,
+ALTER TABLE `Category` MODIFY `createdBy` INTEGER NOT NULL,
     MODIFY `updateBy` INTEGER NOT NULL;
 
 -- AlterTable
-ALTER TABLE `product` MODIFY `createdBy` INTEGER NOT NULL,
+ALTER TABLE `Product` MODIFY `createdBy` INTEGER NOT NULL,
     MODIFY `updateBy` INTEGER NOT NULL;

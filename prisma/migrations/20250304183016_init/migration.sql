@@ -7,14 +7,14 @@
 
 */
 -- DropIndex
-DROP INDEX `User_email_key` ON `user`;
+DROP INDEX `User_email_key` ON `User`;
 
 -- AlterTable
-ALTER TABLE `user` DROP COLUMN `email`,
+ALTER TABLE `User` DROP COLUMN `email`,
     ADD COLUMN `uname` VARCHAR(191) NOT NULL;
 
 -- CreateTable
-CREATE TABLE `product` (
+CREATE TABLE `Product` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `createdBy` VARCHAR(191) NOT NULL,
@@ -26,4 +26,4 @@ CREATE TABLE `product` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateIndex
-CREATE UNIQUE INDEX `User_uname_key` ON `user`(`uname`);
+CREATE UNIQUE INDEX `User_uname_key` ON `User`(`uname`);

@@ -5,4 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE `product` ADD COLUMN `stock` VARCHAR(191) NOT NULL;
+ALTER TABLE `Product` ADD COLUMN `stock` VARCHAR(191) NOT NULL;

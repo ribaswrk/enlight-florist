@@ -1,8 +1,8 @@
 -- AlterTable
-ALTER TABLE `category` MODIFY `imageCatUrl` TEXT NULL;
+ALTER TABLE `Category` MODIFY `imageCatUrl` TEXT NULL;
 
 -- AlterTable
-ALTER TABLE `event` MODIFY `imageEventUrl` TEXT NULL;
+ALTER TABLE `Event` MODIFY `imageEventUrl` TEXT NULL;
 
 -- AlterTable
-ALTER TABLE `product` MODIFY `imageUrl` TEXT NULL;
+ALTER TABLE `Product` MODIFY `imageUrl` TEXT NULL;

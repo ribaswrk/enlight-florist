@@ -5,6 +5,6 @@
 
 */
 -- AlterTable
-ALTER TABLE `product` DROP COLUMN `stock`,
+ALTER TABLE `Product` DROP COLUMN `stock`,
     ADD COLUMN `promoPrice` VARCHAR(191) NOT NULL DEFAULT '0',
     ADD COLUMN `soldqty` VARCHAR(191) NOT NULL DEFAULT '0';

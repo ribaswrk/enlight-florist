@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE `productImage` (
+CREATE TABLE `ProductImage` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `productid` INTEGER NOT NULL,
     `imageUrl` TEXT NULL,
@@ -10,4 +10,4 @@ CREATE TABLE `productImage` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `productImage` ADD CONSTRAINT `ProductImage_productid_fkey` FOREIGN KEY (`productid`) REFERENCES `product`(`productid`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `ProductImage` ADD CONSTRAINT `ProductImage_productid_fkey` FOREIGN KEY (`productid`) REFERENCES `Product`(`productid`) ON DELETE RESTRICT ON UPDATE CASCADE;

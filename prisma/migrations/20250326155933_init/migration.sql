@@ -5,5 +5,5 @@
 
 */
 -- AlterTable
-ALTER TABLE `event` DROP COLUMN `imageUrl`,
+ALTER TABLE `Event` DROP COLUMN `imageUrl`,
     ADD COLUMN `imageEventUrl` VARCHAR(191) NULL;
