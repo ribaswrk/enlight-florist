@@ -97,8 +97,10 @@ export async function createcategory(data: FormData) {
         imageCatUrl,
       },
     });
-  } catch (error: any) {
-    console.error("❌ Failed to create category:", error.message || error);
+  } catch (error) {
+    const errMsg =
+      error instanceof Error ? error.message : "Unknown error occurred";
+    console.error("❌ Failed to create category:", errMsg);
     throw error;
   }
 }
@@ -130,8 +132,10 @@ export async function updatecategory(categoryId: number, data: FormData) {
         ...(imageCatUrl && { imageCatUrl }),
       },
     });
-  } catch (error: any) {
-    console.error("❌ Failed to update category:", error.message || error);
+  } catch (error) {
+    const errMsg =
+      error instanceof Error ? error.message : "Unknown error occurred";
+    console.error("❌ Failed to update category:", errMsg || error);
     throw error;
   }
 }

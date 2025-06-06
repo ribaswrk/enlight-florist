@@ -7,7 +7,7 @@ const LoginPage = () => {
   const [uname, setUname] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   // ✅ Redirect if already logged in

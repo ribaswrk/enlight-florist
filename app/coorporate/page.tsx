@@ -1,13 +1,4 @@
-import {
-  Award,
-  TicketPercent,
-  Clock,
-  Gift,
-  Mail,
-  MessageSquare,
-  Phone,
-  Sparkles,
-} from "lucide-react";
+import { Award, TicketPercent, Clock, Gift } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";

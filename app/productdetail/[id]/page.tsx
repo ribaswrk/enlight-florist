@@ -1,10 +1,11 @@
 "use client";
 
 import AutoSlider from "@/components/MultiImage/autoslider";
+import { formatRupiah } from "@/lib/formatrupiah";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Product {
   id: number;
@@ -23,13 +24,6 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product>();
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
-  const formatRupiah = (price: number) =>
-    new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(price);
-
   const getRandomProducts = (
     products: Product[],
     excludeId: number,
@@ -40,44 +34,49 @@ export default function ProductDetailPage() {
 
     return filtered.sort(() => Math.random() - 0.5).slice(0, limit);
   };
+  const fetchRelatedProducts = useCallback(
+    async (categoryId: number, excludeProductId: number) => {
+      try {
+        const res = await fetch(
+          `/api/protected/products?categoryId=${categoryId}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch related products");
 
-  const fetchProductDetail = async () => {
+        const data: Product[] = await res.json();
+        const limited = getRandomProducts(data, excludeProductId);
+        setRelatedProducts(limited);
+      } catch (error) {
+        console.error(
+          "❌ Error fetching related products:",
+          (error as Error).message || error
+        );
+      }
+    },
+    [setRelatedProducts]
+  );
+
+  const fetchProductDetail = useCallback(async () => {
     try {
       const res = await fetch(`/api/protected/products?productId=${id}`);
       if (!res.ok) throw new Error("Failed to fetch product");
 
-      const [productData] = await res.json();
+      const [productData]: Product[] = await res.json(); // ✅ Use correct typing if possible
       setProduct(productData);
 
       if (productData?.categoryId) {
         fetchRelatedProducts(productData.categoryId, productData.id);
       }
     } catch (error) {
-      console.error("Error fetching product:", error);
-    }
-  };
-
-  const fetchRelatedProducts = async (
-    categoryId: number,
-    excludeProductId: number
-  ) => {
-    try {
-      const res = await fetch(
-        `/api/protected/products?categoryId=${categoryId}`
+      console.error(
+        "❌ Error fetching product:",
+        (error as Error).message || error
       );
-      if (!res.ok) throw new Error("Failed to fetch related products");
-
-      const data: Product[] = await res.json();
-      const limited = getRandomProducts(data, excludeProductId);
-      setRelatedProducts(limited);
-    } catch (error) {
-      console.error("Error fetching related products:", error);
     }
-  };
+  }, [id, fetchRelatedProducts]);
 
   useEffect(() => {
     if (id) fetchProductDetail();
-  }, [id]);
+  }, [fetchProductDetail, id]);
 
   if (!product) return <p className="text-center py-10">Loading...</p>;
 

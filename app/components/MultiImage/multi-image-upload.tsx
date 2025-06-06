@@ -5,6 +5,7 @@ import { X, File } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import axios, { AxiosError, AxiosProgressEvent, AxiosResponse } from "axios";
+import Image from "next/image";
 
 // Define expected types for API responses
 interface SignedUrlResponse {
@@ -158,9 +159,11 @@ export const ImagePreview: React.FC<ImagePreviewProps> = ({
       )}
     >
       {isImage ? (
-        <img
+        <Image
           src={src}
           alt={alt}
+          width={500} // Replace with real width
+          height={300} // Replace with real height
           className="w-full h-full object-cover rounded-md transition-opacity duration-500 ease-in-out"
           loading="lazy"
         />
@@ -218,42 +221,45 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
   const isControlled = !!onChange;
 
   // Helper to map URLs to UploadedFile objects
-  const mapToFiles = (urls: string[]): UploadedFile[] =>
-    urls.map((url, index) => {
-      const existing = files.find((f) => f.url === url);
-      return (
-        existing || {
-          id: `${index}-${Date.now()}`,
-          url,
-          deleteUrl: url,
-          progress: 100,
-          fileType: imageRegex.test(url)
-            ? `image/${url.split(".").pop()?.toLowerCase() || "jpeg"}`
-            : "application/octet-stream",
-          isUploading: false,
-          isDeleting: false,
-        }
-      );
-    });
+
+  const mapToFiles = useCallback(
+    (urls: string[]): UploadedFile[] =>
+      urls.map((url, index) => {
+        const existing = files.find((f) => f.url === url);
+        return (
+          existing || {
+            id: `${index}-${Date.now()}`,
+            url,
+            deleteUrl: url,
+            progress: 100,
+            fileType: imageRegex.test(url)
+              ? `image/${url.split(".").pop()?.toLowerCase() || "jpeg"}`
+              : "application/octet-stream",
+            isUploading: false,
+            isDeleting: false,
+          }
+        );
+      }),
+    [files, imageRegex]
+  );
 
   // Sync state with parent value and form state
-  useEffect(() => {
-    const valueChanged =
-      JSON.stringify(value) !== JSON.stringify(prevValueRef.current);
-    if (isControlled && valueChanged) {
-      setFiles(mapToFiles(value));
-      prevValueRef.current = value;
-    }
 
-    const fileUrls = files.map((f) => f.url);
-    if (
-      isControlled &&
-      JSON.stringify(fileUrls) !== JSON.stringify(prevValueRef.current)
-    ) {
-      onChange(fileUrls);
-      prevValueRef.current = fileUrls;
+  useEffect(() => {
+    if (!isControlled) return;
+
+    const prevUrls = prevValueRef.current;
+    const nextUrls = value;
+
+    const hasChanged = JSON.stringify(prevUrls) !== JSON.stringify(nextUrls);
+
+    if (hasChanged) {
+      const newFiles = mapToFiles(nextUrls);
+      setFiles(newFiles);
+      onChange(nextUrls);
+      prevValueRef.current = nextUrls;
     }
-  }, [value, files, isControlled, onChange, imageRegex]);
+  }, [value, isControlled, onChange, mapToFiles]);
 
   // Handle file upload
   const handleUpload = useCallback(

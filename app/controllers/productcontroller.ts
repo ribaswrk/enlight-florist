@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +9,7 @@ export async function getProducts(
   homeView?: number,
   productId?: number
 ) {
-  const whereCondition: any = {};
+  const whereCondition: Prisma.ProductWhereInput = {};
   if (catId) whereCondition.categoryId = catId;
   if (homeView !== undefined) whereCondition.homeView = homeView;
   if (productId !== undefined) whereCondition.productid = productId;
@@ -73,7 +74,7 @@ export async function getProductsHome() {
           name: true,
           price: true,
           promoPrice: true,
-          soldqty:true,
+          soldqty: true,
           ProductImage: {
             take: 1,
             select: {
@@ -97,7 +98,7 @@ export async function getProductsHome() {
         "/placeholder.svg?height=400&width=400",
       category: cat.categoryId.toString(),
       priceDisc: prod.promoPrice,
-      soldQty: prod.soldqty
+      soldQty: prod.soldqty,
     })),
   }));
 
@@ -145,8 +146,10 @@ export async function createProduct(data: FormData) {
       },
       include: { ProductImage: true },
     });
-  } catch (error: any) {
-    console.error("❌ Failed to create product:", error.message || error);
+  } catch (error) {
+    const errMsg =
+      error instanceof Error ? error.message : "Unknown error occurred";
+    console.error("❌ Failed to create product:", errMsg || error);
     throw error;
   }
 }
@@ -201,8 +204,10 @@ export async function updateProduct(productid: number, data: FormData) {
 
     console.log("✅ Product updated:", updatedProduct);
     return updatedProduct;
-  } catch (error: any) {
-    console.error("❌ Failed to update product:", error.message || error);
+  } catch (error) {
+    const errMsg =
+      error instanceof Error ? error.message : "Unknown error occurred";
+    console.error("❌ Failed to update product:", errMsg || error);
     throw error;
   }
 }
@@ -218,8 +223,10 @@ export async function deleteProduct(productid: number) {
     return await prisma.product.delete({
       where: { productid },
     });
-  } catch (error: any) {
-    console.error("❌ Failed to delete product:", error.message || error);
+  } catch (error) {
+    const errMsg =
+      error instanceof Error ? error.message : "Unknown error occurred";
+    console.error("❌ Failed to delete product:", errMsg || error);
     throw error;
   }
 }

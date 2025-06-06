@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import CategoryCard from "../components/Category/CategoryCard";
 
 export interface Category {
@@ -18,7 +18,7 @@ export interface CategoryRes {
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const fetchCategory = async () => {
+  const fetchCategory = useCallback(async () => {
     try {
       const res = await fetch("/api/protected/category", {
         method: "GET",
@@ -28,25 +28,22 @@ export default function CategoriesPage() {
       if (!res.ok) throw new Error("Failed to fetch category");
 
       const data = await res.json();
-      console.log("data", data);
       const transformedCategories = data.map((category: CategoryRes) => ({
         id: category.id,
         categoryName: category.name,
         imageUrl: category.imageCatUrl,
         slug: category.id,
       }));
-      console.log(transformedCategories);
 
-      setCategories(transformedCategories); // ✅ Store actual data, not a promise
-      console.log(categories);
+      setCategories(transformedCategories);
     } catch (error) {
       console.error("Error fetching category:", error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchCategory();
-  }, []);
+  }, [fetchCategory]);
 
   return (
     <div className="container mx-auto px-4 py-8">

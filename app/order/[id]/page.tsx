@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import type React from 'react';
+import type React from "react";
 
-import { Button } from '@/components/ui/button';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 interface Product {
   id: number;
@@ -15,52 +15,64 @@ interface Product {
   stock: string;
 }
 
+interface FormData {
+  quantity: number;
+  balloonText?: string;
+  flowerType: "real" | "artificial";
+  name: string;
+  recipientName: string;
+  phoneNumber: string;
+  shippingAddress: string;
+  deliveryDateTime: string;
+  cardMessage?: string;
+}
+
 export default function ShippingPage() {
   const { id } = useParams();
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    name: '',
-    recipientName: '',
-    phoneNumber: '',
-    shippingAddress: '',
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    recipientName: "",
+    phoneNumber: "",
+    shippingAddress: "",
     quantity: 1,
-    cardMessage: '',
-    balloonText: '',
-    deliveryDateTime: '',
-    flowerType: 'real', // Default to real flowers
+    cardMessage: "",
+    balloonText: "",
+    deliveryDateTime: "",
+    flowerType: "real", // Default to real flowers
   });
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Replace with your WhatsApp business phone number (international format without + or spaces)
-  const WHATSAPP_NUMBER = '6281998570313';
+  const WHATSAPP_NUMBER = "6281998570313";
 
-  const fetchProductDetail = async () => {
+  const fetchProductDetail = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(`/api/protected/products?productId=${id}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
       });
 
-      if (!res.ok) throw new Error('Failed to fetch product');
+      if (!res.ok) throw new Error("Failed to fetch product");
 
       const data = await res.json();
-      console.log('Fetched product:', data[0]);
+      console.log("Fetched product:", data[0]);
 
       setProduct(data[0]);
     } catch (error) {
-      console.error('Error fetching product:', error);
+      console.error("Error fetching product:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
     fetchProductDetail();
-  }, [id]);
+  }, [fetchProductDetail, id]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -68,7 +80,7 @@ export default function ShippingPage() {
     >
   ) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -87,20 +99,20 @@ export default function ShippingPage() {
       message
     )}`;
     // Open WhatsApp in a new tab
-    window.open(whatsappUrl, '_blank');
+    window.open(whatsappUrl, "_blank");
 
-    router.push('/order-success');
+    router.push("/order-success");
   };
 
-  const formatWhatsAppMessage = (formData: any, product: Product) => {
+  const formatWhatsAppMessage = (formData: FormData, product: Product) => {
     const totalPrice = Number.parseFloat(product.price) * formData.quantity;
     const balloonTextSection =
-      product.category.toLowerCase() === 'balloon'
+      product.category.toLowerCase() === "balloon"
         ? `*TEKS BALON:*
-${formData.balloonText || '-'}
+${formData.balloonText || "-"}
 
 `
-        : '';
+        : "";
 
     return `*✨ PESANAN BARU ✨*
 ━━━━━━━━━━━━━━━━━━━━━
@@ -110,7 +122,7 @@ ${formData.balloonText || '-'}
 • *Harga:* ${product.price}
 • *Jumlah:* ${formData.quantity}
 • *Jenis Bunga:* ${
-      formData.flowerType === 'real' ? 'Bunga Asli' : 'Bunga Artificial'
+      formData.flowerType === "real" ? "Bunga Asli" : "Bunga Artificial"
     }
 • *Total:* ${totalPrice.toFixed(2)}
 
@@ -124,7 +136,7 @@ ${formData.balloonText || '-'}
 • *Tanggal & Waktu:* ${formData.deliveryDateTime}
 
 *PESAN KARTU:*
-${formData.cardMessage || '-'}
+${formData.cardMessage || "-"}
 
 ${balloonTextSection}
 
@@ -146,10 +158,13 @@ ${balloonTextSection}
     return (
       <div className="container mx-auto px-4 py-8 text-center">
         <h1 className="text-2xl font-bold mb-4">Product not found</h1>
-        <p>The product you're looking for doesn't exist or has been removed.</p>
+        <p>
+          The product you&apos;re looking for doesn&apos;t exist or has been
+          removed.
+        </p>
         <Button
           className="mt-6 bg-teal-500 hover:bg-teal-600"
-          onClick={() => router.push('/home')}
+          onClick={() => router.push("/home")}
         >
           Return to Home
         </Button>
@@ -172,7 +187,7 @@ ${balloonTextSection}
             <input
               id="productName"
               name="productName"
-              value={product ? product.name : ''}
+              value={product ? product.name : ""}
               disabled
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400 bg-gray-100"
             />
@@ -188,7 +203,7 @@ ${balloonTextSection}
             <input
               id="price"
               name="price"
-              value={product ? `$${product.price}` : ''}
+              value={product ? `$${product.price}` : ""}
               disabled
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400 bg-gray-100"
             />
@@ -235,7 +250,7 @@ ${balloonTextSection}
               htmlFor="recipientName"
               className="block text-sm font-semibold text-gray-700"
             >
-              Recipient's Name
+              Recipient&apos;s Name
             </label>
             <input
               id="recipientName"
@@ -301,7 +316,7 @@ ${balloonTextSection}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
           </div>
-          {product.category === 'baloon' && (
+          {product.category === "baloon" && (
             <div className="space-y-2">
               <label
                 htmlFor="balloonText"

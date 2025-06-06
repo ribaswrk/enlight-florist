@@ -9,6 +9,7 @@ import {
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { MultiImageUpload } from "@/components/MultiImage/multi-image-upload";
+import { formatRupiah } from "@/lib/formatrupiah";
 
 // Tipe data untuk produk
 
@@ -47,7 +48,7 @@ export default function ProductsManagement() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<number>(0);
   const { data: session } = useSession();
-  const [productImage, setProductImage] = useState<File | null>(null);
+  const [, setProductImage] = useState<File | null>(null);
   const [productImageUrl, setProductImageUrl] = useState<string[]>();
   const [soldqty, setSoldQty] = useState<string | number>("");
 
@@ -185,14 +186,6 @@ export default function ProductsManagement() {
   const confirmDelete = (productId: number) => {
     setSelectedProductId(productId);
     setShowConfirmDialog(true);
-  };
-
-  const formatRupiah = (price: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(price);
   };
 
   useEffect(() => {

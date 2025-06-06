@@ -8,8 +8,6 @@ interface loginParam {
   uname: string;
   password: string;
 }
-// Secret Key for JWT
-const SECRET_KEY = process.env.NEXTAUTH_SECRET || "your-secret-key";
 
 export async function LoginUser(data: { uname: string; password: string }) {
   console.log("🔍 Login Attempt:", data);
@@ -86,8 +84,11 @@ export async function CreateUser(req: loginParam) {
 
     return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
+    const errMsg =
+      error instanceof Error ? error.message : "Unknown error occurred";
+
     return NextResponse.json(
-      { error: "Something went wrong", details: error.message },
+      { error: "Something went wrong", details: errMsg },
       { status: 500 }
     );
   }

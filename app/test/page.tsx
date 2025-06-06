@@ -1,6 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 
+type User = {
+  id: number | string;
+  name: string;
+  email: string;
+};
+
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
 
@@ -15,7 +21,7 @@ export default function UsersPage() {
     <div>
       <h1>User List</h1>
       <ul>
-        {users.map((user: any) => (
+        {users.map((user: User) => (
           <li key={user.id}>
             {user.name} - {user.email}
           </li>

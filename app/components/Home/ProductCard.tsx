@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { formatRupiah } from "@/lib/formatrupiah";
 
 interface Product {
   id: string;
@@ -64,14 +65,6 @@ export default function CategoryCarousel({
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
     setTimeout(() => setIsTransitioning(false), 500);
-  };
-
-  const formatRupiah = (price: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(price);
   };
 
   return (

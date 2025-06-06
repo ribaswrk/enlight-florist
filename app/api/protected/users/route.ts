@@ -22,22 +22,23 @@ export async function GET() {
 // ✅ POST: Create a new user
 export async function POST(req: NextRequest) {
   try {
-		const body = await req.json();
+    const body = await req.json();
 
-		if (!body) {
-			return NextResponse.json(
-				{ error: "Invalid request body" },
-				{ status: 400 }
-			);
-		}
+    if (!body) {
+      return NextResponse.json(
+        { error: "Invalid request body" },
+        { status: 400 }
+      );
+    }
 
-		return await CreateUser(body);
-	} catch (error) {
-		return NextResponse.json(
-			{ error: "Failed to process request", details: error.message },
-			{ status: 500 }
-		);
-	}
+    return await CreateUser(body);
+  } catch (error) {
+    console.error("Update Error:", error);
+    return NextResponse.json(
+      { error: "Failed to process request" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function PUT(req: NextRequest) {

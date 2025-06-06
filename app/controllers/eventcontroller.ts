@@ -5,6 +5,7 @@ import {
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
+import { Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -41,7 +42,7 @@ async function uploadEventImage(file: File): Promise<string | null> {
     );
 
     return `${R2_PUBLIC_URL}/${fileKey}`;
-  } catch (error) {
+  } catch {
     return ``;
   }
 }
@@ -62,28 +63,28 @@ async function deleteImage(imageUrl: string) {
 }
 
 export async function getEvent(eventid?: number, homeView?: number) {
-  const whereCondition: any = {};
+  const whereCondition: Prisma.EventWhereInput = {};
 
-  if (eventid) {
-    whereCondition.eventId = eventid; // ✅ Filter by event ID if provided
+  if (eventid !== undefined) {
+    whereCondition.eventId = eventid;
   }
 
   if (homeView !== undefined) {
-    whereCondition.show = homeView; // ✅ Filter by homeView if provided
+    whereCondition.show = homeView;
   }
 
-  const event = await prisma.event.findMany({
-    where: whereCondition, // ✅ Only applies the filter when categoryId is provided
+  const events = await prisma.event.findMany({
+    where: whereCondition,
   });
 
-  // ✅ Transform the result to match your expected structure
-  return event.map(({ eventId, show, name, imageEventUrl }) => ({
-    id: eventId, // ✅ Rename `eventid` to `id`
+  return events.map(({ eventId, show, name, imageEventUrl }) => ({
+    id: eventId,
     name,
     show,
-    urls: imageEventUrl, // ✅ Flatten category name
+    urls: imageEventUrl,
   }));
 }
+
 // ✅ Create a new event
 export async function createEvent(data: FormData) {
   let imageEventUrl: string | null = null;
@@ -106,8 +107,10 @@ export async function createEvent(data: FormData) {
       },
     });
     return result;
-  } catch (error: any) {
-    console.error("❌ Failed to create event:", error.message || error);
+  } catch (error) {
+    const errMsg =
+      error instanceof Error ? error.message : "Unknown error occurred";
+    console.error("❌ Failed to create event:", errMsg || error);
     throw error;
   }
 }
@@ -141,8 +144,10 @@ export async function updateEvent(eventId: number, data: FormData) {
         ...(imageEventUrl && { imageEventUrl }),
       },
     });
-  } catch (error: any) {
-    console.error("❌ Failed to update event:", error.message || error);
+  } catch (error) {
+    const errMsg =
+      error instanceof Error ? error.message : "Unknown error occurred";
+    console.error("❌ Failed to update event:", errMsg || error);
     throw error;
   }
 }
