@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE `Event` (
+CREATE TABLE `event` (
     `eventId` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `imageUrl` VARCHAR(191) NULL,

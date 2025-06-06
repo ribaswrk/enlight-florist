@@ -14,7 +14,7 @@ ALTER TABLE `user` DROP COLUMN `email`,
     ADD COLUMN `uname` VARCHAR(191) NOT NULL;
 
 -- CreateTable
-CREATE TABLE `Product` (
+CREATE TABLE `product` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `createdBy` VARCHAR(191) NOT NULL,
@@ -26,4 +26,4 @@ CREATE TABLE `Product` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateIndex
-CREATE UNIQUE INDEX `User_uname_key` ON `User`(`uname`);
+CREATE UNIQUE INDEX `User_uname_key` ON `user`(`uname`);

@@ -28,7 +28,7 @@ ALTER TABLE `user` DROP PRIMARY KEY,
     ADD PRIMARY KEY (`uid`);
 
 -- CreateTable
-CREATE TABLE `Category` (
+CREATE TABLE `category` (
     `categoryId` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `createdBy` VARCHAR(191) NOT NULL,
@@ -40,4 +40,4 @@ CREATE TABLE `Category` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `Product` ADD CONSTRAINT `Product_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`categoryId`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `product` ADD CONSTRAINT `Product_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `category`(`categoryId`) ON DELETE RESTRICT ON UPDATE CASCADE;
