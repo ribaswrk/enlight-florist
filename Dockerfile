@@ -7,7 +7,7 @@ WORKDIR /app
 
 # Install OpenSSL 1.1 and dependencies
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends openssl libssl1.1 ca-certificates && \
+    apt-get install -y --no-install-recommends openssl libssl3 ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
 COPY package.json package-lock.json ./
