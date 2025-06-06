@@ -5,11 +5,12 @@ services:
     build:
       context: .
       args:
-        NODE_ENV: ${NODE_ENV}
+        NODE_ENV: production
     ports:
       - "3000:3000"
     env_file:
       - .env
-    volumes:
-      - .:/app
-      - /app/node_modules
+    # Remove volumes in production!
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules
