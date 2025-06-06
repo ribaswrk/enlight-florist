@@ -21,10 +21,10 @@ COPY . .
 RUN npx prisma generate
 
 # Build Next.js for production
-RUN if [ "$NODE_ENV" = "production" ]; then npm run build; 
+RUN if [ "$NODE_ENV" = "production" ]; then npm run build; fi
 
 # Expose port
 EXPOSE 3000
 
 # Run appropriate command based on env
-CMD if [ "$NODE_ENV" = "production" ]; then npm start; else npm run dev;
+CMD if [ "$NODE_ENV" = "production" ]; then npm start; else npm run dev; fi
