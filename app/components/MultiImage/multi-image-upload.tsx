@@ -251,14 +251,10 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
     const nextUrls = value;
 
     const hasChanged = JSON.stringify(prevUrls) !== JSON.stringify(nextUrls);
-    console.log(nextUrls);
-    console.log(files);
     if (hasChanged) {
       const newFiles = mapToFiles(nextUrls);
       setFiles(newFiles);
-      console.log(newFiles);
       onChange(nextUrls);
-      console.log(nextUrls);
       prevValueRef.current = nextUrls;
     }
   }, [value, isControlled, onChange, mapToFiles]);
@@ -337,7 +333,7 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
         upload();
       });
     },
-    [files.length, maxImages]
+    [files.length, isControlled, maxImages, onChange]
   );
 
   // Handle file deletion
