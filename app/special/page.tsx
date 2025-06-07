@@ -15,7 +15,7 @@ export default function SpecialRequest() {
         <div className="absolute inset-0 bg-[#9f6564]/10"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
           <h1 className="font-serif text-4xl font-light tracking-wide text-gray-800 md:text-6xl">
-            Special Requests
+            Special Request
           </h1>
           <div className="mt-4 h-0.5 w-24 bg-[#9f6564]"></div>
         </div>

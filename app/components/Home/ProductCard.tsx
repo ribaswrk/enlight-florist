@@ -75,7 +75,7 @@ export default function CategoryCarousel({
           {category.name}
         </h2>
         <p className="text-muted-foreground">
-          Discover our beautiful selection of {category.name.toLowerCase()}
+          Beberapa produk favorit kami untuk kategori {category.name.toLowerCase()}
         </p>
       </div>
 

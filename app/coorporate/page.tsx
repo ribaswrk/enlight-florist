@@ -11,7 +11,7 @@ export default function Corporate() {
         <div className="absolute inset-0 bg-[#9f6564]/10"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
           <h1 className="font-serif text-4xl font-light tracking-wide text-gray-800 md:text-6xl">
-            Corporate Partnerships
+            Corporate Partnership
           </h1>
           <div className="mt-4 h-0.5 w-24 bg-[#9f6564]"></div>
         </div>
@@ -35,7 +35,7 @@ export default function Corporate() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="font-serif text-3xl font-light text-gray-800">
-              Enlight Florist Corporate Partnerships
+              Enlight Florist Corporate Partnership
             </h2>
             <div className="mx-auto mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
             <p className="mt-6 text-gray-600">
