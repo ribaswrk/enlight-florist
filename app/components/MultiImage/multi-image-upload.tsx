@@ -202,7 +202,6 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
   accept = "image/*",
 }) => {
   // Initialize state with value directly
-  console.log("value multi", value);
   const [files, setFiles] = React.useState<UploadedFile[]>(() =>
     value.map((url, index) => ({
       id: `${index}-${Date.now()}`,
@@ -252,11 +251,14 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
     const nextUrls = value;
 
     const hasChanged = JSON.stringify(prevUrls) !== JSON.stringify(nextUrls);
-
+    console.log(nextUrls);
+    console.log(files);
     if (hasChanged) {
       const newFiles = mapToFiles(nextUrls);
       setFiles(newFiles);
+      console.log(newFiles);
       onChange(nextUrls);
+      console.log(nextUrls);
       prevValueRef.current = nextUrls;
     }
   }, [value, isControlled, onChange, mapToFiles]);
@@ -299,8 +301,10 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
                 prev.map((f) => (f.id === newFile.id ? { ...f, progress } : f))
               );
             });
-            setFiles((prev) =>
-              prev.map((f) =>
+
+            // After upload completes, update file object
+            setFiles((prev) => {
+              const updated = prev.map((f) =>
                 f.id === newFile.id
                   ? {
                       ...f,
@@ -310,8 +314,18 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
                       progress: 100,
                     }
                   : f
-              )
-            );
+              );
+
+              // 🔥 Trigger parent update here!
+              if (isControlled && onChange) {
+                const uploadedUrls = updated
+                  .filter((f) => !f.isUploading)
+                  .map((f) => f.url);
+                onChange(uploadedUrls);
+              }
+
+              return updated;
+            });
           } catch (error) {
             console.error(`Upload failed for ${file!.name}:`, error);
             setFiles((prev) => prev.filter((f) => f.id !== newFile.id));
@@ -336,7 +350,17 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
       if (!fileToDelete) return;
 
       deleteFile(fileToDelete.deleteUrl)
-        .then(() => setFiles((prev) => prev.filter((f) => f.id !== id)))
+        .then(() => {
+          setFiles((prev) => {
+            const filtered = prev.filter((f) => f.id !== id);
+            // Update parent with new URLs after deletion
+            if (isControlled && onChange) {
+              const updatedUrls = filtered.map((f) => f.url);
+              onChange(updatedUrls);
+            }
+            return filtered;
+          });
+        })
         .catch((error) => {
           console.error("Failed to delete file:", error);
           setFiles((prev) =>
@@ -344,7 +368,7 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
           );
         });
     },
-    [files]
+    [files, isControlled, onChange]
   );
 
   // Cleanup blob URLs on unmount

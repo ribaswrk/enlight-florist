@@ -49,7 +49,7 @@ export default function ProductsManagement() {
   const [selectedProductId, setSelectedProductId] = useState<number>(0);
   const { data: session } = useSession();
   const [, setProductImage] = useState<File | null>(null);
-  const [productImageUrl, setProductImageUrl] = useState<string[]>();
+  const [productImageUrl, setProductImageUrl] = useState<string[]>([]);
   const [soldqty, setSoldQty] = useState<string | number>("");
 
   // Filter produk berdasarkan pencarian
@@ -176,11 +176,10 @@ export default function ProductsManagement() {
     setProductName(product?.name || "");
     setProductPrice(product?.price || "");
     setProductHomeView(product?.homeView || 0);
-    setProductImageUrl(product?.images);
+    setProductImageUrl(product?.images || []);
     setSelectedCategoryId(matchedCategory?.id || null);
     setSoldQty(product?.soldqty || 0);
     setShowDialog(true);
-    console.log("setProductImageUrl", productImageUrl);
   };
 
   const confirmDelete = (productId: number) => {
@@ -193,6 +192,9 @@ export default function ProductsManagement() {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    console.log("productImageUrl", productImageUrl);
+  }, [productImageUrl]);
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -404,29 +406,9 @@ export default function ProductsManagement() {
             </select>
 
             {/* Gambar */}
-            {/* {productImageUrl && (
-              <Image
-                src={productImageUrl}
-                alt="Preview"
-                width={200} // ✅ Set a default width
-                height={200} // ✅ Set a default height
-                className="rounded-lg shadow-md"
-              />
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  setProductImage(e.target.files[0]); // Store the selected image
-                  setProductImageUrl(URL.createObjectURL(e.target.files[0])); // Show preview
-                }
-              }}
-            /> */}
             <MultiImageUpload
               value={productImageUrl || []}
-              onChange={setProductImageUrl}
+              onChange={(images) => setProductImageUrl(images)}
             />
 
             {/* Tombol Simpan */}
