@@ -75,7 +75,8 @@ export default function CategoryCarousel({
           {category.name}
         </h2>
         <p className="text-muted-foreground">
-          Beberapa produk favorit kami untuk kategori {category.name.toLowerCase()}
+          Beberapa produk favorit kami untuk kategori{" "}
+          {category.name.toLowerCase()}
         </p>
       </div>
 
@@ -110,7 +111,8 @@ export default function CategoryCarousel({
                           {product.name}
                         </h3>
                         <p className="text-rose-600 dark:text-rose-400 font-semibold">
-                          {product.priceDisc !== "0" ? (
+                          {product.priceDisc !== "0" &&
+                          product.priceDisc !== "" ? (
                             <>
                               <span className="text-red-400 line-through text-sm">
                                 {formatRupiah(Number(product.price))}
