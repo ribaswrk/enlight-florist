@@ -20,6 +20,7 @@ RUN npx prisma generate
 RUN npx prisma migrate deploy
 
 RUN npm run build
+RUN npm run postbuild
 
 EXPOSE 3000
 
