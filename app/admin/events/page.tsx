@@ -105,7 +105,6 @@ export default function EventsManagement() {
       if (!res.ok) throw new Error("Failed to delete event");
 
       const data = await res.json();
-      console.log("Event deleted:", data);
 
       // Refresh the event list after deletion
       fetchEvent();

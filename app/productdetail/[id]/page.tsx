@@ -81,7 +81,9 @@ export default function ProductDetailPage() {
   if (!product) return <p className="text-center py-10">Loading...</p>;
 
   const displayPrice = (price: string, priceDisc: string) =>
-    formatRupiah(priceDisc !== "0" ? Number(priceDisc) : Number(price));
+    formatRupiah(
+      priceDisc !== "0" && priceDisc !== "" ? Number(priceDisc) : Number(price)
+    );
 
   return (
     <div className="container mx-auto px-4 py-8">

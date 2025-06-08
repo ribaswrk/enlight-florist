@@ -46,7 +46,6 @@ export default function CategoriesManagement() {
       if (!res.ok) throw new Error("Failed to fetch category");
 
       const data = await res.json();
-      console.log(data);
       setCategories(data); // ✅ Store actual data, not a promise
     } catch (error) {
       console.error("Error fetching category:", error);
@@ -106,7 +105,6 @@ export default function CategoriesManagement() {
       if (!res.ok) throw new Error("Failed to delete category");
 
       const data = await res.json();
-      console.log("Category deleted:", data);
 
       // Refresh the category list after deletion
       fetchCategory();

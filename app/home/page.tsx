@@ -41,7 +41,6 @@ export default function HomePage() {
 			if (!res.ok) throw new Error("Failed to fetch category");
 
 			const data: CategorySection[] = await res.json();
-			console.log("raw data", data);
 
 			const transformedCategories: CategorySection[] = data.map((category) => ({
 				name: category.name,
@@ -58,7 +57,6 @@ export default function HomePage() {
 			}));
 
 			setCategories(transformedCategories);
-			console.log("transformed", transformedCategories);
 		} catch (error) {
 			console.error("Error fetching category:", error);
 		}
@@ -74,7 +72,6 @@ export default function HomePage() {
 			if (!res.ok) throw new Error("Failed to fetch events");
 
 			const data: events[] = await res.json();
-			console.log("raw event data", data);
 
 			setEvents(data);
 		} catch (error) {

@@ -68,7 +68,6 @@ export async function deleteFileFromR2(key: string): Promise<void> {
 
   try {
     await s3Client.send(command);
-    console.log("File deleted from R2:", key);
   } catch (error) {
     console.error("Failed to delete from R2:", error);
     throw error;

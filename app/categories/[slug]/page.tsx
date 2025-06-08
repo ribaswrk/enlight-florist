@@ -81,7 +81,7 @@ export default async function CategoryPage({
                   <div className="p-4 space-y-2">
                     <h2 className="text-lg font-semibold">{product.name}</h2>
                     <div className="flex items-center gap-2">
-                      {product.priceDisc !== "0" ? (
+                      {product.priceDisc !== "0" && product.priceDisc !== "" ? (
                         <>
                           <span className="text-red-400 line-through text-sm">
                             {formatRupiah(Number(product.price))}

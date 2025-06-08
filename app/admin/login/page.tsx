@@ -38,7 +38,6 @@ const LoginPage = () => {
         res,
       });
 
-      console.log("status", status);
       router.push("/admin"); // ✅ Redirect after login
     } else {
       setError(data.error);

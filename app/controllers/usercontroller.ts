@@ -10,12 +10,10 @@ interface loginParam {
 }
 
 export async function LoginUser(data: { uname: string; password: string }) {
-  console.log("🔍 Login Attempt:", data);
 
   const { uname, password } = data;
 
   if (!uname || !password) {
-    console.log("❌ Missing credentials");
     return NextResponse.json(
       { error: "Username and password required" },
       { status: 400 }
@@ -23,7 +21,6 @@ export async function LoginUser(data: { uname: string; password: string }) {
   }
 
   const user = await prisma.user.findUnique({ where: { uname } });
-  console.log("🔍 User found:", user);
 
   if (!user) {
     console.log("❌ User not found");
@@ -31,7 +28,6 @@ export async function LoginUser(data: { uname: string; password: string }) {
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
-  console.log("🔍 Password match:", passwordMatch);
 
   if (!passwordMatch) {
     console.log("❌ Incorrect password");

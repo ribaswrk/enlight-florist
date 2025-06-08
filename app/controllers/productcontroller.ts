@@ -85,7 +85,6 @@ export async function getProductsHome() {
       },
     },
   });
-  console.log("categories", categories);
   const categorySections = categories.map((cat) => ({
     name: cat.name,
     slug: cat.categoryId.toString(), // using categoryId as slug
@@ -202,7 +201,6 @@ export async function updateProduct(productid: number, data: FormData) {
       });
     }
 
-    console.log("✅ Product updated:", updatedProduct);
     return updatedProduct;
   } catch (error) {
     const errMsg =

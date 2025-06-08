@@ -75,7 +75,6 @@ export default function ShippingPage() {
 			if (!res.ok) throw new Error("Failed to fetch product");
 
 			const data = await res.json();
-			console.log("Fetched product:", data[0]);
 
 			setProduct(data[0]);
 		} catch (error) {
