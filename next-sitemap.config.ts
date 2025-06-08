@@ -1,9 +1,21 @@
 import { IConfig } from "next-sitemap";
 
 const config: IConfig = {
-	siteUrl: "https://yourdomain.com",
+	siteUrl: "https://enlightflorist.com",
 	generateRobotsTxt: true,
-	// ...opsi lain
+	sitemapSize: 7000,
+	changefreq: "daily",
+	priority: 0.7,
+	exclude: ["/admin/**"],
+	robotsTxtOptions: {
+		policies: [
+			{
+				userAgent: "*",
+				allow: "/",
+				disallow: ["/admin"],
+			},
+		],
+	},
 };
 
 export default config;
