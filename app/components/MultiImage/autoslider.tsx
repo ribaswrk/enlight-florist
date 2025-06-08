@@ -24,13 +24,14 @@ export default function AutoSlider({
 
   if (images.length === 0) {
     return (
-      <Image
-        src="/placeholder.svg"
-        alt="No image"
-        width={600}
-        height={600}
-        className="rounded-lg shadow-lg object-cover"
-      />
+      <div className="relative w-full h-[600px]">
+        <Image
+          src="/placeholder.svg"
+          alt="No image"
+          fill
+          className="rounded-lg shadow-lg object-cover"
+        />
+      </div>
     );
   }
 
@@ -46,8 +47,7 @@ export default function AutoSlider({
           <Image
             src={url || "/placeholder.svg"}
             alt={`Slide ${index}`}
-            width={600}
-            height={600}
+            fill
             className="rounded-lg shadow-lg object-cover"
           />
         </div>
