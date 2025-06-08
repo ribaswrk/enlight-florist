@@ -89,7 +89,7 @@ export default function CategoryCarousel({
               <div key={slideIndex} className="flex gap-6 min-w-full px-3">
                 {slide.map((product) => (
                   <div key={product.id} className="flex-1 group">
-                    <div className="relative h-full p-4 rounded-xl border-2 border-pink-200 shadow-sm hover:shadow-md transition-shadow bg-white">
+                    <div className="relative h-full p-4 rounded-xl border-2 shadow-sm hover:shadow-md transition-shadow bg-white">
                       <Link href={`/productdetail/${product.id}`}>
                         <div className="aspect-square relative overflow-hidden rounded-md mb-4">
                           <Image

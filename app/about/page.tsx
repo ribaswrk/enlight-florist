@@ -12,6 +12,7 @@ export default function AboutUs() {
           <h1 className=" text-4xl font-light tracking-wide text-gray-800 md:text-6xl">
             Tentang Kami
           </h1>
+          <div className="mt-4 h-0.5 w-24 bg-[#9f6564]"></div>
         </div>
         <div className="absolute bottom-0 left-0 right-0">
           <svg
