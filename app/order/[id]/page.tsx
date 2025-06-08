@@ -9,10 +9,12 @@ import { useCallback, useEffect, useState } from "react";
 interface Product {
 	id: number;
 	name: string;
-	price: string;
+	images: string[];
+	price: number;
 	category: string;
+	soldqty: string;
+	priceDisc: string;
 	homeView: number;
-	stock: string;
 }
 
 interface FormData {
@@ -120,7 +122,8 @@ export default function ShippingPage() {
 	};
 
 	const formatWhatsAppMessage = (formData: FormData, product: Product) => {
-		const totalPrice = Number(product.price) * formData.quantity;
+		const totalPrice =
+			Number(product.priceDisc || product.price) * formData.quantity;
 		const balloonTextSection =
 			product.category.toLowerCase() === "balloon"
 				? `*TEKS BALON:*
@@ -134,7 +137,7 @@ ${formData.balloonText || "-"}
 
 *DETAIL PRODUK:*
 • *Produk:* ${product.name}
-• *Harga:* ${formatRupiah(Number(product.price))}
+• *Harga:* ${formatRupiah(Number(product.priceDisc || product.price))}
 • *Jumlah:* ${formData.quantity}
 • *Jenis Bunga:* ${
 			formData.flowerType === "real" ? "Bunga Asli" : "Bunga Artificial"
@@ -218,7 +221,11 @@ ${balloonTextSection}
 						<input
 							id="price"
 							name="price"
-							value={product ? formatRupiah(Number(product.price)) : ""}
+							value={
+								product
+									? formatRupiah(Number(product.priceDisc || product.price))
+									: ""
+							}
 							disabled
 							className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400 bg-gray-100"
 						/>
@@ -391,7 +398,9 @@ ${balloonTextSection}
 						<div className="flex justify-between font-semibold text-lg">
 							<span>Total:</span>
 							<span>
-								{formatRupiah(Number(product.price) * formData.quantity)}
+								{formatRupiah(
+									Number(product.priceDisc || product.price) * formData.quantity
+								)}
 							</span>
 						</div>
 					</div>
