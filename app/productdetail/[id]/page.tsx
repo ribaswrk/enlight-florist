@@ -124,7 +124,7 @@ export default function ProductDetailPage() {
                   alt={relatedProduct.name}
                   width={300}
                   height={300}
-                  className="rounded-lg mb-4"
+                  className="rounded-lg mb-4 mx-auto"
                 />
                 <h3 className="text-lg font-semibold text-gray-800">
                   {relatedProduct.name}
