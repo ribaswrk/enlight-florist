@@ -104,8 +104,6 @@ export default function CategoriesManagement() {
 
       if (!res.ok) throw new Error("Failed to delete category");
 
-      const data = await res.json();
-
       // Refresh the category list after deletion
       fetchCategory();
     } catch (error) {
