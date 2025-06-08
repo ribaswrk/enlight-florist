@@ -193,7 +193,11 @@ ${balloonTextSection}
 
 	return (
 		<div className="container mx-auto px-4 py-8">
-			<Button onClick={() => router.back()} variant="outline" className="mb-4">
+			<Button
+				onClick={() => router.back()}
+				variant="default"
+				className="flex items-center text-black-500 hover:underline"
+			>
 				<ArrowUturnLeftIcon className="h-8 w-8 mr-2" />
 			</Button>
 			<h1 className="text-2xl font-bold mb-6 text-center">Rincian Pesanan</h1>
