@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,118 +31,60 @@ const Header = () => {
             href="/"
             className="text-rose-600 transition-colors duration-200"
           >
-            Enlight Florist
+            <Image
+              src="/logos/logo.png"
+              alt="Logo"
+              width={0}
+              height={0}
+              sizes="100vw"
+              className="w-full h-20 object-fill"
+            />
           </Link>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="w-full hidden lg:block mt-4">
-          <ul className="flex justify-center space-x-6">
-            <li>
-              <Link
-                href="/"
-                className={`text-lg font-medium text-black hover:text-gray-500
-          transition-colors duration-200`}
-              >
-                Halaman Utama
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/about"
-                className={`text-lg font-medium text-black hover:text-gray-500
-            transition-colors duration-200`}
-              >
-                Tentang Kami
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/categories"
-                className={`text-lg font-medium text-black hover:text-gray-500
-            transition-colors duration-200`}
-              >
-                Produk Kami
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/special"
-                className={`text-lg font-medium text-black hover:text-gray-500
-            transition-colors duration-200`}
-              >
-                Special Request
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/coorporate"
-                className={`text-lg font-medium text-black hover:text-gray-500
-            transition-colors duration-200`}
-              >
-                Cooporate Partnership
-              </Link>
-            </li>
-          </ul>
+        <nav className="hidden lg:flex justify-center mt-4 space-x-10">
+          {[
+            { href: "/", label: "Halaman Utama" },
+            { href: "/about", label: "Tentang Kami" },
+            { href: "/categories", label: "Produk Kami" },
+            { href: "/special", label: "Special Request" },
+            { href: "/coorporate", label: "Coorporate Partnership" },
+          ].map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className="text-base text-gray-800 hover:text-rose-600 font-medium transition duration-200"
+            >
+              {label}
+            </Link>
+          ))}
         </nav>
 
         {/* Mobile Navigation */}
         <nav
-          className={`w-full lg:hidden ${
-            isMenuOpen ? "max-h-96" : "max-h-0"
-          } overflow-hidden transition-all duration-300 ease-in-out`}
+          className={`w-full lg:hidden transition-all duration-300 ease-in-out overflow-hidden ${
+            isMenuOpen ? "max-h-96 mt-4" : "max-h-0"
+          }`}
         >
-          <ul className="flex flex-col items-center space-y-4 py-4">
-            <li>
-              <Link
-                href="/"
-                className={`text-lg font-medium text-black hover:text-gray-500
-          transition-colors duration-200`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Halaman Utama
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/about"
-                className={`text-lg font-medium text-black hover:text-gray-500
-            transition-colors duration-200`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Tentang Kami
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/categories"
-                className={`text-lg font-medium text-black hover:text-gray-500
-            transition-colors duration-200`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Produk Kami
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/special"
-                className={`text-lg font-medium text-black hover:text-gray-500
-            transition-colors duration-200`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Special Request
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/coorporate"
-                className={`text-lg font-medium text-black hover:text-gray-500
-            transition-colors duration-200`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Cooporate Partnership
-              </Link>
-            </li>
+          <ul className="flex flex-col items-center space-y-4 py-4 border-t border-gray-100">
+            {[
+              { href: "/", label: "Halaman Utama" },
+              { href: "/about", label: "Tentang Kami" },
+              { href: "/categories", label: "Produk Kami" },
+              { href: "/special", label: "Special Request" },
+              { href: "/coorporate", label: "Coorporate Partnership" },
+            ].map(({ href, label }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="text-base font-medium text-gray-800 hover:text-rose-600 transition"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
       </div>
