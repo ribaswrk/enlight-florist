@@ -107,6 +107,8 @@ export default function HomePage() {
 					content="toko bunga Tangerang, florist Tangerang, Enlight Florist"
 				/>
 				<meta name="robots" content="index, follow" />
+
+				{/* Open Graph for Facebook */}
 				<meta
 					property="og:title"
 					content="Enlight Florist - Toko Bunga Tangerang"
@@ -121,8 +123,25 @@ export default function HomePage() {
 					property="og:image"
 					content="https://www.enlightflorist.com/og-image.jpg"
 				/>
+
+				{/* Twitter Card */}
+				<meta name="twitter:card" content="summary_large_image" />
+				<meta
+					name="twitter:title"
+					content="Enlight Florist - Toko Bunga Tangerang"
+				/>
+				<meta
+					name="twitter:description"
+					content="Toko bunga di Tangerang untuk segala acara. Kirim bunga segar dan artificial dari Enlight Florist."
+				/>
+				<meta
+					name="twitter:image"
+					content="https://www.enlightflorist.com/og-image.jpg"
+				/>
+
 				<link rel="canonical" href="https://www.enlightflorist.com" />
 			</Head>
+
 			<main className="bg-customBg min-h-screen">
 				<div className="relative">
 					{/* Carousel event Section */}
