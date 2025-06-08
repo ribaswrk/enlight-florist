@@ -4,12 +4,12 @@ import { Wind, Heart, MapPin, Phone } from "lucide-react";
 
 export default function AboutUs() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white font-poppins">
       {/* Hero Section */}
       <section className="relative h-[50vh] overflow-hidden">
         <div className="absolute inset-0 bg-[#9f6564]/10"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
-          <h1 className="font-serif text-4xl font-light tracking-wide text-gray-800 md:text-6xl">
+          <h1 className=" text-4xl font-light tracking-wide text-gray-800 md:text-6xl">
             Tentang Kami
           </h1>
         </div>
@@ -33,9 +33,7 @@ export default function AboutUs() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center justify-between gap-12 md:flex-row">
             <div className="md:w-1/2">
-              <h2 className="font-serif text-3xl font-light text-gray-800">
-                Kisah Kami
-              </h2>
+              <h2 className=" text-3xl font-light text-gray-800">Kisah Kami</h2>
               <div className="mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
               <p className="mt-6 text-gray-600">
                 Sejak didirikan pada tahun 2016, Enlight Florist telah tumbuh
@@ -63,9 +61,7 @@ export default function AboutUs() {
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="font-serif text-3xl font-light text-gray-800">
-              Our Values
-            </h2>
+            <h2 className=" text-3xl font-light text-gray-800">Our Values</h2>
             <div className="mx-auto mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
@@ -73,7 +69,7 @@ export default function AboutUs() {
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#9f6564]/10">
                 <Wind className="h-8 w-8 text-[#9f6564]" />
               </div>
-              <h3 className="mt-6 font-serif text-xl font-medium text-gray-800">
+              <h3 className="mt-6  text-xl font-medium text-gray-800">
                 Fleksibel
               </h3>
               <p className="mt-4 text-gray-600">
@@ -86,9 +82,7 @@ export default function AboutUs() {
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#9f6564]/10">
                 <Heart className="h-8 w-8 text-[#9f6564]" />
               </div>
-              <h3 className="mt-6 font-serif text-xl font-medium text-gray-800">
-                Hati
-              </h3>
+              <h3 className="mt-6  text-xl font-medium text-gray-800">Hati</h3>
               <p className="mt-4 text-gray-600">
                 Setiap rangkaian bunga yang kami buat adalah hasil dari cinta
                 dan perhatian kami terhadap detail. Kami percaya bahwa setiap
@@ -99,7 +93,7 @@ export default function AboutUs() {
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#9f6564]/10">
                 <MapPin className="h-8 w-8 text-[#9f6564]" />
               </div>
-              <h3 className="mt-6 font-serif text-xl font-medium text-gray-800">
+              <h3 className="mt-6  text-xl font-medium text-gray-800">
                 Kualitas
               </h3>
               <p className="mt-4 text-gray-600">
@@ -120,7 +114,7 @@ export default function AboutUs() {
           <div className="rounded-lg bg-white p-8 shadow-sm md:p-12">
             <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
               <div>
-                <h2 className="font-serif text-2xl font-light text-gray-800 md:text-3xl">
+                <h2 className=" text-2xl font-light text-gray-800 md:text-3xl">
                   Kunjungi Toko Kami
                 </h2>
                 <div className="mt-2 h-0.5 w-16 bg-[#9f6564]"></div>

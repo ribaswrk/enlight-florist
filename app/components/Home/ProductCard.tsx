@@ -32,7 +32,6 @@ export default function CategoryCarousel({
 
   const productsPerSlide = 4;
 
-  // Group products into slides of 4
   const getProductSlides = (products: Product[]) => {
     const slides = [];
     for (let i = 0; i < products.length; i += productsPerSlide) {
@@ -44,7 +43,6 @@ export default function CategoryCarousel({
   const productSlides = getProductSlides(category.products);
   const totalSlides = productSlides.length;
 
-  // Auto-slide functionality
   const handleNextSlide = useCallback(() => {
     if (isTransitioning) return;
     setIsTransitioning(true);
@@ -55,8 +53,7 @@ export default function CategoryCarousel({
   useEffect(() => {
     const timer = setInterval(() => {
       handleNextSlide();
-    }, 5000); // Change slides every 5 seconds
-
+    }, 5000);
     return () => clearInterval(timer);
   }, [handleNextSlide]);
 
@@ -68,19 +65,17 @@ export default function CategoryCarousel({
   };
 
   return (
-    <div className="mb-24 last:mb-0 pt-12">
+    <div className="mb-24 last:mb-0 pt-12 font-poppins">
       {/* Category Title */}
       <div className="text-center mb-8 space-y-2">
-        <h2 className="text-3xl font-serif font-medium tracking-tight">
-          {category.name}
-        </h2>
+        <h2 className="text-3xl font-medium tracking-tight">{category.name}</h2>
         <p className="text-muted-foreground">
           Beberapa produk favorit kami untuk kategori{" "}
           {category.name.toLowerCase()}
         </p>
       </div>
 
-      {/* Product Carousel */}
+      {/* Carousel */}
       <div className="relative">
         <div className="overflow-hidden">
           <div
@@ -94,11 +89,8 @@ export default function CategoryCarousel({
               <div key={slideIndex} className="flex gap-6 min-w-full px-3">
                 {slide.map((product) => (
                   <div key={product.id} className="flex-1 group">
-                    <div className="relative bg-[#9f6564]/10 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow h-full">
-                      <Link
-                        href={`/productdetail/${product.id}`}
-                        key={product.id}
-                      >
+                    <div className="relative h-full p-4 rounded-xl border-2 border-pink-200 shadow-sm hover:shadow-md transition-shadow bg-white">
+                      <Link href={`/productdetail/${product.id}`}>
                         <div className="aspect-square relative overflow-hidden rounded-md mb-4">
                           <Image
                             src={product.image || "/placeholder.svg"}
@@ -107,14 +99,14 @@ export default function CategoryCarousel({
                             className="object-cover transition-transform group-hover:scale-105"
                           />
                         </div>
-                        <h3 className="font-medium text-lg mb-2">
+                        <h3 className="font-semibold text-lg mb-1">
                           {product.name}
                         </h3>
-                        <p className="text-rose-600 dark:text-rose-400 font-semibold">
+                        <p className="text-rose-600 dark:text-rose-400 font-semibold mb-1">
                           {product.priceDisc !== "0" &&
                           product.priceDisc !== "" ? (
                             <>
-                              <span className="text-red-400 line-through text-sm">
+                              <span className="text-red-400 line-through text-sm mr-2">
                                 {formatRupiah(Number(product.price))}
                               </span>
                               <span className="text-red-500 font-bold">
@@ -127,7 +119,6 @@ export default function CategoryCarousel({
                             </span>
                           )}
                         </p>
-                        {/* Terjual */}
                         <p className="text-sm text-gray-500">
                           {product.soldQty} terjual
                         </p>
@@ -135,7 +126,7 @@ export default function CategoryCarousel({
                     </div>
                   </div>
                 ))}
-                {/* Add empty placeholders if needed */}
+                {/* Empty placeholder */}
                 {slide.length < productsPerSlide &&
                   Array(productsPerSlide - slide.length)
                     .fill(null)
@@ -147,7 +138,7 @@ export default function CategoryCarousel({
           </div>
         </div>
 
-        {/* Navigation Buttons */}
+        {/* Navigation */}
         <button
           onClick={handlePrevSlide}
           className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-[#9f6564]/20 p-2 rounded-full shadow-md dark:hover:bg-rose-400 transition-colors"
@@ -163,15 +154,15 @@ export default function CategoryCarousel({
           <ChevronRight className="h-6 w-6" />
         </button>
 
-        {/* Slide Indicators */}
+        {/* Indicators */}
         <div className="flex justify-center mt-8 space-x-2">
           {Array.from({ length: totalSlides }).map((_, index) => (
             <button
               key={index}
-              className={`w-2 h-2 rounded-full transition-colors ${
+              className={`h-2 rounded-full transition-all ${
                 index === currentSlide
                   ? "bg-rose-500 w-4"
-                  : "bg-rose-200 dark:bg-rose-800"
+                  : "bg-rose-200 dark:bg-rose-800 w-2"
               }`}
               onClick={() => {
                 setCurrentSlide(index);

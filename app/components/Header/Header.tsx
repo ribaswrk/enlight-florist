@@ -14,7 +14,7 @@ const Header = () => {
     <header
       className={`top-0 left-0 w-full z-50 shadow-md transition-all duration-500 translate-y-0 bg-customBg`}
     >
-      <div className="container mx-auto flex flex-col items-center px-6 py-4 md:py-7 relative">
+      <div className="container mx-auto flex flex-col items-center px-6 py-4 md:py-7 relative font-poppins">
         {/* Mobile Menu Button - positioned absolutely */}
         <button
           className="lg:hidden text-black focus:outline-none absolute right-6 top-1/2 transform -translate-y-1/2"

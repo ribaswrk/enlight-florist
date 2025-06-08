@@ -5,12 +5,12 @@ import React from "react";
 
 export default function Corporate() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white font-poppins">
       {/* Hero Section */}
       <section className="relative h-[50vh] overflow-hidden">
         <div className="absolute inset-0 bg-[#9f6564]/10"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
-          <h1 className="font-serif text-4xl font-light tracking-wide text-gray-800 md:text-6xl">
+          <h1 className=" text-4xl font-light tracking-wide text-gray-800 md:text-6xl">
             Corporate Partnership
           </h1>
           <div className="mt-4 h-0.5 w-24 bg-[#9f6564]"></div>
@@ -34,7 +34,7 @@ export default function Corporate() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="font-serif text-3xl font-light text-gray-800">
+            <h2 className=" text-3xl font-light text-gray-800">
               Enlight Florist Corporate Partnership
             </h2>
             <div className="mx-auto mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
@@ -59,7 +59,7 @@ export default function Corporate() {
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="font-serif text-3xl font-light text-gray-800">
+            <h2 className=" text-3xl font-light text-gray-800">
               Keuntungan Partnership
             </h2>
             <div className="mx-auto mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
@@ -74,7 +74,7 @@ export default function Corporate() {
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#9f6564]/10">
                 <TicketPercent className="h-6 w-6 text-[#9f6564]" />
               </div>
-              <h3 className="font-serif text-xl font-semibold text-gray-800">
+              <h3 className=" text-xl font-semibold text-gray-800">
                 Harga Spesial
               </h3>
               <p className="mt-4 text-gray-600">
@@ -87,7 +87,7 @@ export default function Corporate() {
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#9f6564]/10">
                 <Clock className="h-6 w-6 text-[#9f6564]" />
               </div>
-              <h3 className="font-serif text-xl font-semibold text-gray-800">
+              <h3 className=" text-xl font-semibold text-gray-800">
                 Hampers Eksklusif
               </h3>
               <p className="mt-4 text-gray-600">
@@ -101,7 +101,7 @@ export default function Corporate() {
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#9f6564]/10">
                 <Award className="h-6 w-6 text-[#9f6564]" />
               </div>
-              <h3 className="font-serif text-xl font-semibold text-gray-800">
+              <h3 className=" text-xl font-semibold text-gray-800">
                 Pembayaran Tempo
               </h3>
               <p className="mt-4 text-gray-600">
@@ -115,7 +115,7 @@ export default function Corporate() {
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#9f6564]/10">
                 <Gift className="h-6 w-6 text-[#9f6564]" />
               </div>
-              <h3 className="font-serif text-xl font-semibold text-gray-800">
+              <h3 className=" text-xl font-semibold text-gray-800">
                 Program Membership
               </h3>
               <p className="mt-4 text-gray-600">
@@ -131,9 +131,7 @@ export default function Corporate() {
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="font-serif text-3xl font-light text-gray-800">
-              Perusahaan
-            </h2>
+            <h2 className=" text-3xl font-light text-gray-800">Perusahaan</h2>
             <div className="mx-auto mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
             <p className="mx-auto mt-4 max-w-2xl text-gray-600">
               Berikut beberapa perusahaan yang sudah pernah memesan produk kami
@@ -167,7 +165,7 @@ export default function Corporate() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="font-serif text-3xl font-light text-gray-800">
+            <h2 className=" text-3xl font-light text-gray-800">
               Cara Menjalin Kerja Sama
             </h2>
             <div className="mx-auto mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
@@ -185,7 +183,7 @@ export default function Corporate() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="rounded-lg bg-[#9f6564]/10 p-8 text-center shadow-sm md:p-12">
-            <h2 className="font-serif text-3xl font-light text-gray-800">
+            <h2 className=" text-3xl font-light text-gray-800">
               Siap untuk menjalin kerja sama dengan kami ?
             </h2>
             <div className="mx-auto mt-2 h-0.5 w-16 bg-[#9f6564]"></div>

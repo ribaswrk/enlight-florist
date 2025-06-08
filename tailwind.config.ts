@@ -68,6 +68,10 @@ const config: Config = {
           950: "#4c0519",
         },
       },
+      fontFamily: {
+        poppins: ["Poppins", "sans-serif"],
+      },
+
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

@@ -9,12 +9,12 @@ export default function SpecialRequest() {
   // Mohon bantuannya yaa`;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white font-poppins">
       {/* Hero Section */}
       <section className="relative h-[50vh] overflow-hidden">
         <div className="absolute inset-0 bg-[#9f6564]/10"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
-          <h1 className="font-serif text-4xl font-light tracking-wide text-gray-800 md:text-6xl">
+          <h1 className=" text-4xl font-light tracking-wide text-gray-800 md:text-6xl">
             Special Request
           </h1>
           <div className="mt-4 h-0.5 w-24 bg-[#9f6564]"></div>
@@ -38,7 +38,7 @@ export default function SpecialRequest() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="font-serif text-3xl font-light text-gray-800">
+            <h2 className=" text-3xl font-light text-gray-800">
               Kami Siap Mewujudkan Mimpi Bunga Anda
             </h2>
             <div className="mx-auto mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
@@ -63,7 +63,7 @@ export default function SpecialRequest() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center gap-16 md:flex-row">
             <div className="md:w-1/2">
-              <h2 className="font-serif text-3xl font-light text-gray-800">
+              <h2 className=" text-3xl font-light text-gray-800">
                 Cara mewujudkan mimpi bunga anda
               </h2>
               <div className="mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
@@ -73,7 +73,7 @@ export default function SpecialRequest() {
                     1
                   </div>
                   <div>
-                    <h3 className="font-serif text-xl font-medium text-gray-800">
+                    <h3 className=" text-xl font-medium text-gray-800">
                       Hubungi kami
                     </h3>
                     <p className="mt-2 text-gray-600">
@@ -87,7 +87,7 @@ export default function SpecialRequest() {
                     2
                   </div>
                   <div>
-                    <h3 className="font-serif text-xl font-medium text-gray-800">
+                    <h3 className=" text-xl font-medium text-gray-800">
                       Konsultasi
                     </h3>
                     <p className="mt-2 text-gray-600">
@@ -103,7 +103,7 @@ export default function SpecialRequest() {
                     3
                   </div>
                   <div>
-                    <h3 className="font-serif text-xl font-medium text-gray-800">
+                    <h3 className=" text-xl font-medium text-gray-800">
                       Feedback
                     </h3>
                     <p className="mt-2 text-gray-600">
@@ -120,7 +120,7 @@ export default function SpecialRequest() {
                     4
                   </div>
                   <div>
-                    <h3 className="font-serif text-xl font-medium text-gray-800">
+                    <h3 className=" text-xl font-medium text-gray-800">
                       Pengiriman
                     </h3>
                     <p className="mt-2 text-gray-600">
@@ -138,7 +138,7 @@ export default function SpecialRequest() {
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="font-serif text-3xl font-light text-gray-800">
+            <h2 className=" text-3xl font-light text-gray-800">
               Cerita Pelanggan Kami
             </h2>
             <div className="mx-auto mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
@@ -172,7 +172,7 @@ export default function SpecialRequest() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="rounded-lg bg-[#9f6564]/10 p-8 text-center shadow-sm md:p-12">
-            <h2 className="font-serif text-3xl font-light text-gray-800">
+            <h2 className=" text-3xl font-light text-gray-800">
               Siap untuk memesan bunga impian anda?
             </h2>
             <div className="mx-auto mt-2 h-0.5 w-16 bg-[#9f6564]"></div>
