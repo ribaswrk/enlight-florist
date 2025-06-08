@@ -5,6 +5,7 @@ import type React from "react";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
 
 interface Product {
 	id: number;
@@ -192,6 +193,9 @@ ${balloonTextSection}
 
 	return (
 		<div className="container mx-auto px-4 py-8">
+			<Button onClick={() => router.back()} variant="outline" className="mb-4">
+				<ArrowUturnLeftIcon className="h-8 w-8 mr-2" />
+			</Button>
 			<h1 className="text-2xl font-bold mb-6 text-center">Rincian Pesanan</h1>
 			<div className="max-w-md mx-auto mt-8">
 				<form onSubmit={handleSubmit} className="space-y-6">
