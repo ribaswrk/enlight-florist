@@ -29,6 +29,12 @@ export async function getProducts(
           imageUrl: true,
         },
       },
+      Subcategory: {
+        select: {
+          subcategoryId: true,
+          subcatname: true,
+        },
+      },
     },
   });
 
@@ -42,15 +48,18 @@ export async function getProducts(
       category,
       homeView,
       ProductImage,
+      Subcategory,
     }) => ({
       id: productid,
       name,
       price,
       priceDisc: promoPrice,
-      soldqty,
+      soldqty: Number(soldqty),
       homeView,
       categoryId: category.categoryId,
       category: category.name,
+      subcategory: Subcategory?.subcatname,
+      subcategoryId: Subcategory?.subcategoryId,
       images: ProductImage.map((img) => img.imageUrl),
     })
   );
@@ -129,6 +138,7 @@ export async function createProduct(data: FormData) {
         soldqty: String(data.get("soldqty")),
         categoryId: Number(data.get("categoryId")),
         homeView: Number(data.get("homeView")),
+        subcategoryId: Number(data.get("subcategoryId")),
         createdBy: data.get("createdBy") as string,
         updateBy: data.get("updateBy") as string,
         createdAt: new Date(),
@@ -178,6 +188,7 @@ export async function updateProduct(productid: number, data: FormData) {
         promoPrice: String(data.get("promoPrice")),
         soldqty: String(data.get("soldqty")),
         categoryId: Number(data.get("categoryId")),
+        subcategoryId: Number(data.get("subcategoryId")),
         homeView: Number(data.get("homeView")),
         updateBy: data.get("updateBy") as string,
         updateAt: new Date(),

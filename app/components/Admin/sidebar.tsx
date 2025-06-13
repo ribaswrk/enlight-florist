@@ -15,6 +15,7 @@ import {
   X,
   ChevronDown,
   ChevronRight,
+  Grid2x2,
 } from "lucide-react";
 
 export default function AdminSidebar() {
@@ -95,6 +96,13 @@ export default function AdminSidebar() {
               icon={<ShoppingCart size={20} />}
               title="Kategori"
               isActive={pathname.startsWith("/admin/categories")}
+              isCollapsed={isCollapsed}
+            />
+            <SidebarItem
+              href="/admin/subcategory"
+              icon={<Grid2x2 size={20} />}
+              title="Sub Kategori"
+              isActive={pathname.startsWith("/admin/subcategory")}
               isCollapsed={isCollapsed}
             />
             <SidebarItem

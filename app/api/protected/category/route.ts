@@ -5,7 +5,7 @@ import {
   updatecategory,
   deletecategory,
 } from "../../../controllers/categorycontroller";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 // ✅ GET: Fetch all category
 export async function GET() {
@@ -24,25 +24,31 @@ export async function GET() {
 // ✅ POST: Create a new category
 export async function POST(req: NextRequest) {
   try {
-    // ✅ Extract Bearer token manually
     const authHeader = req.headers.get("authorization");
-    const tokenString = authHeader?.split(" ")[1]; // Get token after "Bearer "
+    const tokenString = authHeader?.split(" ")[1];
 
-    console.log("Extracted Token:", tokenString); // Debugging
+    console.log("Extracted Token:", tokenString);
 
     if (!tokenString) {
       return NextResponse.json({ error: "No token provided" }, { status: 401 });
     }
 
-    // ✅ Manually decode the token using `jsonwebtoken`
-    let decodedToken;
+    // Deklarasi dan isi variabel di luar try agar bisa digunakan di bawah
+    type MyToken = JwtPayload & {
+      id: string;
+      name: string;
+      role: string;
+    };
+
+    let decodedToken: MyToken;
     try {
-      decodedToken = jwt.verify(tokenString, process.env.NEXTAUTH_SECRET!) as {
-        id: string;
-        name: string;
-        role: string;
-      };
-      console.log("Decoded Token:", decodedToken); // Debugging
+      decodedToken = jwt.verify(
+        tokenString,
+        process.env.NEXTAUTH_SECRET!
+      ) as MyToken;
+
+      console.log("Decoded Token:", decodedToken);
+      console.log("Token exp:", decodedToken.exp);
     } catch (error) {
       console.error("JWT Verification Error:", error);
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
@@ -58,7 +64,8 @@ export async function POST(req: NextRequest) {
 
     const newcategory = await createcategory(formData);
     return NextResponse.json(newcategory, { status: 201 });
-  } catch {
+  } catch (error) {
+    console.error("General Error:", error);
     return NextResponse.json(
       { error: "Failed to create category" },
       { status: 500 }

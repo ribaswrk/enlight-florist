@@ -17,6 +17,9 @@ type Product = {
   id: number;
   name: string;
   category: string;
+  categoryId: number;
+  subcategory: string;
+  subcategoryId: number;
   price: number;
   priceDisc: number;
   homeView: number;
@@ -30,10 +33,16 @@ type Category = {
   name: string;
 };
 
+type Subcategory = {
+  id: number;
+  name: string;
+};
+
 export default function ProductsManagement() {
   // Data produk contoh (ganti dengan data sebenarnya dari API/database)
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -44,18 +53,32 @@ export default function ProductsManagement() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null
   );
+  const [selectedSubCategoryId, setSelectedSubCategoryId] = useState<
+    number | null
+  >(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<number>(0);
   const { data: session } = useSession();
   const [, setProductImage] = useState<File | null>(null);
   const [productImageUrl, setProductImageUrl] = useState<string[]>([]);
-  const [soldqty, setSoldQty] = useState<string | number>("");
+  const [soldqty, setSoldQty] = useState<number>(0);
 
   // Filter produk berdasarkan pencarian
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const validateProductForm = () => {
+    const requiredFields = [
+      { field: productName.trim(), name: "Nama Produk" },
+      { field: selectedCategoryId, name: "Kategori" },
+      { field: selectedSubCategoryId, name: "Sub Kategori" },
+      { field: productPrice, name: "Harga" },
+    ];
+    const missing = requiredFields.find((f) => !f.field);
+    return missing?.name || null;
+  };
 
   const fetchProducts = async () => {
     try {
@@ -89,9 +112,29 @@ export default function ProductsManagement() {
     }
   };
 
+  const fetchSubcategory = async (catid?: number) => {
+    try {
+      const res = await fetch(
+        `/api/protected/subcat?categoryId=${encodeURIComponent(catid || 0)}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to fetch subcategories");
+
+      const data = await res.json();
+      setSubcategories(data);
+    } catch (error) {
+      console.error("Error fetching subcategories:", error);
+    }
+  };
+
   const saveProduct = async () => {
-    if (!productName.trim() || !selectedCategoryId || productPrice === "") {
-      alert("Please fill in all required fields.");
+    const missingField = validateProductForm();
+    if (missingField) {
+      alert(`Field "${missingField}" wajib diisi.`);
       return;
     }
 
@@ -105,6 +148,7 @@ export default function ProductsManagement() {
       formData.append("price", String(productPrice));
       formData.append("promoPrice", String(productPriceDisc));
       formData.append("categoryId", String(selectedCategoryId));
+      formData.append("subcategoryId", String(selectedSubCategoryId));
       formData.append("homeView", String(productHomeView));
       formData.append("soldqty", String(soldqty));
       formData.append("updateBy", session?.user?.name || "Admin"); // Update user
@@ -133,6 +177,7 @@ export default function ProductsManagement() {
       setProductPrice("");
       setProductHomeView(0);
       setSelectedCategoryId(null);
+      setSelectedSubCategoryId(null);
       setProductImage(null);
       setProductImageUrl([]);
       setShowDialog(false);
@@ -168,17 +213,24 @@ export default function ProductsManagement() {
     }
   };
 
-  const openDialog = (product?: Product) => {
-    const matchedCategory = categories.find(
-      (cat) => cat.name === product?.category
-    );
+  const openDialog = async (product?: Product) => {
     setEditingProduct(product || null);
     setProductName(product?.name || "");
     setProductPrice(product?.price || "");
+    setProductPriceDisc(product?.priceDisc || "");
     setProductHomeView(product?.homeView || 0);
     setProductImageUrl(product?.images || []);
-    setSelectedCategoryId(matchedCategory?.id || null);
+    setSelectedCategoryId(product?.categoryId || null);
     setSoldQty(product?.soldqty || 0);
+
+    // Fetch subcategories terlebih dahulu
+    if (product?.categoryId) {
+      await fetchSubcategory(product.categoryId);
+    }
+
+    // Setelah subkategori di-fetch, baru isi selectedSubCategoryId
+    setSelectedSubCategoryId(product?.subcategoryId || null);
+
     setShowDialog(true);
   };
 
@@ -190,7 +242,18 @@ export default function ProductsManagement() {
   useEffect(() => {
     fetchProducts();
     fetchCategories();
+    fetchSubcategory();
   }, []);
+
+  useEffect(() => {
+    if (selectedCategoryId) {
+      fetchSubcategory(selectedCategoryId);
+      // Jangan reset subkategori kalau sedang edit produk
+      if (!editingProduct) {
+        setSelectedSubCategoryId(null);
+      }
+    }
+  }, [editingProduct, selectedCategoryId]);
 
   useEffect(() => {
     console.log("productImageUrl", productImageUrl);
@@ -231,6 +294,9 @@ export default function ProductsManagement() {
                 Kategori
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Sub Kategori
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Harga Asli
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -256,6 +322,7 @@ export default function ProductsManagement() {
                 <td className="px-6 py-4">{product.id}</td>
                 <td className="px-6 py-4">{product.name}</td>
                 <td className="px-6 py-4">{product.category}</td>
+                <td className="px-6 py-4">{product.subcategory}</td>
                 <td className="px-6 py-4">{formatRupiah(product.price)}</td>
                 <td className="px-6 py-4">
                   {product.priceDisc ? formatRupiah(product.priceDisc) : "-"}
@@ -375,7 +442,7 @@ export default function ProductsManagement() {
                 const value = e.target.value;
                 if (/^\d*$/.test(value)) {
                   // Hanya angka yang diperbolehkan
-                  setSoldQty(value);
+                  setSoldQty(Number(value));
                 }
               }}
             />
@@ -401,6 +468,20 @@ export default function ProductsManagement() {
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
+                </option>
+              ))}
+            </select>
+
+            {/* Sub Kategori */}
+            <select
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
+              value={selectedSubCategoryId || 0}
+              onChange={(e) => setSelectedSubCategoryId(Number(e.target.value))}
+            >
+              <option value="">Pilih Sub Kategori</option>
+              {subcategories.map((subcategory) => (
+                <option key={subcategory.id} value={subcategory.id}>
+                  {subcategory.name}
                 </option>
               ))}
             </select>

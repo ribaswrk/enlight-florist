@@ -3,6 +3,7 @@ import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req });
+  console.log("Middleware Token:", token?.exp, token);
 
   // ✅ Login Access
   const isLoginRoute = req.nextUrl.pathname.startsWith("/api/protected/users");

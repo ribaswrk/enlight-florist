@@ -17,19 +17,22 @@ model User {
 }
 
 model Product {
-  productid    Int            @id @default(autoincrement())
-  category     Category       @relation(fields: [categoryId], references: [categoryId])
-  categoryId   Int
-  name         String
-  price        String
-  promoPrice   String         @default("0")
-  soldqty      String         @default("0")
-  homeView     Int            @default(0)
-  createdBy    String
-  createdAt    DateTime       @default(now())
-  updateBy     String
-  updateAt     DateTime       @default(now())
-  ProductImage productImage[]
+  productid     Int            @id @default(autoincrement())
+  category      Category       @relation(fields: [categoryId], references: [categoryId])
+  categoryId    Int
+  name          String
+  price         String
+  promoPrice    String         @default("0")
+  soldqty       String         @default("0")
+  homeView      Int            @default(0)
+  description   String         @default("")
+  createdBy     String
+  createdAt     DateTime       @default(now())
+  updateBy      String
+  updateAt      DateTime       @default(now())
+  ProductImage  productImage[]
+  Subcategory   Subcategory?   @relation(fields: [subcategoryId], references: [subcategoryId])
+  subcategoryId Int?           @default(0)
 
   @@map("Product")
 }
@@ -46,17 +49,34 @@ model productImage {
 }
 
 model Category {
-  categoryId  Int       @id @default(autoincrement())
+  categoryId  Int           @id @default(autoincrement())
   name        String
-  imageCatUrl String?   @db.Text
-  homeView    Int       @default(0)
+  imageCatUrl String?       @db.Text
+  homeView    Int           @default(0)
   createdBy   String
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime      @default(now())
   updateBy    String
-  updateAt    DateTime  @default(now())
+  updateAt    DateTime      @default(now())
   Product     Product[]
+  Subcategory Subcategory[]
 
   @@map("Category")
+}
+
+model Subcategory {
+  subcategoryId  Int       @id @default(autoincrement())
+  subcatname     String
+  imageSubCatUrl String?   @db.Text
+  homeView       Int       @default(0)
+  createdBy      String
+  createdAt      DateTime  @default(now())
+  updateBy       String
+  updateAt       DateTime  @default(now())
+  category       Category  @relation(fields: [categoryId], references: [categoryId])
+  categoryId     Int
+  Product        Product[]
+
+  @@map("Subcategory")
 }
 
 model Event {
