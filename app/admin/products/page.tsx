@@ -66,7 +66,9 @@ export default function ProductsManagement() {
   const [productImageUrl, setProductImageUrl] = useState<string[]>([]);
   const [soldqty, setSoldQty] = useState<number>(0);
   const [useVariation, setUseVariation] = useState(false);
-  const [variations, setVariations] = useState([{ name: "", price: "" }]);
+  const [variations, setVariations] = useState([
+    { name: "", price: "", discPrice: "" },
+  ]);
 
   // Filter produk berdasarkan pencarian
   const filteredProducts = products.filter((product) =>
@@ -137,7 +139,7 @@ export default function ProductsManagement() {
 
   const handleVariationChange = (
     index: number,
-    key: "name" | "price",
+    key: "name" | "price" | "discPrice",
     value: string
   ) => {
     const newVariations = [...variations];
@@ -146,7 +148,7 @@ export default function ProductsManagement() {
   };
 
   const addVariationField = () => {
-    setVariations([...variations, { name: "", price: "" }]);
+    setVariations([...variations, { name: "", price: "", discPrice: "" }]);
   };
 
   const removeVariationField = (index: number) => {
@@ -404,7 +406,7 @@ export default function ProductsManagement() {
       )}
       {showDialog && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative bg-white p-6 rounded-lg shadow-lg w-96">
+          <div className="relative bg-white p-6 rounded-lg shadow-lg w-98">
             {/* Tombol silang untuk menutup dialog */}
             <button
               onClick={() => setShowDialog(false)}
@@ -536,6 +538,19 @@ export default function ProductsManagement() {
                       value={variation.price}
                       onChange={(e) =>
                         handleVariationChange(index, "price", e.target.value)
+                      }
+                    />
+                    <input
+                      type="number"
+                      placeholder="Diskon Variasi"
+                      className="w-28 px-3 py-1 border border-gray-300 rounded"
+                      value={variation.discPrice}
+                      onChange={(e) =>
+                        handleVariationChange(
+                          index,
+                          "discPrice",
+                          e.target.value
+                        )
                       }
                     />
                     {variations.length > 1 && (
