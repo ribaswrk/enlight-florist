@@ -47,6 +47,8 @@ export async function getProducts(
       soldqty,
       category,
       homeView,
+      addVal,
+      addFlag,
       ProductImage,
       Subcategory,
     }) => ({
@@ -56,6 +58,8 @@ export async function getProducts(
       priceDisc: promoPrice,
       soldqty: Number(soldqty),
       homeView,
+      addFlag,
+      addVal,
       categoryId: category.categoryId,
       category: category.name,
       subcategory: Subcategory?.subcatname,

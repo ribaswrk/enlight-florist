@@ -22,6 +22,8 @@ type Product = {
   subcategoryId: number;
   price: number;
   priceDisc: number;
+  addFlag: number;
+  addVal: string;
   homeView: number;
   stock: number;
   images?: string[];
@@ -63,6 +65,8 @@ export default function ProductsManagement() {
   const [, setProductImage] = useState<File | null>(null);
   const [productImageUrl, setProductImageUrl] = useState<string[]>([]);
   const [soldqty, setSoldQty] = useState<number>(0);
+  const [useVariation, setUseVariation] = useState(false);
+  const [variations, setVariations] = useState([{ name: "", price: "" }]);
 
   // Filter produk berdasarkan pencarian
   const filteredProducts = products.filter((product) =>
@@ -131,6 +135,25 @@ export default function ProductsManagement() {
     }
   };
 
+  const handleVariationChange = (
+    index: number,
+    key: "name" | "price",
+    value: string
+  ) => {
+    const newVariations = [...variations];
+    newVariations[index][key] = value;
+    setVariations(newVariations);
+  };
+
+  const addVariationField = () => {
+    setVariations([...variations, { name: "", price: "" }]);
+  };
+
+  const removeVariationField = (index: number) => {
+    const newVariations = variations.filter((_, i) => i !== index);
+    setVariations(newVariations);
+  };
+
   const saveProduct = async () => {
     const missingField = validateProductForm();
     if (missingField) {
@@ -156,6 +179,10 @@ export default function ProductsManagement() {
       if (productImageUrl) {
         formData.append("images", JSON.stringify(productImageUrl)); // Attach file
       }
+      formData.append(
+        "addVal",
+        useVariation ? JSON.stringify(variations) : "0"
+      );
 
       const method = editingProduct ? "PUT" : "POST";
       if (editingProduct) {
@@ -255,9 +282,6 @@ export default function ProductsManagement() {
     }
   }, [editingProduct, selectedCategoryId]);
 
-  useEffect(() => {
-    console.log("productImageUrl", productImageUrl);
-  }, [productImageUrl]);
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -392,7 +416,6 @@ export default function ProductsManagement() {
             <h2 className="text-lg font-bold mb-4">
               {editingProduct ? "Edit" : "Tambah"} Produk
             </h2>
-
             {/* Nama Produk */}
             <input
               type="text"
@@ -401,7 +424,6 @@ export default function ProductsManagement() {
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
             />
-
             {/* Harga */}
             <input
               type="number"
@@ -416,7 +438,6 @@ export default function ProductsManagement() {
                 }
               }}
             />
-
             {/* Harga Promo */}
             <input
               type="number"
@@ -431,7 +452,6 @@ export default function ProductsManagement() {
                 }
               }}
             />
-
             {/* soldqty */}
             <input
               type="number"
@@ -446,7 +466,6 @@ export default function ProductsManagement() {
                 }
               }}
             />
-
             {/* home view */}
             <label className="flex items-center space-x-2 mb-4">
               <span>Home View</span>
@@ -457,7 +476,6 @@ export default function ProductsManagement() {
                 onChange={(e) => setProductHomeView(e.target.checked ? 1 : 0)} // Toggle antara 1 dan 0
               />
             </label>
-
             {/* Kategori */}
             <select
               className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
@@ -471,7 +489,6 @@ export default function ProductsManagement() {
                 </option>
               ))}
             </select>
-
             {/* Sub Kategori */}
             <select
               className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
@@ -486,12 +503,67 @@ export default function ProductsManagement() {
               ))}
             </select>
 
+            {/* Gunakan Variasi */}
+            <label className="flex items-center space-x-2 mb-4">
+              <span>Gunakan Variasi</span>
+              <input
+                type="checkbox"
+                className="w-5 h-5 border-gray-300 rounded"
+                checked={useVariation}
+                onChange={(e) => setUseVariation(e.target.checked)}
+              />
+            </label>
+
+            {/* Field Variasi */}
+            {useVariation && (
+              <div className="mb-4">
+                <h3 className="font-semibold mb-2">Variasi Produk</h3>
+                {variations.map((variation, index) => (
+                  <div key={index} className="flex items-center gap-2 mb-2">
+                    <input
+                      type="text"
+                      placeholder="Nama variasi"
+                      className="flex-1 px-3 py-1 border border-gray-300 rounded"
+                      value={variation.name}
+                      onChange={(e) =>
+                        handleVariationChange(index, "name", e.target.value)
+                      }
+                    />
+                    <input
+                      type="number"
+                      placeholder="Harga"
+                      className="w-28 px-3 py-1 border border-gray-300 rounded"
+                      value={variation.price}
+                      onChange={(e) =>
+                        handleVariationChange(index, "price", e.target.value)
+                      }
+                    />
+                    {variations.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeVariationField(index)}
+                        className="text-red-500 hover:underline"
+                      >
+                        Hapus
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={addVariationField}
+                  className="text-sm text-blue-500 hover:underline"
+                >
+                  + Tambah Variasi
+                </button>
+              </div>
+            )}
             {/* Gambar */}
             <MultiImageUpload
               value={productImageUrl || []}
               onChange={(images) => setProductImageUrl(images)}
+              className="py-5"
             />
-
             {/* Tombol Simpan */}
             <button
               onClick={saveProduct}

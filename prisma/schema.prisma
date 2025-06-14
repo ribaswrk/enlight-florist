@@ -25,6 +25,8 @@ model Product {
   promoPrice    String         @default("0")
   soldqty       String         @default("0")
   homeView      Int            @default(0)
+  addFlag       Int            @default(0)
+  addVal        String         @default("") @db.VarChar(255)
   description   String         @default("")
   createdBy     String
   createdAt     DateTime       @default(now())

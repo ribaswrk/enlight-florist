@@ -7,6 +7,7 @@ export default function AdminDashboard() {
     products: 0,
     categories: 0,
     events: 0,
+    subcat: 0,
   });
 
   const fetchCounts = async () => {
@@ -48,10 +49,10 @@ export default function AdminDashboard() {
           description="Total Kategori Produk"
         />
         <DashboardCard
-          title="Category"
-          count={counts.categories}
+          title="Sub-Category"
+          count={counts.subcat}
           link="/admin/subcategory"
-          description="Total Kategori Produk"
+          description="Total Sub Kategori Produk"
         />
         <DashboardCard
           title="Event"
