@@ -24,6 +24,7 @@ type Product = {
   priceDisc: number;
   addFlag: number;
   addVal: string;
+  description: string;
   homeView: number;
   stock: number;
   images?: string[];
@@ -69,6 +70,7 @@ export default function ProductsManagement() {
   const [variations, setVariations] = useState([
     { name: "", price: "", discPrice: "" },
   ]);
+  const [productDescription, setProductDescription] = useState("");
 
   // Filter produk berdasarkan pencarian
   const filteredProducts = products.filter((product) =>
@@ -186,6 +188,7 @@ export default function ProductsManagement() {
         useVariation ? JSON.stringify(variations) : "0"
       );
       formData.append("addFlag", String(useVariation ? 1 : 0));
+      formData.append("desc", String(productDescription));
 
       const method = editingProduct ? "PUT" : "POST";
       if (editingProduct) {
@@ -213,6 +216,8 @@ export default function ProductsManagement() {
       setShowDialog(false);
       setEditingProduct(null);
       setProductPriceDisc("");
+      setVariations([{ name: "", price: "", discPrice: "" }]);
+      setUseVariation(false);
       setSoldQty(0);
       fetchProducts();
     } catch (error) {
@@ -253,7 +258,18 @@ export default function ProductsManagement() {
     setSelectedCategoryId(product?.categoryId || null);
     setSoldQty(product?.soldqty || 0);
     setUseVariation(product?.addFlag === 1);
-    setVariations(JSON.parse(product?.addVal || ""));
+    //hehe error tadi ya
+    setVariations(() => {
+      try {
+        return product?.addVal
+          ? JSON.parse(product.addVal)
+          : [{ name: "", price: "", discPrice: "" }];
+      } catch (error) {
+        console.error("❌ Gagal parse addVal:", error);
+        return [{ name: "", price: "", discPrice: "" }];
+      }
+    });
+    setProductDescription(product?.description || "");
     // Fetch subcategories terlebih dahulu
     if (product?.categoryId) {
       await fetchSubcategory(product.categoryId);
@@ -408,7 +424,7 @@ export default function ProductsManagement() {
       )}
       {showDialog && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative bg-white p-6 rounded-lg shadow-lg w-98">
+          <div className="relative bg-white p-6 rounded-lg shadow-lg w-98 max-h-screen overflow-y-auto">
             {/* Tombol silang untuk menutup dialog */}
             <button
               onClick={() => setShowDialog(false)}
@@ -506,6 +522,14 @@ export default function ProductsManagement() {
                 </option>
               ))}
             </select>
+
+            {/* Deskripsi Produk */}
+            <textarea
+              placeholder="Deskripsi produk"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 min-h-[100px]"
+              value={productDescription}
+              onChange={(e) => setProductDescription(e.target.value)}
+            />
 
             {/* Gunakan Variasi */}
             <label className="flex items-center space-x-2 mb-4">
