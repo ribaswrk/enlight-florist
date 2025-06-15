@@ -185,6 +185,7 @@ export default function ProductsManagement() {
         "addVal",
         useVariation ? JSON.stringify(variations) : "0"
       );
+      formData.append("addFlag", String(useVariation ? 1 : 0));
 
       const method = editingProduct ? "PUT" : "POST";
       if (editingProduct) {
@@ -251,7 +252,8 @@ export default function ProductsManagement() {
     setProductImageUrl(product?.images || []);
     setSelectedCategoryId(product?.categoryId || null);
     setSoldQty(product?.soldqty || 0);
-
+    setUseVariation(product?.addFlag === 1);
+    setVariations(JSON.parse(product?.addVal || ""));
     // Fetch subcategories terlebih dahulu
     if (product?.categoryId) {
       await fetchSubcategory(product.categoryId);
