@@ -13,10 +13,14 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const view = searchParams.get("view"); // e.g. 'home' or 'admin'
+    const subcategoryId = searchParams.get("subcategoryId");
     const categoryId = searchParams.get("categoryId");
     const homeView = searchParams.get("homeView");
     const productId = searchParams.get("productId");
 
+    const parsedSubcategoryId = subcategoryId
+      ? parseInt(subcategoryId, 10)
+      : undefined;
     const parsedCategoryId = categoryId ? parseInt(categoryId, 10) : undefined;
     const parsedHomeView = homeView ? parseInt(homeView, 10) : undefined;
     const parsedProductId = productId ? parseInt(productId, 10) : undefined;
@@ -27,6 +31,7 @@ export async function GET(req: Request) {
       result = await getProductsHome();
     } else {
       result = await getProducts(
+        parsedSubcategoryId,
         parsedCategoryId,
         parsedHomeView,
         parsedProductId

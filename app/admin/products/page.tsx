@@ -183,10 +183,7 @@ export default function ProductsManagement() {
       if (productImageUrl) {
         formData.append("images", JSON.stringify(productImageUrl)); // Attach file
       }
-      formData.append(
-        "addVal",
-        useVariation ? JSON.stringify(variations) : "0"
-      );
+      formData.append("addVal", useVariation ? JSON.stringify(variations) : "");
       formData.append("addFlag", String(useVariation ? 1 : 0));
       formData.append("desc", String(productDescription));
 

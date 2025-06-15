@@ -6,11 +6,14 @@ const prisma = new PrismaClient();
 // ✅ Get Products
 export async function getProducts(
   catId?: number,
+  subcatId?: number,
   homeView?: number,
   productId?: number
 ) {
   const whereCondition: Prisma.ProductWhereInput = {};
   if (catId) whereCondition.categoryId = catId;
+  if (subcatId) whereCondition.subcategoryId = subcatId;
+
   if (homeView !== undefined) whereCondition.homeView = homeView;
   if (productId !== undefined) whereCondition.productid = productId;
 
