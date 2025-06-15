@@ -9,6 +9,7 @@ export interface Category {
 	categoryName: string;
 	slug: string;
 	imageUrl: string;
+	hasSubcategories: boolean;
 }
 
 export interface CategoryRes {
@@ -29,12 +30,41 @@ export default function CategoriesPage() {
 			if (!res.ok) throw new Error("Failed to fetch category");
 
 			const data = await res.json();
-			const transformedCategories = data.map((category: CategoryRes) => ({
-				id: category.id,
-				categoryName: category.name,
-				imageUrl: category.imageCatUrl,
-				slug: category.id,
-			}));
+			const transformedCategories = await Promise.all(
+				data.map(async (category: CategoryRes) => {
+					let hasSubcategories = false;
+
+					try {
+						const subRes = await fetch(
+							`/api/protected/subcat?categoryId=${encodeURIComponent(
+								category.id
+							)}`,
+							{
+								method: "GET",
+								headers: { "Content-Type": "application/json" },
+							}
+						);
+
+						if (subRes.ok) {
+							const subData = await subRes.json();
+							hasSubcategories = Array.isArray(subData) && subData.length > 0;
+						}
+					} catch (subErr) {
+						console.error(
+							`Error checking subcategories for category ${category.id}`,
+							subErr
+						);
+					}
+
+					return {
+						id: category.id,
+						categoryName: category.name,
+						imageUrl: category.imageCatUrl,
+						slug: category.id.toString(),
+						hasSubcategories,
+					};
+				})
+			);
 
 			setCategories(transformedCategories);
 		} catch (error) {
@@ -69,6 +99,7 @@ export default function CategoriesPage() {
 								imageUrl={cat.imageUrl}
 								categoryName={cat.categoryName}
 								slug={cat.slug}
+								hasSubcategories={cat.hasSubcategories}
 							/>
 						</div>
 					))}
