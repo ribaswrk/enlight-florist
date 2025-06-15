@@ -31,8 +31,8 @@ export async function GET(req: Request) {
       result = await getProductsHome();
     } else {
       result = await getProducts(
-        parsedSubcategoryId,
         parsedCategoryId,
+        parsedSubcategoryId,
         parsedHomeView,
         parsedProductId
       );
