@@ -81,7 +81,6 @@ export default function ProductsManagement() {
     const requiredFields = [
       { field: productName.trim(), name: "Nama Produk" },
       { field: selectedCategoryId, name: "Kategori" },
-      { field: selectedSubCategoryId, name: "Sub Kategori" },
       { field: productPrice, name: "Harga" },
     ];
     const missing = requiredFields.find((f) => !f.field);
