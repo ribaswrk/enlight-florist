@@ -19,6 +19,7 @@ interface Product {
 	soldqty: string;
 	homeView: number;
 	images: string[];
+	description: string;
 }
 
 export default function ProductDetailPage() {
@@ -107,9 +108,12 @@ export default function ProductDetailPage() {
 					<p className="text-2xl text-pink-600 font-semibold mb-4">
 						{displayPrice(product.price, product.priceDisc)}
 					</p>
+					<p className="text-gray-600 mb-6">
+						{product.description || "tidak ada deskripsi."}
+					</p>
 					<Link href={`/order/${product.id}`}>
 						<button className="w-full bg-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-pink-600 transition duration-300">
-							Order Now
+							Pesan Sekarang
 						</button>
 					</Link>
 				</div>
