@@ -9,19 +9,23 @@ import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
 
 interface Product {
 	id: number;
-	name: string;
-	images: string[];
-	price: number;
 	category: string;
-	soldqty: string;
+	categoryId: number;
+	name: string;
+	price: string;
 	priceDisc: string;
+	soldqty: string;
 	homeView: number;
+	addFlag: number;
+	addVal: string;
+	images: string[];
+	description: string;
 }
 
 interface FormData {
 	quantity: number;
 	balloonText?: string;
-	flowerType: "real" | "artificial";
+	variant?: string;
 	name: string;
 	recipientName: string;
 	phoneNumber: string;
@@ -30,9 +34,16 @@ interface FormData {
 	cardMessage?: string;
 }
 
+interface Varian {
+	name: string;
+	price: string;
+	discPrice: string;
+}
+
 export default function ShippingPage() {
 	const { id } = useParams();
 	const router = useRouter();
+	const [varian, setVarian] = useState<Varian[]>([]);
 	const [formData, setFormData] = useState<FormData>({
 		name: "",
 		recipientName: "",
@@ -42,7 +53,7 @@ export default function ShippingPage() {
 		cardMessage: "",
 		balloonText: "",
 		deliveryDateTime: "",
-		flowerType: "real", // Default to real flowers
+		variant: "",
 	});
 
 	const [product, setProduct] = useState<Product | null>(null);
@@ -80,6 +91,20 @@ export default function ShippingPage() {
 			const data = await res.json();
 
 			setProduct(data[0]);
+			const rawAddVal = data[0].addVal;
+
+			const parsedVarian =
+				rawAddVal && rawAddVal !== "0" ? JSON.parse(rawAddVal) : [];
+
+			setVarian(parsedVarian);
+
+			// Set default varian jika tersedia
+			if (parsedVarian.length > 0) {
+				setFormData((prevData) => ({
+					...prevData,
+					variant: parsedVarian[0].name,
+				}));
+			}
 		} catch (error) {
 			console.error("Error fetching product:", error);
 		} finally {
@@ -123,8 +148,14 @@ export default function ShippingPage() {
 	};
 
 	const formatWhatsAppMessage = (formData: FormData, product: Product) => {
-		const totalPrice =
-			Number(product.priceDisc || product.price) * formData.quantity;
+		const selectedVarian = getSelectedVarian();
+		const basePrice = Number(
+			selectedVarian?.discPrice ||
+				selectedVarian?.price ||
+				product.priceDisc ||
+				product.price
+		);
+		const totalPrice = basePrice * formData.quantity;
 		const balloonTextSection =
 			product.category.toLowerCase() === "balloon"
 				? `*TEKS BALON:*
@@ -138,11 +169,9 @@ ${formData.balloonText || "-"}
 
 *DETAIL PRODUK:*
 • *Produk:* ${product.name}
-• *Harga:* ${formatRupiah(Number(product.priceDisc || product.price))}
+• *Harga:* ${formatRupiah(basePrice)}
 • *Jumlah:* ${formData.quantity}
-• *Jenis Bunga:* ${
-			formData.flowerType === "real" ? "Bunga Asli" : "Bunga Artificial"
-		}
+• *Jenis Bunga:* ${formData.variant ? formData.variant : ""}
 • *Total:* ${formatRupiah(totalPrice)}
 
 *INFORMASI PELANGGAN:*
@@ -191,6 +220,12 @@ ${balloonTextSection}
 		);
 	}
 
+	const getSelectedVarian = () => {
+		return Array.isArray(varian)
+			? varian.find((v) => v.name === formData.variant)
+			: undefined;
+	};
+
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<Button
@@ -229,11 +264,14 @@ ${balloonTextSection}
 						<input
 							id="price"
 							name="price"
-							value={
-								product
-									? formatRupiah(Number(product.priceDisc || product.price))
-									: ""
-							}
+							value={formatRupiah(
+								Number(
+									getSelectedVarian()?.discPrice ||
+										getSelectedVarian()?.price ||
+										product.priceDisc ||
+										product.price
+								)
+							)}
 							disabled
 							className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400 bg-gray-100"
 						/>
@@ -383,31 +421,42 @@ ${balloonTextSection}
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<label
-							htmlFor="flowerType"
-							className="block text-sm font-semibold text-gray-700"
-						>
-							Jenis Bunga
-						</label>
-						<select
-							id="flowerType"
-							name="flowerType"
-							value={formData.flowerType}
-							onChange={handleChange}
-							className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
-						>
-							<option value="real">Bunga Asli</option>
-							<option value="artificial">Artificial Flowers</option>
-						</select>
-					</div>
+					{varian.length > 0 && (
+						<div className="space-y-2">
+							<label
+								htmlFor="variant"
+								className="block text-sm font-semibold text-gray-700"
+							>
+								Pilih Varian
+							</label>
+							<select
+								id="variant"
+								name="variant"
+								value={formData.variant}
+								onChange={handleChange}
+								required
+								className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
+							>
+								{varian.map((item: any, index: number) => (
+									<option key={index} value={item.name}>
+										{item.name}
+									</option>
+								))}
+							</select>
+						</div>
+					)}
 
 					<div className="pt-4">
 						<div className="flex justify-between font-semibold text-lg">
 							<span>Total:</span>
 							<span>
 								{formatRupiah(
-									Number(product.priceDisc || product.price) * formData.quantity
+									Number(
+										getSelectedVarian()?.discPrice ||
+											getSelectedVarian()?.price ||
+											product.priceDisc ||
+											product.price
+									) * formData.quantity
 								)}
 							</span>
 						</div>
