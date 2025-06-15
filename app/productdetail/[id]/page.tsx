@@ -89,6 +89,19 @@ export default function ProductDetailPage() {
     if (id) fetchProductDetail();
   }, [fetchProductDetail, id]);
 
+  useEffect(() => {
+    if (product?.addVal) {
+      try {
+        const parsed = JSON.parse(product.addVal);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setSelectedOption(parsed[0]); // Preselect first item, or choose logic
+        }
+      } catch (err) {
+        console.error("Invalid addVal JSON:", err);
+      }
+    }
+  }, [product]);
+
   if (!product) return <p className="text-center py-10">Loading...</p>;
 
   const displayPrice = () => {
