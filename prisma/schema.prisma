@@ -34,7 +34,7 @@ model Product {
   updateAt      DateTime       @default(now())
   ProductImage  productImage[]
   Subcategory   Subcategory?   @relation(fields: [subcategoryId], references: [subcategoryId])
-  subcategoryId Int?           @default(0)
+  subcategoryId Int?  
 
   @@map("Product")
 }
