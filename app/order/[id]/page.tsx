@@ -437,7 +437,7 @@ ${balloonTextSection}
 								required
 								className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
 							>
-								{varian.map((item: any, index: number) => (
+								{varian.map((item: Varian, index: number) => (
 									<option key={index} value={item.name}>
 										{item.name}
 									</option>
