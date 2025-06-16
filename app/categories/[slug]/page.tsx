@@ -57,13 +57,15 @@ async function getSubcategories(categoryId: string): Promise<Subcategory[]> {
 	return res.json();
 }
 
+interface CategoryPageProps {
+	params: { slug: string };
+	searchParams?: { type?: string };
+}
+
 export default async function CategoryPage({
 	params,
 	searchParams,
-}: {
-	params: { slug: string };
-	searchParams: { type?: string };
-}) {
+}: CategoryPageProps) {
 	const isSubcategoryPage = searchParams?.type === "subcat";
 
 	// 1. Jika type = subcat, langsung ambil product by subcategory
