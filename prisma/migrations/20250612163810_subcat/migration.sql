@@ -1,11 +1,11 @@
 -- DropForeignKey
-ALTER TABLE `product` DROP FOREIGN KEY `product_categoryId_fkey`;
+ALTER TABLE `Product` DROP FOREIGN KEY `product_categoryId_fkey`;
 
 -- DropForeignKey
-ALTER TABLE `productimage` DROP FOREIGN KEY `productImage_productid_fkey`;
+ALTER TABLE `ProductImage` DROP FOREIGN KEY `productImage_productid_fkey`;
 
 -- AlterTable
-ALTER TABLE `product` ADD COLUMN `description` VARCHAR(191) NOT NULL DEFAULT '',
+ALTER TABLE `Product` ADD COLUMN `description` VARCHAR(191) NOT NULL DEFAULT '',
     ADD COLUMN `subcategoryId` INTEGER NULL DEFAULT 0;
 
 -- CreateTable
@@ -32,4 +32,4 @@ ALTER TABLE `Product` ADD CONSTRAINT `Product_subcategoryId_fkey` FOREIGN KEY (`
 ALTER TABLE `ProductImage` ADD CONSTRAINT `ProductImage_productid_fkey` FOREIGN KEY (`productid`) REFERENCES `Product`(`productid`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- RenameIndex
-ALTER TABLE `user` RENAME INDEX `user_uname_key` TO `User_uname_key`;
+ALTER TABLE `User` RENAME INDEX `user_uname_key` TO `User_uname_key`;

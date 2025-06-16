@@ -5,7 +5,7 @@
 
 */
 -- AlterTable
-ALTER TABLE `subcategory` ADD COLUMN `categoryId` INTEGER NOT NULL;
+ALTER TABLE `Subcategory` ADD COLUMN `categoryId` INTEGER NOT NULL;
 
 -- AddForeignKey
 ALTER TABLE `Subcategory` ADD CONSTRAINT `Subcategory_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`categoryId`) ON DELETE RESTRICT ON UPDATE CASCADE;
