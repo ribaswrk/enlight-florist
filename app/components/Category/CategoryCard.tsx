@@ -14,8 +14,8 @@ export default function CategoryCard({
 	slug,
 	hasSubcategories,
 }: CategoryCardProps) {
-	const href = hasSubcategories
-		? `/categories/${slug}?type=sub`
+	const href = !hasSubcategories
+		? `/subcategories/${slug}`
 		: `/categories/${slug}`;
 	return (
 		<div
