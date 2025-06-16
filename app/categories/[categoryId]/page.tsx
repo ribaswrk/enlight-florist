@@ -1,3 +1,4 @@
+import { formatRupiah } from "@/lib/formatrupiah";
 import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
@@ -152,12 +153,4 @@ function ProductGrid({ products }: { products: Product[] }) {
       ))}
     </div>
   );
-}
-
-function formatRupiah(price: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-  }).format(price);
 }
