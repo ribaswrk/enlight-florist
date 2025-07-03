@@ -27,14 +27,14 @@ model Product {
   homeView      Int            @default(0)
   addFlag       Int            @default(0)
   addVal        String         @default("") @db.VarChar(255)
-  description   String         @default("")
+  description   String         @default("") @db.Text
   createdBy     String
   createdAt     DateTime       @default(now())
   updateBy      String
   updateAt      DateTime       @default(now())
   ProductImage  productImage[]
   Subcategory   Subcategory?   @relation(fields: [subcategoryId], references: [subcategoryId])
-  subcategoryId Int?  
+  subcategoryId Int?
 
   @@map("Product")
 }
