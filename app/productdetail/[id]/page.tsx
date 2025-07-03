@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import AutoSlider from "@/components/MultiImage/autoslider";
-import { formatRupiah } from "@/lib/formatrupiah";
-import Image from "next/image";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
-import { Button } from "@/components/ui/button";
+import AutoSlider from '@/components/MultiImage/autoslider';
+import { Button } from '@/components/ui/button';
+import { formatRupiah } from '@/lib/formatrupiah';
+import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 
 interface Product {
   id: number;
@@ -40,7 +40,7 @@ export default function ProductDetailPage() {
     excludeId: number,
     limit = 3
   ): Product[] => {
-    const filtered = products.filter((p) => p.id !== excludeId);
+    const filtered = products.filter(p => p.id !== excludeId);
     if (filtered.length <= limit) return filtered;
 
     return filtered.sort(() => Math.random() - 0.5).slice(0, limit);
@@ -51,14 +51,14 @@ export default function ProductDetailPage() {
         const res = await fetch(
           `/api/protected/products?categoryId=${categoryId}`
         );
-        if (!res.ok) throw new Error("Failed to fetch related products");
+        if (!res.ok) throw new Error('Failed to fetch related products');
 
         const data: Product[] = await res.json();
         const limited = getRandomProducts(data, excludeProductId);
         setRelatedProducts(limited);
       } catch (error) {
         console.error(
-          "❌ Error fetching related products:",
+          '❌ Error fetching related products:',
           (error as Error).message || error
         );
       }
@@ -69,7 +69,7 @@ export default function ProductDetailPage() {
   const fetchProductDetail = useCallback(async () => {
     try {
       const res = await fetch(`/api/protected/products?productId=${id}`);
-      if (!res.ok) throw new Error("Failed to fetch product");
+      if (!res.ok) throw new Error('Failed to fetch product');
 
       const [productData]: Product[] = await res.json(); // ✅ Use correct typing if possible
       setProduct(productData);
@@ -79,7 +79,7 @@ export default function ProductDetailPage() {
       }
     } catch (error) {
       console.error(
-        "❌ Error fetching product:",
+        '❌ Error fetching product:',
         (error as Error).message || error
       );
     }
@@ -97,7 +97,7 @@ export default function ProductDetailPage() {
           setSelectedOption(parsed[0]); // Preselect first item, or choose logic
         }
       } catch (err) {
-        console.error("Invalid addVal JSON:", err);
+        console.error('Invalid addVal JSON:', err);
       }
     }
   }, [product]);
@@ -132,7 +132,7 @@ export default function ProductDetailPage() {
 
   const getDisplayPrice = (price: string, priceDisc: string) =>
     formatRupiah(
-      priceDisc !== "0" && priceDisc !== "" ? Number(priceDisc) : Number(price)
+      priceDisc !== '0' && priceDisc !== '' ? Number(priceDisc) : Number(price)
     );
 
   return (
@@ -172,8 +172,8 @@ export default function ProductDetailPage() {
                       onClick={() => setSelectedOption(opt)}
                       className={`px-3 py-1 rounded-full border text-sm transition ${
                         selectedOption?.name === opt.name
-                          ? "bg-pink-500 text-white border-pink-500"
-                          : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+                          ? 'bg-pink-500 text-white border-pink-500'
+                          : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'
                       }`}
                     >
                       {opt.name}
@@ -185,7 +185,7 @@ export default function ProductDetailPage() {
           )}
 
           <p className="text-gray-600 mb-6">
-            {product.description || "tidak ada deskripsi."}
+            <pre>{product.description || 'tidak ada deskripsi.'}</pre>
           </p>
 
           <Link href={`/order/${product.id}`}>
@@ -204,13 +204,13 @@ export default function ProductDetailPage() {
           <p>Tidak ada produk lain di kategori ini.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {relatedProducts.map((relatedProduct) => (
+            {relatedProducts.map(relatedProduct => (
               <div
                 key={relatedProduct.id}
                 className="border rounded-lg p-4 hover:shadow-lg transition duration-300"
               >
                 <Image
-                  src={relatedProduct.images[0] || "/placeholder.svg"}
+                  src={relatedProduct.images[0] || '/placeholder.svg'}
                   alt={relatedProduct.name}
                   width={300}
                   height={300}
