@@ -6,7 +6,7 @@ import {
   PlusCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 
 // Tipe data untuk kategori
@@ -119,6 +119,11 @@ export default function SubCategoriesManagement() {
         },
         body: formData,
       });
+
+      if (res.status === 401) {
+        // Sign out user
+        signOut(); // dari next-auth/react
+      }
 
       if (!res.ok) throw new Error("Failed to save sub category");
 

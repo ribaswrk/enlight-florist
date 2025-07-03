@@ -6,7 +6,7 @@ import {
   PlusCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 
 // Tipe data untuk produk
@@ -79,6 +79,10 @@ export default function EventsManagement() {
         },
         body: formData,
       });
+      if (res.status === 401) {
+        // Sign out user
+        signOut(); // dari next-auth/react
+      }
       if (!res.ok) throw new Error("Failed to save event");
       setEventName("");
       setEventShow(0);

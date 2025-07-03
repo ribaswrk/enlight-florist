@@ -6,7 +6,7 @@ import {
   PlusCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { MultiImageUpload } from "@/components/MultiImage/multi-image-upload";
 import { formatRupiah } from "@/lib/formatrupiah";
@@ -198,6 +198,11 @@ export default function ProductsManagement() {
         },
         body: formData, // ✅ Send FormData
       });
+
+      if (res.status === 401) {
+        // Sign out user
+        signOut(); // dari next-auth/react
+      }
 
       if (!res.ok) throw new Error("Failed to save product");
 
