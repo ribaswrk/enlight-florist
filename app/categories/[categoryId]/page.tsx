@@ -39,18 +39,20 @@ async function getProductsByCategoryId(categoryId: string): Promise<Product[]> {
     }
   );
   if (!res.ok) throw new Error("Failed to fetch products by category");
+  console.log(res);
   return res.json();
 }
 
 export default async function CategoryPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { categoryId: string };
 }) {
-  const { slug } = await params;
+  const { categoryId } = params;
 
-  const subcategories = await getSubcategories(slug);
+  const subcategories = await getSubcategories(categoryId);
 
+  console.log(categoryId);
   if (subcategories.length > 0) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -90,7 +92,7 @@ export default async function CategoryPage({
     );
   }
 
-  const products = await getProductsByCategoryId(slug);
+  const products = await getProductsByCategoryId(categoryId);
 
   return (
     <div className="container mx-auto px-4 py-8">

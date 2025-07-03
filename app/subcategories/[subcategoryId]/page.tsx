@@ -28,11 +28,11 @@ async function getProductsBySubcategoryId(id: string): Promise<Product[]> {
 export default async function SubcategoryPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ subcategoryId: string }>;
 }) {
-  const { slug } = await params;
+  const { subcategoryId } = await params;
 
-  const products = await getProductsBySubcategoryId(slug);
+  const products = await getProductsBySubcategoryId(subcategoryId);
 
   return (
     <div className="container mx-auto px-4 py-8">
