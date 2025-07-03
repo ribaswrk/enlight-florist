@@ -254,7 +254,9 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
     if (hasChanged) {
       const newFiles = mapToFiles(nextUrls);
       setFiles(newFiles);
-      onChange(nextUrls);
+      setTimeout(() => {
+        onChange?.(nextUrls); // ✅ Hindari update state saat render
+      }, 0);
       prevValueRef.current = nextUrls;
     }
   }, [value, isControlled, onChange, mapToFiles]);
@@ -313,11 +315,16 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
               );
 
               // 🔥 Trigger parent update here!
-              if (isControlled && onChange) {
+              const allDone = updated.every((f) => !f.isUploading);
+
+              if (isControlled && onChange && allDone) {
                 const uploadedUrls = updated
                   .filter((f) => !f.isUploading)
                   .map((f) => f.url);
-                onChange(uploadedUrls);
+
+                setTimeout(() => {
+                  onChange(uploadedUrls); // ✅ aman
+                }, 0);
               }
 
               return updated;
@@ -352,7 +359,9 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
             // Update parent with new URLs after deletion
             if (isControlled && onChange) {
               const updatedUrls = filtered.map((f) => f.url);
-              onChange(updatedUrls);
+              setTimeout(() => {
+                onChange(updatedUrls);
+              }, 0);
             }
             return filtered;
           });

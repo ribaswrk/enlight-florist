@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   PencilIcon,
   TrashIcon,
@@ -303,6 +303,10 @@ export default function ProductsManagement() {
     }
   }, [editingProduct, selectedCategoryId]);
 
+  const handleImageChange = useCallback((images: string[]) => {
+    setProductImageUrl(images);
+  }, []);
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -603,7 +607,7 @@ export default function ProductsManagement() {
             {/* Gambar */}
             <MultiImageUpload
               value={productImageUrl || []}
-              onChange={(images) => setProductImageUrl(images)}
+              onChange={handleImageChange}
               className="py-5"
             />
             {/* Tombol Simpan */}
