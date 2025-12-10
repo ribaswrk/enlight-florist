@@ -9,22 +9,22 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "cdn.rri.co.id",
-        pathname: "**",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "www.quipper.com",
-        pathname: "**",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "asset.kompas.com",
-        pathname: "**",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "cdn-enlightflorist.cloud",
-        pathname: "**",
+        pathname: "/**",
       },
     ],
   },
