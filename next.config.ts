@@ -4,12 +4,29 @@ const nextConfig: NextConfig = {
   /* config options here */
   // FOR LOCAL TEST
   images: {
-    domains: [
-      "cdn.rri.co.id",
-      "www.quipper.com",
-      "asset.kompas.com",
-      "cdn-enlightflorist.cloud",
-    ], // Tambahkan hostname yang diperlukan
+    formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.rri.co.id",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.quipper.com",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "asset.kompas.com",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn-enlightflorist.cloud",
+        pathname: "**",
+      },
+    ],
   },
 };
 
