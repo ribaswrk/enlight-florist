@@ -32,6 +32,7 @@ RUN npm prune --omit=dev
 FROM base AS runner
 WORKDIR /app
 
+COPY --from=build /app/next.config.ts ./
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/package.json /app/package-lock.json ./
 COPY --from=build /app/.next ./.next
