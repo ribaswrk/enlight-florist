@@ -10,9 +10,14 @@ export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 if (!globalForPrisma.prisma) globalForPrisma.prisma = prisma;
 
 const authSecret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
+const authUrl = process.env.AUTH_URL || process.env.NEXTAUTH_URL;
+const authTrustHost =
+  process.env.AUTH_TRUST_HOST === "true" ||
+  Boolean(authUrl);
 
 const config: NextAuthConfig = {
   secret: authSecret,
+  trustHost: authTrustHost,
   session: { maxAge: 3600 }, // 1 jam; v5 default JWT
 
   providers: [
