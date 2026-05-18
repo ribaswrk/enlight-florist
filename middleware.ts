@@ -14,7 +14,7 @@ export async function middleware(req: NextRequest) {
       console.log("TOKEN", token);
       return NextResponse.json(
         { error: "Unauthorized Middleware" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 

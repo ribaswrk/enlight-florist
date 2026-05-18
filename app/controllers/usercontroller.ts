@@ -30,7 +30,7 @@ export async function CreateUser(req: UserPayload) {
     if (!uname || !password) {
       return NextResponse.json(
         { error: "All fields are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -40,7 +40,7 @@ export async function CreateUser(req: UserPayload) {
           error:
             "Password must be at least 10 characters and include uppercase, lowercase, numbers, and symbols.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -58,7 +58,7 @@ export async function CreateUser(req: UserPayload) {
 
     return NextResponse.json(
       { error: "Something went wrong", details: errMsg },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
