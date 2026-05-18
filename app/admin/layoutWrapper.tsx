@@ -19,10 +19,12 @@ export default function LayoutWrapper({
   useEffect(() => {
     if (status === "loading") return;
 
-    if (!session) {
+    if (!session && !isAdminPage) {
       router.push("/admin/login");
       return;
     }
+
+    if (!session) return;
 
     // ✅ Auto-logout if session is expired
     const expiresAt = new Date(session.expires).getTime();
@@ -31,7 +33,7 @@ export default function LayoutWrapper({
     if (currentTime >= expiresAt) {
       signOut({ callbackUrl: "/admin/login" });
     }
-  }, [session, status, router]);
+  }, [session, status, router, isAdminPage]);
 
   return (
     <div className="flex min-h-screen bg-gray-100">

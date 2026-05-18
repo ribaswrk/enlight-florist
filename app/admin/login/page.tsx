@@ -21,27 +21,28 @@ const LoginPage = () => {
     e.preventDefault();
     setError("");
 
-    const res = await fetch("/api/protected/users", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ uname, password }),
+    const result = await signIn("credentials", {
+      redirect: false,
+      uname,
+      password,
     });
 
-    const data = await res.json();
-
-    if (res.ok) {
-      // ✅ Use NextAuth to sync the session
-      await signIn("credentials", {
-        redirect: false, // Prevent full page reload
-        uname,
-        password,
-        res,
-      });
-
-      router.push("/admin"); // ✅ Redirect after login
-    } else {
-      setError(data.error);
+    if (!result) {
+      setError("Login failed. Please try again.");
+      return;
     }
+
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+
+    if (result.ok) {
+      router.push("/admin");
+      return;
+    }
+
+    setError("Login failed. Please check your credentials.");
   };
 
   if (status === "loading") {
@@ -57,7 +58,9 @@ const LoginPage = () => {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <input
+            name="username"
             type="text"
+            autoComplete="username"
             value={uname}
             onChange={(e) => setUname(e.target.value)}
             placeholder="Username"
@@ -65,7 +68,9 @@ const LoginPage = () => {
             required
           />
           <input
+            name="password"
             type="password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"

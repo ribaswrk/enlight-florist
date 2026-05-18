@@ -1,11 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
-import {
-  GetAllUsers,
-  CreateUser,
-  LoginUser,
-} from "@/controllers/usercontroller";
+import { GetAllUsers, CreateUser } from "@/controllers/usercontroller";
 
 // ✅ GET: Fetch all users
 export async function GET() {
@@ -41,11 +37,4 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-export async function PUT(req: NextRequest) {
-  const body = await req.json();
-  const loginResponse = await LoginUser(body);
-  console.log("🔍 Login Response:", loginResponse);
-  return loginResponse;
 }

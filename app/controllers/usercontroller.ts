@@ -1,58 +1,21 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { sign } from "jsonwebtoken";
 
 const prisma = new PrismaClient();
-interface loginParam {
+interface UserPayload {
   uname: string;
   password: string;
 }
 
-export async function LoginUser(data: { uname: string; password: string }) {
-
-  const { uname, password } = data;
-
-  if (!uname || !password) {
-    return NextResponse.json(
-      { error: "Username and password required" },
-      { status: 400 }
-    );
-  }
-
-  const user = await prisma.user.findUnique({ where: { uname } });
-
-  if (!user) {
-    console.log("❌ User not found");
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
-  }
-
-  const passwordMatch = await bcrypt.compare(password, user.password);
-
-  if (!passwordMatch) {
-    console.log("❌ Incorrect password");
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
-  }
-
-  console.log("✅ User authenticated successfully");
-
-  // ✅ Generate a NextAuth-compatible JWT
-  const token = sign(
-    { id: user.uid, name: user.uname, role: "admin" }, // ✅ Remove extra "user" object
-    process.env.NEXTAUTH_SECRET!,
-    {
-      expiresIn: "1h",
-    }
+function isStrongPassword(password: string) {
+  return (
+    password.length >= 10 &&
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /[0-9]/.test(password) &&
+    /[^A-Za-z0-9]/.test(password)
   );
-
-  console.log("✅ Token generated:", token);
-
-  // ✅ Return the token, but don't set it manually in cookies
-  return NextResponse.json({
-    message: "Login successful",
-    user: { id: user.uid, uname: user.uname, role: "admin" },
-    token,
-  });
 }
 
 export async function GetAllUsers() {
@@ -61,9 +24,9 @@ export async function GetAllUsers() {
 }
 
 // ✅ POST: Create a new user
-export async function CreateUser(req: loginParam) {
+export async function CreateUser(req: UserPayload) {
   try {
-    const { uname, password } = req; // No need for `await req`
+    const { uname, password } = req;
     if (!uname || !password) {
       return NextResponse.json(
         { error: "All fields are required" },
@@ -71,8 +34,18 @@ export async function CreateUser(req: loginParam) {
       );
     }
 
+    if (!isStrongPassword(password)) {
+      return NextResponse.json(
+        {
+          error:
+            "Password must be at least 10 characters and include uppercase, lowercase, numbers, and symbols.",
+        },
+        { status: 400 }
+      );
+    }
+
     // Hash password before storing
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     const newUser = await prisma.user.create({
       data: { uname, password: hashedPassword },

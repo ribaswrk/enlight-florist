@@ -10,7 +10,7 @@ export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 if (!globalForPrisma.prisma) globalForPrisma.prisma = prisma;
 
 const authSecret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
-const authUrl = process.env.AUTH_URL || process.env.NEXTAUTH_URL;
+const authUrl = process.env.AUTH_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
 const authTrustHost =
   process.env.AUTH_TRUST_HOST === "true" ||
   Boolean(authUrl);
@@ -18,7 +18,10 @@ const authTrustHost =
 const config: NextAuthConfig = {
   secret: authSecret,
   trustHost: authTrustHost,
-  session: { maxAge: 3600 }, // 1 jam; v5 default JWT
+  session: { strategy: "jwt", maxAge: 3600 }, // 1 jam; v5 default JWT
+  pages: {
+    signIn: "/admin/login",
+  },
 
   providers: [
     Credentials({
@@ -39,7 +42,7 @@ const config: NextAuthConfig = {
 
         const isValid = await compare(
           String(credentials.password),
-          user.password
+          user.password,
         );
         if (!isValid) throw new Error("Invalid credentials");
 
@@ -51,7 +54,7 @@ const config: NextAuthConfig = {
         const accessToken = jwt.sign(
           { id: user.uid, role: "admin", name: user.uname },
           authSecret,
-          { expiresIn: "1h" }
+          { expiresIn: "1h" },
         );
 
         return {
