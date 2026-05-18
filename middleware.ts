@@ -2,9 +2,18 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
+  const secureCookieName = "__Secure-authjs.session-token";
+  const insecureCookieName = "authjs.session-token";
+  const cookieName = req.cookies.get(secureCookieName)
+    ? secureCookieName
+    : req.cookies.get(insecureCookieName)
+      ? insecureCookieName
+      : undefined;
+
   const token = await getToken({
     req,
     secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+    cookieName,
   });
   console.log("Middleware Token:", token?.exp, token);
 

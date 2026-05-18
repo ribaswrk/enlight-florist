@@ -23,6 +23,7 @@ const LoginPage = () => {
 
     const result = await signIn("credentials", {
       redirect: false,
+      callbackUrl: "/admin",
       uname,
       password,
     });
@@ -38,7 +39,7 @@ const LoginPage = () => {
     }
 
     if (result.ok) {
-      router.push("/admin");
+      router.replace(result.url ?? "/admin");
       return;
     }
 
