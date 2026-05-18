@@ -1,6 +1,5 @@
 import { formatRupiah } from "@/lib/formatrupiah";
 import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import Link from "next/link";
 
 interface Product {
@@ -19,7 +18,7 @@ async function getProductsBySubcategoryId(id: string): Promise<Product[]> {
     `${baseUrl}/api/protected/products?subcategoryId=${id}`,
     {
       cache: "no-store",
-    }
+    },
   );
   if (!res.ok) throw new Error("Failed to fetch products by subcategory");
   return res.json();
@@ -63,11 +62,10 @@ function ProductGrid({ products }: { products: Product[] }) {
         <Link href={`/productdetail/${product.id}`} key={product.id}>
           <div className="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
             <div className="relative aspect-square">
-              <Image
+              <img
                 src={product.images[0] || "/placeholder.svg"}
                 alt={product.name}
-                fill
-                className="object-cover"
+                className="object-cover w-full h-full"
               />
             </div>
             <div className="p-4 space-y-2">

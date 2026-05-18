@@ -7,7 +7,6 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
 
 // Tipe data untuk produk
 type Event = {
@@ -35,7 +34,7 @@ export default function EventsManagement() {
 
   // Filter kategori berdasarkan pencarian
   const filteredEvents = events.filter((event) =>
-    event.name.toLowerCase().includes(searchTerm.toLowerCase())
+    event.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const fetchEvent = async () => {
@@ -189,7 +188,7 @@ export default function EventsManagement() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {event.urls && (
-                    <Image
+                    <img
                       src={event.urls}
                       alt={event.name}
                       width={150} // ✅ Set a default width
@@ -271,7 +270,7 @@ export default function EventsManagement() {
 
               {/*Foto Event*/}
               {savedEventImage && (
-                <Image
+                <img
                   src={savedEventImage}
                   alt={eventName}
                   width={150} // ✅ Set a default width

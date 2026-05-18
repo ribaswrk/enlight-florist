@@ -5,7 +5,6 @@ import { X, File } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import axios, { AxiosError, AxiosProgressEvent, AxiosResponse } from "axios";
-import Image from "next/image";
 
 // Define expected types for API responses
 interface SignedUrlResponse {
@@ -25,7 +24,7 @@ type UploadProgressCallback = (percent: number) => void;
  */
 export async function generateSignedUrl(
   fileName: string,
-  contentType: string
+  contentType: string,
 ): Promise<SignedUrlResponse> {
   try {
     const response: AxiosResponse<SignedUrlResponse> = await axios.post(
@@ -33,14 +32,14 @@ export async function generateSignedUrl(
       {
         fileName,
         contentType,
-      }
+      },
     );
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError<{ error: string }>;
     if (axiosError.isAxiosError && axiosError.response) {
       throw new Error(
-        `Error generating signed URL: ${axiosError.response.data.error}`
+        `Error generating signed URL: ${axiosError.response.data.error}`,
       );
     }
     throw new Error(`Error generating signed URL: ${String(error)}`);
@@ -58,7 +57,7 @@ export async function generateSignedUrl(
 export async function uploadFileToSignedUrl(
   file: File,
   signedUrl: string,
-  onProgress: UploadProgressCallback
+  onProgress: UploadProgressCallback,
 ): Promise<void> {
   try {
     await axios.put(signedUrl, file, {
@@ -70,7 +69,7 @@ export async function uploadFileToSignedUrl(
       onUploadProgress: (progressEvent: AxiosProgressEvent) => {
         if (progressEvent.total) {
           const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
+            (progressEvent.loaded * 100) / progressEvent.total,
           );
           onProgress(percentCompleted);
         }
@@ -83,7 +82,7 @@ export async function uploadFileToSignedUrl(
       throw new Error(
         `Error uploading file: ${
           axiosError.response.data.error || "Unknown error"
-        }`
+        }`,
       );
     }
     throw new Error(`Error uploading file: ${String(error)}`);
@@ -155,11 +154,11 @@ export const ImagePreview: React.FC<ImagePreviewProps> = ({
     <div
       className={cn(
         "relative flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-md transition-all duration-600 ease-in-out",
-        isDeleting && "animate-glow-effect"
+        isDeleting && "animate-glow-effect",
       )}
     >
       {isImage ? (
-        <Image
+        <img
           src={src}
           alt={alt}
           width={500} // Replace with real width
@@ -213,7 +212,7 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
         : "application/octet-stream",
       isUploading: false,
       isDeleting: false,
-    }))
+    })),
   );
 
   const prevValueRef = useRef<string[]>(value);
@@ -239,7 +238,7 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
           }
         );
       }),
-    [files, imageRegex]
+    [files, imageRegex],
   );
 
   // Sync state with parent value and form state
@@ -266,7 +265,7 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
     (filesList: FileList) => {
       const fileArray = Array.from(filesList).slice(
         0,
-        maxImages ? maxImages - files.length : undefined
+        maxImages ? maxImages - files.length : undefined,
       );
 
       if (fileArray.length === 0 && maxImages) {
@@ -292,11 +291,11 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
           try {
             const { uploadUrl, publicUrl } = await generateSignedUrl(
               file!.name,
-              file!.type
+              file!.type,
             );
             await uploadFileToSignedUrl(file!, uploadUrl, (progress) => {
               setFiles((prev) =>
-                prev.map((f) => (f.id === newFile.id ? { ...f, progress } : f))
+                prev.map((f) => (f.id === newFile.id ? { ...f, progress } : f)),
               );
             });
 
@@ -311,7 +310,7 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
                       isUploading: false,
                       progress: 100,
                     }
-                  : f
+                  : f,
               );
 
               // 🔥 Trigger parent update here!
@@ -340,14 +339,14 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
         upload();
       });
     },
-    [files.length, isControlled, maxImages, onChange]
+    [files.length, isControlled, maxImages, onChange],
   );
 
   // Handle file deletion
   const handleDeleteImage = useCallback(
     (id: string) => {
       setFiles((prev) =>
-        prev.map((f) => (f.id === id ? { ...f, isDeleting: true } : f))
+        prev.map((f) => (f.id === id ? { ...f, isDeleting: true } : f)),
       );
       const fileToDelete = files.find((f) => f.id === id);
       if (!fileToDelete) return;
@@ -369,11 +368,11 @@ export const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
         .catch((error) => {
           console.error("Failed to delete file:", error);
           setFiles((prev) =>
-            prev.map((f) => (f.id === id ? { ...f, isDeleting: false } : f))
+            prev.map((f) => (f.id === id ? { ...f, isDeleting: false } : f)),
           );
         });
     },
-    [files, isControlled, onChange]
+    [files, isControlled, onChange],
   );
 
   // Cleanup blob URLs on unmount

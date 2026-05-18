@@ -7,7 +7,6 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
 
 // Tipe data untuk kategori
 type Subcategory = {
@@ -43,7 +42,7 @@ export default function SubCategoriesManagement() {
 
   // Filter kategori berdasarkan pencarian
   const filteredSubcategories = subcategory.filter((subcat) =>
-    subcat.name.toLowerCase().includes(searchTerm.toLowerCase())
+    subcat.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const fetchSubcategory = async () => {
@@ -236,7 +235,7 @@ export default function SubCategoriesManagement() {
                 <td className="px-6 py-4 whitespace-nowrap">{subcat.id}</td>
                 <td className="px-6 py-4">
                   {subcat.imageSubCatUrl && (
-                    <Image
+                    <img
                       src={subcat.imageSubCatUrl}
                       alt={subcat.name}
                       width={150} // ✅ Set a default width

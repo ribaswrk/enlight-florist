@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface AutoSliderProps {
@@ -25,11 +24,10 @@ export default function AutoSlider({
   if (images.length === 0) {
     return (
       <div className="relative w-full h-[600px]">
-        <Image
+        <img
           src="/placeholder.svg"
           alt="No image"
-          fill
-          className="rounded-lg shadow-lg object-cover"
+          className="rounded-lg shadow-lg object-cover w-full h-full"
         />
       </div>
     );
@@ -44,11 +42,10 @@ export default function AutoSlider({
             index === current ? "opacity-100 z-10" : "opacity-0 z-0"
           }`}
         >
-          <Image
+          <img
             src={url || "/placeholder.svg"}
             alt={`Slide ${index}`}
-            fill
-            className="rounded-lg shadow-lg object-cover"
+            className="rounded-lg shadow-lg object-cover w-full h-full"
           />
         </div>
       ))}

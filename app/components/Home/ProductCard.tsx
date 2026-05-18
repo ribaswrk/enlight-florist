@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { formatRupiah } from "@/lib/formatrupiah";
@@ -92,11 +91,10 @@ export default function CategoryCarousel({
                     <div className="relative h-full p-4 rounded-xl border-2 shadow-sm hover:shadow-md transition-shadow bg-white">
                       <Link href={`/productdetail/${product.id}`}>
                         <div className="aspect-square relative overflow-hidden rounded-md mb-4">
-                          <Image
+                          <img
                             src={product.image || "/placeholder.svg"}
                             alt={product.name}
-                            fill
-                            className="object-cover transition-transform group-hover:scale-105"
+                            className="object-cover transition-transform group-hover:scale-105 w-full h-full"
                           />
                         </div>
                         <h3 className="font-semibold text-lg mb-1">

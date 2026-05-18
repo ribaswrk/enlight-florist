@@ -7,7 +7,6 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
 
 // Tipe data untuk kategori
 type Category = {
@@ -33,7 +32,7 @@ export default function CategoriesManagement() {
 
   // Filter kategori berdasarkan pencarian
   const filteredCategories = categories.filter((category) =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+    category.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const fetchCategory = async () => {
@@ -186,7 +185,7 @@ export default function CategoriesManagement() {
                 <td className="px-6 py-4 whitespace-nowrap">{category.id}</td>
                 <td className="px-6 py-4">
                   {category.imageCatUrl && (
-                    <Image
+                    <img
                       src={category.imageCatUrl}
                       alt={category.name}
                       width={150} // ✅ Set a default width

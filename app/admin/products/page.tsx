@@ -7,7 +7,6 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
 import { MultiImageUpload } from "@/components/MultiImage/multi-image-upload";
 import { formatRupiah } from "@/lib/formatrupiah";
 
@@ -54,7 +53,7 @@ export default function ProductsManagement() {
   const [productPrice, setProductPrice] = useState<number | string>("");
   const [productPriceDisc, setProductPriceDisc] = useState<number | string>("");
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null
+    null,
   );
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState<
     number | null
@@ -74,7 +73,7 @@ export default function ProductsManagement() {
 
   // Filter produk berdasarkan pencarian
   const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    product.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const validateProductForm = () => {
@@ -126,7 +125,7 @@ export default function ProductsManagement() {
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
 
       if (!res.ok) throw new Error("Failed to fetch subcategories");
@@ -141,7 +140,7 @@ export default function ProductsManagement() {
   const handleVariationChange = (
     index: number,
     key: "name" | "price" | "discPrice",
-    value: string
+    value: string,
   ) => {
     const newVariations = [...variations];
     newVariations[index][key] = value;
@@ -383,7 +382,7 @@ export default function ProductsManagement() {
                 <td className="px-6 py-4">
                   {product.images?.[0] &&
                     typeof product.images[0] === "string" && (
-                      <Image
+                      <img
                         src={product.images[0]}
                         alt={product.name}
                         width={150}
@@ -580,7 +579,7 @@ export default function ProductsManagement() {
                         handleVariationChange(
                           index,
                           "discPrice",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     />

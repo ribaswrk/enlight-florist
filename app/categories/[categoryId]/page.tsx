@@ -1,6 +1,5 @@
 import { formatRupiah } from "@/lib/formatrupiah";
 import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import Link from "next/link";
 
 interface Subcategory {
@@ -25,7 +24,7 @@ async function getSubcategories(categoryId: string): Promise<Subcategory[]> {
     `${baseUrl}/api/protected/subcat?categoryId=${categoryId}`,
     {
       cache: "no-store",
-    }
+    },
   );
   if (!res.ok) throw new Error("Failed to fetch subcategories");
   return res.json();
@@ -36,7 +35,7 @@ async function getProductsByCategoryId(categoryId: string): Promise<Product[]> {
     `${baseUrl}/api/protected/products?categoryId=${categoryId}`,
     {
       cache: "no-store",
-    }
+    },
   );
   if (!res.ok) throw new Error("Failed to fetch products by category");
   console.log(res);
@@ -72,11 +71,10 @@ export default async function CategoryPage({
             <Link href={`/subcategories/${sub.id}`} key={sub.id}>
               <div className="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
                 <div className="relative aspect-square">
-                  <Image
+                  <img
                     src={sub.imageUrl || "/placeholder.svg"}
                     alt={sub.name}
-                    fill
-                    className="object-cover"
+                    className="object-cover w-full h-full"
                   />
                 </div>
                 <div className="p-4 text-center">
@@ -123,11 +121,10 @@ function ProductGrid({ products }: { products: Product[] }) {
         <Link href={`/productdetail/${product.id}`} key={product.id}>
           <div className="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
             <div className="relative aspect-square">
-              <Image
+              <img
                 src={product.images[0] || "/placeholder.svg"}
                 alt={product.name}
-                fill
-                className="object-cover"
+                className="object-cover w-full h-full"
               />
             </div>
             <div className="p-4 space-y-2">

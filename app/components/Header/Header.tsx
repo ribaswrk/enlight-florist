@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import Image from "next/image";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,12 +30,9 @@ const Header = () => {
             href="/"
             className="text-rose-600 transition-colors duration-200"
           >
-            <Image
+            <img
               src="/logos/logo.png"
               alt="Logo"
-              width={0}
-              height={0}
-              sizes="100vw"
               className="w-full h-20 object-fill"
             />
           </Link>

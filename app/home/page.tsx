@@ -1,7 +1,6 @@
 "use client";
 import Head from "next/head";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { Flower2 } from "lucide-react";
 import CategoryCarousel from "../components/Home/ProductCard";
 import Link from "next/link";
@@ -147,15 +146,10 @@ export default function HomePage() {
                   index === currentSlide ? "opacity-100" : "opacity-0"
                 }`}
               >
-                <Image
+                <img
                   src={image.urls || "/placeholder.svg"}
                   alt={image.name}
-                  fill
-                  sizes="100vw"
-                  style={{
-                    objectFit: "cover",
-                  }}
-                  priority={index === 0}
+                  className="w-full h-full object-cover"
                 />
               </div>
             ))}
