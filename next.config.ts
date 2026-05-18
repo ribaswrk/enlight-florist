@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "cdn-enlightflorist.cloud",
+        hostname: "cdn.enlightflorist.com",
         pathname: "/**",
       },
     ],

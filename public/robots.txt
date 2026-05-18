@@ -1,0 +1,10 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /admin
+
+# Host
+Host: https://enlightflorist.com
+
+# Sitemaps
+Sitemap: https://enlightflorist.com/sitemap.xml

@@ -2,7 +2,7 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Flower2 } from "lucide-react";
+import { Flower2, Sparkles } from "lucide-react";
 import CategoryCarousel from "../components/Home/ProductCard";
 import Link from "next/link";
 interface Product {
@@ -24,6 +24,21 @@ interface events {
 	name: string;
 	urls: string;
 }
+
+const storeHighlights = [
+	{
+		title: "Florist Berpengalaman",
+		description: "Tim bersertifikat dengan mata detail untuk rangkaian artistik.",
+	},
+	{
+		title: "Studio Premium",
+		description: "Konsultasi privat dengan koleksi bunga segar setiap hari.",
+	},
+	{
+		title: "Pengiriman Terjaga",
+		description: "Armada internal memastikan bunga tiba dalam kondisi terbaik.",
+	},
+];
 
 export default function HomePage() {
 	const [currentSlide, setCurrentSlide] = useState(0);
@@ -85,7 +100,7 @@ export default function HomePage() {
 	}, []);
 
 	useEffect(() => {
-		if (events.length <= 1) return; // ✅ Prevent carousel logic if only 1 image
+		if (events.length <= 1) return; // Prevent carousel logic if only 1 image
 
 		const interval = setInterval(() => {
 			setCurrentSlide((prev) => (prev + 1) % events.length);
@@ -136,10 +151,16 @@ export default function HomePage() {
 				</script>
 			</Head>
 
-			<main className="bg-customBg min-h-screen">
+			<main className="min-h-screen bg-gradient-to-b from-[#fff9fb] via-white to-[#ffecec]">
 				<div className="relative">
+					<div className="pointer-events-none absolute inset-0">
+						<div className="absolute -left-20 top-24 h-64 w-64 rounded-full bg-rose-100 blur-[160px]" />
+						<div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-amber-100 blur-[180px]" />
+						<div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-rose-200/50 blur-[120px]" />
+					</div>
 					{/* Carousel event Section */}
-					<div className="relative w-full h-[30vh] sm:h-[40vh] md:h-[50vh] lg:h-[60vh] overflow-hidden">
+					<div className="relative w-full h-[30vh] sm:h-[40vh] md:h-[50vh] lg:h-[60vh] overflow-hidden rounded-b-[48px] border border-white/40 shadow-[0_30px_120px_-40px_rgba(188,94,102,0.8)]">
+						<div className="absolute inset-0 z-10 bg-gradient-to-b from-black/10 via-transparent to-black/30" />
 						{events.map((image, index) => (
 							<div
 								key={index}
@@ -159,12 +180,18 @@ export default function HomePage() {
 								/>
 							</div>
 						))}
+						<div className="absolute left-6 top-6 z-20 hidden md:flex items-center gap-2 rounded-full border border-white/60 bg-white/60 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-rose-600 backdrop-blur">
+							<Sparkles className="h-4 w-4" />
+							Event
+						</div>
 						<div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
 							{events.map((_, index) => (
 								<button
 									key={index}
-									className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${
-										index === currentSlide ? "bg-white" : "bg-white/50"
+									className={`h-2 rounded-full transition-all ${
+										index === currentSlide
+											? "w-6 bg-white shadow-lg shadow-black/30"
+											: "w-3 bg-white/40"
 									}`}
 									onClick={() => {
 										if (events.length > 1) setCurrentSlide(index);
@@ -344,78 +371,100 @@ export default function HomePage() {
 							<div className="flex text-rose-500 dark:text-rose-400 items-center justify-center text-center">
 								<Flower2 className="h-8 w-8 animate-pulse" />
 							</div>
-							{categories
-								.filter((category) => category.products.length > 0)
-								.map((category) => (
-									<CategoryCarousel key={category.slug} category={category} />
-								))}
+							<div className="relative mt-8 rounded-[32px] border border-rose-100/70 bg-white/80 p-8 shadow-2xl shadow-rose-100/60 backdrop-blur">
+								<div className="pointer-events-none absolute inset-0 rounded-[32px] bg-gradient-to-br from-white via-transparent to-rose-50 opacity-70" />
+								<div className="relative">
+									{categories
+										.filter((category) => category.products.length > 0)
+										.map((category) => (
+											<CategoryCarousel key={category.slug} category={category} />
+										))}
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 
 				{/* Store Information Section - terpisah tanpa ilustrasi */}
 				<div className="max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-					<div className="rounded-lg shadow-lg p-8 bg-[#9f6564]/10">
-						<h2 className="text-3xl font-semibold text-center text-rose-500 mb-6">
-							Selamat Datang di Toko Bunga Kami
-						</h2>
-						<p className="text-center text-gray-700 mb-8">
-							Kami menyediakan rangkaian bunga segar dan indah untuk berbagai
-							acara spesial Anda.
-						</p>
-						<div className="space-y-4">
-							<div className="flex items-center justify-center space-x-2">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									className="h-6 w-6 text-rose-500"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke="currentColor"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-									/>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-									/>
-								</svg>
-								<span className="text-gray-700">
-									Jl. Imam Bonjol No.238d, RT.001/RW.004 Bojong Jaya,
-									Kec.Karawaci Kota Tangerang, Banten 15115 Indonesia
-								</span>
+					<div className="relative overflow-hidden rounded-[32px] border border-rose-100 bg-gradient-to-r from-[#fff5f6] via-white to-[#ffe8ec] p-10 shadow-[0_30px_80px_-40px_rgba(159,101,100,0.9)]">
+						<div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/40 blur-3xl" />
+						<div className="pointer-events-none absolute left-0 bottom-0 h-28 w-28 rounded-full bg-rose-200/40 blur-2xl" />
+						<div className="relative space-y-6">
+							<h2 className="text-3xl font-semibold text-center text-rose-500">
+								Selamat Datang di Toko Bunga Kami
+							</h2>
+							<p className="text-center text-gray-700">
+								Kami menyediakan rangkaian bunga segar dan indah untuk berbagai
+								acara spesial Anda.
+							</p>
+							<div className="grid gap-4 md:grid-cols-2">
+								<div className="flex items-start gap-3 rounded-2xl bg-white/70 p-4 shadow-sm">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="h-6 w-6 text-rose-500"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+										/>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+										/>
+									</svg>
+									<span className="text-gray-700">
+										Jl. Imam Bonjol No.238d, RT.001/RW.004 Bojong Jaya,
+										Kec.Karawaci Kota Tangerang, Banten 15115 Indonesia
+									</span>
+								</div>
+								<div className="flex items-start gap-3 rounded-2xl bg-white/70 p-4 shadow-sm">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="h-6 w-6 text-rose-500"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+										/>
+									</svg>
+									<span className="text-gray-700">+62 819 9857 0313</span>
+								</div>
 							</div>
-							<div className="flex items-center justify-center space-x-2">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									className="h-6 w-6 text-rose-500"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke="currentColor"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-									/>
-								</svg>
-								<span className="text-gray-700">+62 819 9857 0313</span>
+							<div className="grid gap-4 pt-4 md:grid-cols-3">
+								{storeHighlights.map((item) => (
+									<div
+										key={item.title}
+										className="rounded-2xl border border-rose-100/80 bg-white/80 p-4 text-center shadow-sm"
+									>
+										<p className="text-sm font-semibold text-rose-500">
+											{item.title}
+										</p>
+										<p className="text-xs text-gray-600">{item.description}</p>
+									</div>
+								))}
 							</div>
-						</div>
-						<div className="mt-8 text-center">
-							<Link
-								href="https://wa.me/6281998570313"
-								target="_blank"
-								className="inline-flex items-center justify-center rounded-md bg-[#9f6564] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#9f6564]/90"
-							>
-								Whatsapp
-							</Link>
+							<div className="text-center">
+								<Link
+									href="https://wa.me/6281998570313"
+									target="_blank"
+									className="inline-flex items-center justify-center rounded-full bg-[#9f6564] px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-rose-200 transition hover:-translate-y-0.5 hover:bg-[#8c5857]"
+								>
+									Whatsapp
+								</Link>
+							</div>
 						</div>
 					</div>
 				</div>
