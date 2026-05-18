@@ -9,7 +9,10 @@ const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 if (!globalForPrisma.prisma) globalForPrisma.prisma = prisma;
 
+const authSecret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
+
 const config: NextAuthConfig = {
+  secret: authSecret,
   session: { maxAge: 3600 }, // 1 jam; v5 default JWT
 
   providers: [
@@ -36,9 +39,13 @@ const config: NextAuthConfig = {
         if (!isValid) throw new Error("Invalid credentials");
 
         // Optional: token kustom di samping JWT NextAuth
+        if (!authSecret) {
+          throw new Error("AUTH_SECRET or NEXTAUTH_SECRET is required");
+        }
+
         const accessToken = jwt.sign(
           { id: user.uid, role: "admin", name: user.uname },
-          process.env.AUTH_SECRET!, // v5: pakai AUTH_SECRET
+          authSecret,
           { expiresIn: "1h" }
         );
 
