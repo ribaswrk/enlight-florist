@@ -36,7 +36,7 @@ async function uploadImage(file: File): Promise<string | null> {
         Key: fileKey,
         Body: buffer,
         ContentType: file.type,
-      })
+      }),
     );
 
     return `${R2_PUBLIC_URL}/${fileKey}`;
@@ -56,7 +56,7 @@ async function deleteImage(imageUrl: string) {
     new DeleteObjectCommand({
       Bucket: R2_BUCKET_NAME,
       Key: fileKey,
-    })
+    }),
   );
 }
 

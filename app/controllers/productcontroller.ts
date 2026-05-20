@@ -8,7 +8,7 @@ export async function getProducts(
   catId?: number,
   subcatId?: number,
   homeView?: number,
-  productId?: number
+  productId?: number,
 ) {
   const whereCondition: Prisma.ProductWhereInput = {};
   if (catId) whereCondition.categoryId = catId;
@@ -73,7 +73,7 @@ export async function getProducts(
       subcategory: Subcategory?.subcatname,
       subcategoryId: Subcategory?.subcategoryId,
       images: ProductImage.map((img) => img.imageUrl),
-    })
+    }),
   );
 }
 

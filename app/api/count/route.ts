@@ -26,7 +26,7 @@ export async function GET() {
     console.error("Failed to fetch counts:", error);
     return NextResponse.json(
       { error: "Failed to fetch counts" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
