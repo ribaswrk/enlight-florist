@@ -1,13 +1,13 @@
 -- DropForeignKey
-ALTER TABLE `product`
+ALTER TABLE `Product`
 DROP FOREIGN KEY `product_categoryId_fkey`;
 
 -- DropForeignKey
-ALTER TABLE `productimage`
+ALTER TABLE `ProductImage`
 DROP FOREIGN KEY `productImage_productid_fkey`;
 
 -- AlterTable
-ALTER TABLE `product` MODIFY `description` TEXT NOT NULL;
+ALTER TABLE `Product` MODIFY `description` TEXT NOT NULL;
 
 -- AddForeignKey
 ALTER TABLE `Product` ADD CONSTRAINT `Product_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category` (`categoryId`) ON DELETE RESTRICT ON UPDATE CASCADE;
