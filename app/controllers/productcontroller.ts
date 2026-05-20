@@ -19,6 +19,7 @@ export async function getProducts(
 
   const products = await prisma.product.findMany({
     where: whereCondition,
+    orderBy: [{ sequence: "asc" }, { productid: "asc" }],
     include: {
       category: {
         select: {
@@ -48,6 +49,7 @@ export async function getProducts(
       price,
       promoPrice,
       soldqty,
+      sequence,
       category,
       homeView,
       addVal,
@@ -61,6 +63,7 @@ export async function getProducts(
       price,
       priceDisc: promoPrice,
       soldqty: Number(soldqty),
+      sequence,
       homeView,
       addFlag,
       addVal,
@@ -86,9 +89,11 @@ export async function getProductsHome() {
         where: {
           homeView: 1,
         },
+        orderBy: [{ sequence: "asc" }, { productid: "asc" }],
         take: 10,
         select: {
           productid: true,
+          sequence: true,
           name: true,
           price: true,
           promoPrice: true,
@@ -145,6 +150,7 @@ export async function createProduct(data: FormData) {
         price: String(data.get("price")),
         promoPrice: String(data.get("promoPrice")),
         soldqty: String(data.get("soldqty")),
+        sequence: Number(data.get("sequence") ?? 0),
         categoryId: Number(data.get("categoryId")),
         homeView: Number(data.get("homeView")),
         subcategoryId: Number(data.get("subcategoryId")),
@@ -199,6 +205,7 @@ export async function updateProduct(productid: number, data: FormData) {
         price: String(data.get("price")),
         promoPrice: String(data.get("promoPrice")),
         soldqty: String(data.get("soldqty")),
+        sequence: Number(data.get("sequence") ?? 0),
         categoryId: Number(data.get("categoryId")),
         subcategoryId: Number(data.get("subcategoryId")),
         addFlag: Number(data.get("addFlag")),

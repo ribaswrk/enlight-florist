@@ -6,6 +6,11 @@ import {
   PlusCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import {
+  ArrowsUpDownIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from "@heroicons/react/24/solid";
 import { signOut, useSession } from "next-auth/react";
 import { MultiImageUpload } from "@/components/MultiImage/multi-image-upload";
 import { formatRupiah } from "@/lib/formatrupiah";
@@ -14,6 +19,7 @@ import { formatRupiah } from "@/lib/formatrupiah";
 
 type Product = {
   id: number;
+  sequence: number;
   name: string;
   category: string;
   categoryId: number;
@@ -49,6 +55,7 @@ export default function ProductsManagement() {
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [productName, setProductName] = useState("");
+  const [productSequence, setProductSequence] = useState<number | string>(0);
   const [productHomeView, setProductHomeView] = useState<number | string>("");
   const [productPrice, setProductPrice] = useState<number | string>("");
   const [productPriceDisc, setProductPriceDisc] = useState<number | string>("");
@@ -70,11 +77,25 @@ export default function ProductsManagement() {
     { name: "", price: "", discPrice: "" },
   ]);
   const [productDescription, setProductDescription] = useState("");
+  const [sortField, setSortField] = useState<keyof Product>("sequence");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   // Filter produk berdasarkan pencarian
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredProducts = products
+    .filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
+    .sort((a, b) => {
+      const direction = sortDirection === "asc" ? 1 : -1;
+      const aValue = a[sortField];
+      const bValue = b[sortField];
+
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        return (aValue - bValue) * direction;
+      }
+
+      return String(aValue ?? "").localeCompare(String(bValue ?? "")) * direction;
+    });
 
   const validateProductForm = () => {
     const requiredFields = [
@@ -151,6 +172,25 @@ export default function ProductsManagement() {
     setVariations([...variations, { name: "", price: "", discPrice: "" }]);
   };
 
+  const handleSort = (field: keyof Product) => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+      return;
+    }
+
+    setSortField(field);
+    setSortDirection("asc");
+  };
+
+  const getSortIcon = (field: keyof Product) => {
+    if (sortField !== field) return <ArrowsUpDownIcon className="h-4 w-4" />;
+    return sortDirection === "asc" ? (
+      <ChevronUpIcon className="h-4 w-4" />
+    ) : (
+      <ChevronDownIcon className="h-4 w-4" />
+    );
+  };
+
   const removeVariationField = (index: number) => {
     const newVariations = variations.filter((_, i) => i !== index);
     setVariations(newVariations);
@@ -172,6 +212,7 @@ export default function ProductsManagement() {
       formData.append("name", productName);
       formData.append("price", String(productPrice));
       formData.append("promoPrice", String(productPriceDisc));
+      formData.append("sequence", String(productSequence));
       formData.append("categoryId", String(selectedCategoryId));
       formData.append("subcategoryId", String(selectedSubCategoryId));
       formData.append("homeView", String(productHomeView));
@@ -208,6 +249,7 @@ export default function ProductsManagement() {
       // Reset form
       setProductName("");
       setProductPrice("");
+      setProductSequence(0);
       setProductHomeView(0);
       setSelectedCategoryId(null);
       setSelectedSubCategoryId(null);
@@ -253,6 +295,7 @@ export default function ProductsManagement() {
     setProductName(product?.name || "");
     setProductPrice(product?.price || "");
     setProductPriceDisc(product?.priceDisc || "");
+    setProductSequence(product?.sequence || 0);
     setProductHomeView(product?.homeView || 0);
     setProductImageUrl(product?.images || []);
     setSelectedCategoryId(product?.categoryId || null);
@@ -329,29 +372,60 @@ export default function ProductsManagement() {
         />
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200">
+        <table className="w-full table-auto bg-white border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                ID
+                No
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Nama Produk
+                <button type="button" onClick={() => handleSort("sequence")}>
+                  <span className="inline-flex items-center gap-1">
+                    Sequence {getSortIcon("sequence")}
+                  </span>
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Kategori
+                <button type="button" onClick={() => handleSort("name")}>
+                  <span className="inline-flex items-center gap-1">
+                    Nama Produk {getSortIcon("name")}
+                  </span>
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Sub Kategori
+                <button type="button" onClick={() => handleSort("category")}>
+                  <span className="inline-flex items-center gap-1">
+                    Kategori {getSortIcon("category")}
+                  </span>
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Harga Asli
+                <button type="button" onClick={() => handleSort("subcategory")}>
+                  <span className="inline-flex items-center gap-1">
+                    Sub Kategori {getSortIcon("subcategory")}
+                  </span>
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Harga Promo
+                <button type="button" onClick={() => handleSort("price")}>
+                  <span className="inline-flex items-center gap-1">
+                    Harga Asli {getSortIcon("price")}
+                  </span>
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Terjual
+                <button type="button" onClick={() => handleSort("priceDisc")}>
+                  <span className="inline-flex items-center gap-1">
+                    Harga Promo {getSortIcon("priceDisc")}
+                  </span>
+                </button>
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <button type="button" onClick={() => handleSort("soldqty")}>
+                  <span className="inline-flex items-center gap-1">
+                    Terjual {getSortIcon("soldqty")}
+                  </span>
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Tampilkan di Home
@@ -365,9 +439,10 @@ export default function ProductsManagement() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {filteredProducts.map((product) => (
+            {filteredProducts.map((product, index) => (
               <tr key={product.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4">{product.id}</td>
+                <td className="px-6 py-4">{index + 1}</td>
+                <td className="px-6 py-4">{product.sequence}</td>
                 <td className="px-6 py-4">{product.name}</td>
                 <td className="px-6 py-4">{product.category}</td>
                 <td className="px-6 py-4">{product.subcategory}</td>
@@ -447,6 +522,18 @@ export default function ProductsManagement() {
               className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Sequence (urutan tampil)"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
+              value={productSequence}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) {
+                  setProductSequence(value);
+                }
+              }}
             />
             {/* Harga */}
             <input

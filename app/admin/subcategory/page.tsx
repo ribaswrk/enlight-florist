@@ -6,6 +6,11 @@ import {
   PlusCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import {
+  ArrowsUpDownIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from "@heroicons/react/24/solid";
 import { signOut, useSession } from "next-auth/react";
 
 // Tipe data untuk kategori
@@ -37,13 +42,49 @@ export default function SubCategoriesManagement() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
   const [subcatHomeView, setSubcatHomeView] = useState<number>(0);
   const [subcategoryImage, setSubcategoryImage] = useState<File | null>(null);
+  const [sortField, setSortField] = useState<"name" | "catname" | "homeView">(
+    "name",
+  );
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   const { data: session } = useSession();
 
   // Filter kategori berdasarkan pencarian
-  const filteredSubcategories = subcategory.filter((subcat) =>
-    subcat.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredSubcategories = subcategory
+    .filter((subcat) =>
+      subcat.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
+    .sort((a, b) => {
+      const direction = sortDirection === "asc" ? 1 : -1;
+      const aValue = a[sortField];
+      const bValue = b[sortField];
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        return (aValue - bValue) * direction;
+      }
+      return String(aValue).localeCompare(String(bValue)) * direction;
+    });
+
+  const handleSort = (field: "name" | "catname" | "homeView") => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+      return;
+    }
+    setSortField(field);
+    setSortDirection("asc");
+  };
+
+  const SortIcon = ({
+    field,
+  }: {
+    field: "name" | "catname" | "homeView";
+  }) => {
+    if (sortField !== field) return <ArrowsUpDownIcon className="h-4 w-4" />;
+    return sortDirection === "asc" ? (
+      <ChevronUpIcon className="h-4 w-4" />
+    ) : (
+      <ChevronDownIcon className="h-4 w-4" />
+    );
+  };
 
   const fetchSubcategory = async () => {
     try {
@@ -206,23 +247,44 @@ export default function SubCategoriesManagement() {
       </div>
       {/* Tabel daftar kategori */}
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200">
+        <table className="w-full table-auto bg-white border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                ID
+                No
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Gambar
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Nama Sub Kategori
+                <button
+                  type="button"
+                  onClick={() => handleSort("name")}
+                  className="inline-flex items-center gap-1"
+                >
+                  Nama Sub Kategori
+                  <SortIcon field="name" />
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Nama Kategori
+                <button
+                  type="button"
+                  onClick={() => handleSort("catname")}
+                  className="inline-flex items-center gap-1"
+                >
+                  Nama Kategori
+                  <SortIcon field="catname" />
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Tampilkan di Home
+                <button
+                  type="button"
+                  onClick={() => handleSort("homeView")}
+                  className="inline-flex items-center gap-1"
+                >
+                  Tampilkan di Home
+                  <SortIcon field="homeView" />
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Aksi
@@ -230,9 +292,9 @@ export default function SubCategoriesManagement() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {filteredSubcategories.map((subcat) => (
+            {filteredSubcategories.map((subcat, index) => (
               <tr key={subcat.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">{subcat.id}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
                 <td className="px-6 py-4">
                   {subcat.imageSubCatUrl && (
                     <img

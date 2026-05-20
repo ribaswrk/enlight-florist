@@ -6,6 +6,11 @@ import {
   PlusCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import {
+  ArrowsUpDownIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from "@heroicons/react/24/solid";
 import { signOut, useSession } from "next-auth/react";
 
 // Tipe data untuk produk
@@ -30,12 +35,42 @@ export default function EventsManagement() {
 
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [selectedEventId, setSelectedEventId] = useState<number>(0);
+  const [sortField, setSortField] = useState<"name" | "show">("name");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const { data: session } = useSession();
 
   // Filter kategori berdasarkan pencarian
-  const filteredEvents = events.filter((event) =>
-    event.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredEvents = events
+    .filter((event) =>
+      event.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
+    .sort((a, b) => {
+      const direction = sortDirection === "asc" ? 1 : -1;
+      const aValue = a[sortField];
+      const bValue = b[sortField];
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        return (aValue - bValue) * direction;
+      }
+      return String(aValue).localeCompare(String(bValue)) * direction;
+    });
+
+  const handleSort = (field: "name" | "show") => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+      return;
+    }
+    setSortField(field);
+    setSortDirection("asc");
+  };
+
+  const SortIcon = ({ field }: { field: "name" | "show" }) => {
+    if (sortField !== field) return <ArrowsUpDownIcon className="h-4 w-4" />;
+    return sortDirection === "asc" ? (
+      <ChevronUpIcon className="h-4 w-4" />
+    ) : (
+      <ChevronDownIcon className="h-4 w-4" />
+    );
+  };
 
   const fetchEvent = async () => {
     try {
@@ -158,17 +193,31 @@ export default function EventsManagement() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200">
+        <table className="w-full table-auto bg-white border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                ID
+                No
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Nama Event
+                <button
+                  type="button"
+                  onClick={() => handleSort("name")}
+                  className="inline-flex items-center gap-1"
+                >
+                  Nama Event
+                  <SortIcon field="name" />
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Tampilkan di Home
+                <button
+                  type="button"
+                  onClick={() => handleSort("show")}
+                  className="inline-flex items-center gap-1"
+                >
+                  Tampilkan di Home
+                  <SortIcon field="show" />
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Banner
@@ -179,9 +228,9 @@ export default function EventsManagement() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {filteredEvents.map((event) => (
+            {filteredEvents.map((event, index) => (
               <tr key={event.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">{event.id}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{event.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {event.show ? "Ya" : "Tidak"}

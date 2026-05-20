@@ -6,6 +6,11 @@ import {
   PlusCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import {
+  ArrowsUpDownIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from "@heroicons/react/24/solid";
 import { signOut, useSession } from "next-auth/react";
 
 // Tipe data untuk kategori
@@ -27,13 +32,43 @@ export default function CategoriesManagement() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
   const [catHomeView, setCatHomeView] = useState<number>(0);
   const [categoryImage, setCategoryImage] = useState<File | null>(null);
+  const [sortField, setSortField] = useState<"name" | "homeView">("name");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   const { data: session } = useSession();
 
   // Filter kategori berdasarkan pencarian
-  const filteredCategories = categories.filter((category) =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredCategories = categories
+    .filter((category) =>
+      category.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
+    .sort((a, b) => {
+      const direction = sortDirection === "asc" ? 1 : -1;
+      const aValue = a[sortField];
+      const bValue = b[sortField];
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        return (aValue - bValue) * direction;
+      }
+      return String(aValue).localeCompare(String(bValue)) * direction;
+    });
+
+  const handleSort = (field: "name" | "homeView") => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+      return;
+    }
+    setSortField(field);
+    setSortDirection("asc");
+  };
+
+  const SortIcon = ({ field }: { field: "name" | "homeView" }) => {
+    if (sortField !== field) return <ArrowsUpDownIcon className="h-4 w-4" />;
+    return sortDirection === "asc" ? (
+      <ChevronUpIcon className="h-4 w-4" />
+    ) : (
+      <ChevronDownIcon className="h-4 w-4" />
+    );
+  };
 
   const fetchCategory = async () => {
     try {
@@ -159,20 +194,34 @@ export default function CategoriesManagement() {
       </div>
       {/* Tabel daftar kategori */}
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200">
+        <table className="w-full table-auto bg-white border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                ID
+                No
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Gambar
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Nama Kategori
+                <button
+                  type="button"
+                  onClick={() => handleSort("name")}
+                  className="inline-flex items-center gap-1"
+                >
+                  Nama Kategori
+                  <SortIcon field="name" />
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Tampilkan di Home
+                <button
+                  type="button"
+                  onClick={() => handleSort("homeView")}
+                  className="inline-flex items-center gap-1"
+                >
+                  Tampilkan di Home
+                  <SortIcon field="homeView" />
+                </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Aksi
@@ -180,9 +229,9 @@ export default function CategoriesManagement() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {filteredCategories.map((category) => (
+            {filteredCategories.map((category, index) => (
               <tr key={category.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">{category.id}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
                 <td className="px-6 py-4">
                   {category.imageCatUrl && (
                     <img

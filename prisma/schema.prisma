@@ -20,6 +20,7 @@ model Product {
   productid     Int            @id @default(autoincrement())
   category      Category       @relation(fields: [categoryId], references: [categoryId])
   categoryId    Int
+  sequence      Int            @default(0)
   name          String
   price         String
   promoPrice    String         @default("0")
@@ -27,7 +28,7 @@ model Product {
   homeView      Int            @default(0)
   addFlag       Int            @default(0)
   addVal        String         @default("") @db.VarChar(255)
-  description   String         @default("") @db.Text
+  description   String         @db.Text
   createdBy     String
   createdAt     DateTime       @default(now())
   updateBy      String
