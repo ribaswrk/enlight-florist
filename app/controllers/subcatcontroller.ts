@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../generated/prisma/client";
+import { prisma } from "../lib/prisma";
 
 import {
   S3Client,
@@ -7,8 +7,6 @@ import {
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
-
-const prisma = new PrismaClient();
 
 const R2_ENDPOINT = process.env.R2_ENDPOINT!;
 const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID!;

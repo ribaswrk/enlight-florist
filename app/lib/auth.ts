@@ -1,13 +1,8 @@
 import NextAuth, { type NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "./prisma";
 import { compare } from "bcryptjs";
 import jwt from "jsonwebtoken";
-
-// Prisma singleton (hindari terlalu banyak koneksi saat dev)
-const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
-export const prisma = globalForPrisma.prisma ?? new PrismaClient();
-if (!globalForPrisma.prisma) globalForPrisma.prisma = prisma;
 
 const authSecret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
 const authUrl =

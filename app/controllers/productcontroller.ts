@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { Prisma } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { Prisma } from "../generated/prisma/client";
+import { prisma } from "../lib/prisma";
 
 // ✅ Get Products
 export async function getProducts(
