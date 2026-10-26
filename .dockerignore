@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+.gitignore
+app/generated
+coverage
+npm-debug.log*
+.env*
